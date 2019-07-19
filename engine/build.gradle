@@ -1,0 +1,42 @@
+plugins {
+    id 'org.jetbrains.dokka' version '0.9.18'
+    id 'com.github.johnrengelman.shadow' version '5.1.0'
+}
+
+apply plugin: 'application'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+description = 'RSBox Server'
+mainClassName = 'io.rsbox.engine.Main'
+
+run {
+    workingDir = rootProject.projectDir
+}
+
+dependencies {
+    compile project(':util')
+
+    compile "org.jetbrains.kotlin:kotlin-scripting-common:$kotlinVersion"
+    compile "org.jetbrains.kotlin:kotlin-script-runtime:$kotlinVersion"
+    compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kcoroutineVersion"
+
+    compile "org.reflections:reflections:$reflectionsVersion"
+    compile "commons-io:commons-io:$commonsIoVersion"
+
+    compile "io.github.classgraph:classgraph:$classGraphVersion"
+    compile "it.unimi.dsi:fastutil:$fastUtilVersion"
+    compile group: 'org.springframework', name: 'spring-core', version: '2.5.6'
+
+    implementation "org.bouncycastle:bcprov-jdk15on:$bouncycastleVersion"
+
+    testImplementation "junit:junit:$junitVersion"
+}
+
+shadowJar {
+    from('./') {
+        exclude 'rsbox'
+    }
+    
+    //noinspection GrDeprecatedAPIUsage
+    shadowJar.archiveName = 'rsbox.jar'
+}

@@ -1,0 +1,9 @@
+.idea/
+/.gradle/
+build/
+g=out/
+
+gradlew
+gradlew.bat
+
+rsbox/
