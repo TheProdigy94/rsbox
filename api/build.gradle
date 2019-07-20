@@ -1,0 +1,9 @@
+plugins {
+    
+}
+
+description = "RSBox API"
+
+dependencies {
+    implementation project(':util')
+}
