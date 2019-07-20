@@ -1,7 +1,9 @@
 package io.rsbox.engine.game.world
 
 import io.rsbox.api.GameContext
+import io.rsbox.api.Server
 import io.rsbox.api.World
+import io.rsbox.engine.event.RSEventFactory
 import io.rsbox.util.codec.HuffmanCodec
 import net.runelite.cache.IndexType
 import net.runelite.cache.fs.Store
@@ -10,7 +12,12 @@ import net.runelite.cache.fs.Store
  * @author Kyle Escobar
  */
 
-class RSWorld(private val gameContext: GameContext) : World {
+class RSWorld(private val server: Server, private val gameContext: GameContext) : World {
+
+    override fun getServer(): Server {
+        return this.server
+    }
+
     /**
      * This is the storage for our cache.
      */
@@ -43,7 +50,7 @@ class RSWorld(private val gameContext: GameContext) : World {
     }
 
     internal fun preLoad() {
-
+        RSEventFactory.callWorldPreloadEvent(this)
     }
 
     internal fun postLoad() {

@@ -132,7 +132,7 @@ class RSServer : Server {
         this.getStopwatch().reset().start()
         logger.info("Loading world...")
 
-        world = RSWorld(this.getGameContext())
+        world = RSWorld(this, this.getGameContext())
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

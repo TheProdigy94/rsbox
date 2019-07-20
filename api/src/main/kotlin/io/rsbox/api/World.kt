@@ -5,4 +5,5 @@ package io.rsbox.api
  */
 
 interface World {
+    fun getServer(): Server
 }
