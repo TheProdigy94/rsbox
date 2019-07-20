@@ -1,0 +1,6 @@
+# Server Settings
+name: "RSBox"
+revision: 180
+server-port: 43594
+tickSpeed: 600
+maxPlayers: 2000

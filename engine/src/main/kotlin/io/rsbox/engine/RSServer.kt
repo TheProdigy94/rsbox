@@ -5,6 +5,8 @@ import io.netty.bootstrap.ServerBootstrap
 import io.netty.channel.nio.NioEventLoopGroup
 import io.rsbox.api.GameContext
 import io.rsbox.api.Server
+import io.rsbox.api.World
+import io.rsbox.engine.game.world.RSWorld
 import io.rsbox.util.ServerProperties
 import mu.KLogging
 import org.springframework.util.ResourceUtils
@@ -33,12 +35,14 @@ class RSServer : Server {
 
     private lateinit var gameContext: GameContext
 
+    internal lateinit var world: World
+
     /**
      * RSBox directories to create
      */
     private val dirs = arrayOf(
         "./rsbox/",
-        "./rsbox/configs/",
+        "./rsbox/config/",
         "./rsbox/data",
         "./rsbox/data/cache",
         "./rsbox/data/xteas",
@@ -84,8 +88,8 @@ class RSServer : Server {
          * Check if server.properties.yml exists
          * If not, clone from sources. [projectRoot]/server.properties.yml
          */
-        val serverPropFile = File("./rsbox/configs/server.properties.yml")
-        val defaultPropFile = ResourceUtils.getFile("classpath:configs/server.properties.yml")
+        val serverPropFile = File("./rsbox/config/server.properties.yml")
+        val defaultPropFile = ResourceUtils.getFile("classpath:config/server.properties.yml")
 
         println(defaultPropFile)
 
@@ -122,6 +126,13 @@ class RSServer : Server {
             tickSpeed = this.getServerProperties().getOrDefault("tickSpeed", 600),
             maxPlayers = this.getServerProperties().getOrDefault("maxPlayers", 2000)
         )
+
+        logger.info("Loaded game context in {}ms", this.getStopwatch().elapsed(TimeUnit.MILLISECONDS))
+
+        this.getStopwatch().reset().start()
+        logger.info("Loading world...")
+
+        world = RSWorld(this.getGameContext())
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -144,6 +155,10 @@ class RSServer : Server {
 
     override fun getGameContext(): GameContext {
         return this.gameContext
+    }
+
+    override fun getWorld(): World {
+        return this.world
     }
 
     companion object: KLogging()

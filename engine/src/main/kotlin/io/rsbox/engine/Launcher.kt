@@ -1,8 +1,7 @@
-package io.rsbox.server
+package io.rsbox.engine
 
 import io.rsbox.api.RSBox
 import io.rsbox.api.Server
-import io.rsbox.engine.RSServer
 import java.nio.file.Paths
 
 /**
@@ -20,7 +19,7 @@ object Launcher {
 
         server.startServer(
             cache = Paths.get("./rsbox/data/cache"),
-            serverProperties = Paths.get("./rsbox/configs/server.properties.yml"),
+            serverProperties = Paths.get("./rsbox/config/server.properties.yml"),
             packets = Paths.get("./rsbox/data/packets.yml"),
             blocks = Paths.get("./rsbox/data/blocks.yml"),
             args = args

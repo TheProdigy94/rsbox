@@ -1,8 +1,18 @@
+plugins {
+    id 'org.jetbrains.dokka' version '0.9.18'
+}
+
+apply plugin: 'application'
+
 description = 'RSBox Server'
+mainClassName = 'io.rsbox.engine.Launcher'
+
+run {
+    workingDir = rootProject.projectDir
+}
 
 dependencies {
-    implementation project(':api')
-    implementation project(':util')
+    compile project(':util')
     
     compile "org.jetbrains.kotlin:kotlin-scripting-common:$kotlinVersion"
     compile "org.jetbrains.kotlin:kotlin-script-runtime:$kotlinVersion"
@@ -18,4 +28,18 @@ dependencies {
     implementation "org.bouncycastle:bcprov-jdk15on:$bouncycastleVersion"
 
     testImplementation "junit:junit:$junitVersion"
+}
+
+sourceSets {
+    main.kotlin.srcDirs = ['src/main/kotlin']
+    main.resources.srcDirs = ['src/main/resources']
+}
+
+shadowJar {
+    from('./') {
+        exclude 'rsbox/'
+    }
+
+    //noinspection GrDeprecatedAPIUsage
+    shadowJar.baseName = 'rsbox'
 }

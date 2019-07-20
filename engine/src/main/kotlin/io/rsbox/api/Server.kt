@@ -49,4 +49,10 @@ interface Server {
      * @return [GameContext]
      */
     fun getGameContext(): GameContext
+
+    /**
+     * Gets and returns the [World] instance from the engine.
+     * @return [World]
+     */
+    fun getWorld(): World
 }
