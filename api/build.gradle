@@ -1,5 +1,9 @@
 description = "RSBox API"
 
+dependencies {
+    implementation project(':util')
+}
+
 shadowJar {
     //noinspection GrDeprecatedAPIUsage
     shadowJar.archiveName = 'rsbox-api.jar'

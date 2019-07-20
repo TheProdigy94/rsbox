@@ -2,6 +2,7 @@ description = 'RSBox Server'
 
 dependencies {
     implementation project(':api')
+    implementation project(':util')
     
     compile "org.jetbrains.kotlin:kotlin-scripting-common:$kotlinVersion"
     compile "org.jetbrains.kotlin:kotlin-script-runtime:$kotlinVersion"
