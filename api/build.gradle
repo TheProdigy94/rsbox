@@ -1,0 +1,6 @@
+description = "RSBox API"
+
+shadowJar {
+    //noinspection GrDeprecatedAPIUsage
+    shadowJar.archiveName = 'rsbox-api.jar'
+}

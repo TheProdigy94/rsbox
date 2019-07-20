@@ -1,7 +1,19 @@
-description = 'RSBox Server'
+plugins {
+}
+
+apply plugin: 'application'
+
+description = "RSBox Server"
+mainClassName = 'io.rsbox.server.Launcher'
+
+run {
+    workingDir = rootProject.projectDir
+}
 
 dependencies {
-    implementation project(':api')
+    compile project(':api')
+    compile project(':engine')
+    compile project(':util')
     
     compile "org.jetbrains.kotlin:kotlin-scripting-common:$kotlinVersion"
     compile "org.jetbrains.kotlin:kotlin-script-runtime:$kotlinVersion"
@@ -17,4 +29,13 @@ dependencies {
     implementation "org.bouncycastle:bcprov-jdk15on:$bouncycastleVersion"
 
     testImplementation "junit:junit:$junitVersion"
+}
+
+shadowJar {
+    from('./') {
+        exclude 'rsbox/'
+    }
+
+    //noinspection GrDeprecatedAPIUsage
+    shadowJar.archiveName = 'rsbox.jar'
 }

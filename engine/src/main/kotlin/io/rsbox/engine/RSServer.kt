@@ -3,10 +3,11 @@ package io.rsbox.engine
 import com.google.common.base.Stopwatch
 import io.netty.bootstrap.ServerBootstrap
 import io.netty.channel.nio.NioEventLoopGroup
+import io.rsbox.api.RSBox
+import io.rsbox.api.Server
 import mu.KLogging
 import org.springframework.util.ResourceUtils
 import java.io.File
-import java.nio.file.Paths
 import java.util.concurrent.TimeUnit
 
 /**
@@ -14,14 +15,14 @@ import java.util.concurrent.TimeUnit
  */
 
 /**
- * The [Server] is the object which makes all the needed calls to initialize the RSBox server
+ * The [RSServer] is the object which makes all the needed calls to initialize the RSBox server
  */
-class Server {
+class RSServer : Server {
     private val acceptGroup = NioEventLoopGroup(2)
 
     private val ioGroup = NioEventLoopGroup(1)
 
-    val bootstrap = ServerBootstrap()
+    internal val bootstrap = ServerBootstrap()
 
     /**
      * RSBox directories to create
@@ -34,7 +35,7 @@ class Server {
     /**
      * Initializes anything needed to start the server
      */
-    fun initServer() {
+    override fun initServer() {
         Thread.setDefaultUncaughtExceptionHandler { t, e -> logger.error("Uncaught server exception in thread $t!", e)}
         val stopwatch = Stopwatch.createStarted()
 
@@ -67,12 +68,12 @@ class Server {
 
         if(!serverPropFile.exists()) {
             stopwatch.reset().start()
-            logger.info { "Server properties file 'server.properties.yml' not found. Creating default." }
+            logger.info { "RSServer properties file 'server.properties.yml' not found. Creating default." }
             defaultPropFile.copyTo(serverPropFile)
             logger.info("Created default '{}' file in {}ms.", serverPropFile.name, stopwatch.elapsed(TimeUnit.MILLISECONDS))
         }
 
-        logger.info { "Server engine initialization completed." }
+        logger.info { "RSServer engine initialization completed." }
     }
 
     companion object: KLogging()
