@@ -7,6 +7,7 @@ import io.rsbox.api.GameContext
 import io.rsbox.api.Server
 import io.rsbox.api.World
 import io.rsbox.engine.game.world.RSWorld
+import io.rsbox.engine.service.rsa.RsaService
 import io.rsbox.util.ServerProperties
 import mu.KLogging
 import org.springframework.util.ResourceUtils
@@ -126,10 +127,21 @@ class RSServer : Server {
         logger.info("Preparing to load engine services...")
         world.loadServices(this, serviceProperties = this.serviceProperties)
 
+        logger.info("Unpacking cache...")
+        world.setCacheStore(cache.toFile())
+        world.getCacheStore().load()
+        logger.info("Loaded cache store.")
+
+        logger.info("Loading definitions from cache...")
+        world.getDefinitions().loadAll(world.getCacheStore())
+
+
         /**
          * Start the server process.
          */
         this.getStopwatch().reset().start()
+        logger.info { "Starting server process..." }
+        val rsaService = world.getService(RsaService::class.java)
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

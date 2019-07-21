@@ -1,15 +1,13 @@
 package io.rsbox.engine.game.world
 
-import io.rsbox.api.GameContext
-import io.rsbox.api.Server
-import io.rsbox.api.Service
-import io.rsbox.api.World
-import io.rsbox.engine.event.RSEventFactory
+import io.rsbox.api.*
+import io.rsbox.engine.service.xteas.RSXteaKeyService
 import io.rsbox.util.ServerProperties
 import io.rsbox.util.codec.HuffmanCodec
 import mu.KLogging
 import net.runelite.cache.IndexType
 import net.runelite.cache.fs.Store
+import java.io.File
 
 /**
  * @author Kyle Escobar
@@ -26,7 +24,10 @@ class RSWorld(private val server: Server, private val gameContext: GameContext) 
      */
     internal lateinit var cacheStore: Store
 
-    // TODO cache definitions and a shit ton after that... O.O
+    /**
+     * Holds general cacheStore data.
+     */
+    internal var definitions = DefinitionSet()
 
     /**
      * The [HuffmanCodec] used to compress / decompress public chat.
@@ -53,12 +54,15 @@ class RSWorld(private val server: Server, private val gameContext: GameContext) 
      */
     internal val services = mutableListOf<Service>()
 
-    override fun init() {
+    /**
+     * RSXteaKeyService instance
+     */
+    internal var xteaKeyService: RSXteaKeyService? = null
 
+    override fun init() {
     }
 
     override fun preLoad() {
-        RSEventFactory.callWorldPreloadEvent(this)
     }
 
     override fun postLoad() {
@@ -94,6 +98,30 @@ class RSWorld(private val server: Server, private val gameContext: GameContext) 
 
         services.forEach { service -> service.postLoad(server, this) }
         logger.info("Loaded {} engine services.", services.size)
+    }
+
+    override fun getCacheStore(): Store {
+        return this.cacheStore
+    }
+
+    override fun setCacheStore(file: File) {
+        this.cacheStore = Store(file)
+    }
+
+    override fun getXteaKeyService(): XteaKeyService {
+        return this.xteaKeyService as RSXteaKeyService
+    }
+
+    override fun setXteaKeyService(service: XteaKeyService) {
+        this.xteaKeyService = (service as RSXteaKeyService)
+    }
+
+    override fun getDefinitions(): DefinitionSet {
+        return this.definitions
+    }
+
+    override fun setDefinitions(defs: DefinitionSet) {
+        this.definitions = defs
     }
 
     companion object : KLogging()
