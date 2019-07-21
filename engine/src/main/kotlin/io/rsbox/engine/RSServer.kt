@@ -2,17 +2,21 @@ package io.rsbox.engine
 
 import com.google.common.base.Stopwatch
 import io.netty.bootstrap.ServerBootstrap
+import io.netty.channel.ChannelOption
 import io.netty.channel.nio.NioEventLoopGroup
+import io.netty.channel.socket.nio.NioServerSocketChannel
 import io.rsbox.api.GameContext
 import io.rsbox.api.Server
 import io.rsbox.api.World
 import io.rsbox.engine.game.world.RSWorld
+import io.rsbox.engine.server.ClientChannelInitializer
 import io.rsbox.engine.service.rsa.RsaService
 import io.rsbox.util.ServerProperties
 import mu.KLogging
 import org.springframework.util.ResourceUtils
 import java.io.File
 import java.lang.NullPointerException
+import java.net.InetSocketAddress
 import java.nio.file.Path
 import java.util.concurrent.TimeUnit
 
@@ -142,6 +146,23 @@ class RSServer : Server {
         this.getStopwatch().reset().start()
         logger.info { "Starting server process..." }
         val rsaService = world.getService(RsaService::class.java)
+        val clientChannelInitializer = ClientChannelInitializer(
+            revision = gameContext.getRevision(),
+            rsaExponent = rsaService?.getExponent(),
+            rsaModulus = rsaService?.getModulus(),
+            cacheStore = world.getCacheStore(),
+            world = world as RSWorld
+        )
+        bootstrap.group(acceptGroup, ioGroup)
+        bootstrap.channel(NioServerSocketChannel::class.java)
+        bootstrap.childHandler(clientChannelInitializer)
+        bootstrap.option(ChannelOption.TCP_NODELAY, true).option(ChannelOption.SO_KEEPALIVE, true)
+
+        val port = getServerProperties().getOrDefault("server-port", 43594)
+        bootstrap.bind(InetSocketAddress(port)).sync().awaitUninterruptibly()
+        logger.info("Server start. Listening for incoming connections on port $port.")
+
+        System.gc()
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
