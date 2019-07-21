@@ -36,7 +36,7 @@ interface Server {
      * @param blocks File path where blocks.yml are stored.
      * @param args Launcher arguments
      */
-    fun startServer(cache: Path, serverProperties: Path, packets: Path, blocks: Path, args: Array<String>)
+    fun startServer(cache: Path, serverProperties: Path, serviceProperties: Path, packets: Path, blocks: Path, args: Array<String>)
 
     /**
      * Gets and returns the parsed key -> values defined in server.properties.yml

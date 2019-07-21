@@ -1,0 +1,3 @@
+# Enabled Services
+services:
+  - class: io.rsbox.engine.service.rsa.RsaService

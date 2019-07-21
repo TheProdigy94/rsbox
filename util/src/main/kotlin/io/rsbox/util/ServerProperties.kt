@@ -64,4 +64,18 @@ class ServerProperties {
 
         return this
     }
+
+    fun loadMap(data: Map<String, Any>): ServerProperties {
+        check(properties.isEmpty())
+
+        data.forEach { key, value ->
+            if(value is String && value.isEmpty()) {
+                properties[key] = null
+            } else {
+                properties[key] = value
+            }
+        }
+
+        return this
+    }
 }

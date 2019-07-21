@@ -20,6 +20,7 @@ object Launcher {
         server.startServer(
             cache = Paths.get("./rsbox/data/cache"),
             serverProperties = Paths.get("./rsbox/config/server.properties.yml"),
+            serviceProperties = Paths.get("./rsbox/config/services.yml"),
             packets = Paths.get("./rsbox/data/packets.yml"),
             blocks = Paths.get("./rsbox/data/blocks.yml"),
             args = args

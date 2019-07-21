@@ -32,6 +32,7 @@ class RSServer : Server {
     private lateinit var stopwatch: Stopwatch
 
     private var serverProperties = ServerProperties()
+    private var serviceProperties = ServerProperties()
 
     private lateinit var gameContext: GameContext
 
@@ -52,6 +53,8 @@ class RSServer : Server {
     )
 
     private val resources = hashMapOf(
+        Pair("./rsbox/config/server.properties.yml", ResourceUtils.getFile("classpath:config/server.properties.yml")),
+        Pair("./rsbox/config/services.yml", ResourceUtils.getFile("classpath:config/services.yml")),
         Pair("./rsbox/data/blocks.yml", ResourceUtils.getFile("classpath:data/blocks.yml")),
         Pair("./rsbox/data/packets.yml", ResourceUtils.getFile("classpath:data/packets.yml")),
         Pair("./rsbox/data/defs/items.yml", ResourceUtils.getFile("classpath:data/items.yml")),
@@ -84,22 +87,6 @@ class RSServer : Server {
 
         logger.info { "Scanning folders for required files." }
 
-        /**
-         * Check if server.properties.yml exists
-         * If not, clone from sources. [projectRoot]/server.properties.yml
-         */
-        val serverPropFile = File("./rsbox/config/server.properties.yml")
-        val defaultPropFile = ResourceUtils.getFile("classpath:config/server.properties.yml")
-
-        println(defaultPropFile)
-
-        if(!serverPropFile.exists()) {
-            stopwatch.reset().start()
-            logger.info { "RSServer properties file 'server.properties.yml' not found. Creating default." }
-            defaultPropFile.copyTo(serverPropFile)
-            logger.info("Created default '{}' file in {}ms.", serverPropFile.name, stopwatch.elapsed(TimeUnit.MILLISECONDS))
-        }
-
         resources.forEach { path, resource ->
             val file = File(path)
             if(!file.exists()) {
@@ -112,10 +99,11 @@ class RSServer : Server {
         return true
     }
 
-    override fun startServer(cache: Path, serverProperties: Path, packets: Path, blocks: Path, args: Array<String>) {
+    override fun startServer(cache: Path, serverProperties: Path, serviceProperties: Path, packets: Path, blocks: Path, args: Array<String>) {
         this.setStopwatch(Stopwatch.createStarted())
 
         this.setServerProperties(this.serverProperties.loadYaml(serverProperties.toFile()))
+        this.serviceProperties = this.serviceProperties.loadYaml(serviceProperties.toFile())
 
         logger.info("Loaded server properties for ${this.getServerProperties().get<String>("name")!!} in {}ms.", this.getStopwatch().elapsed(TimeUnit.MILLISECONDS))
 
@@ -133,6 +121,15 @@ class RSServer : Server {
         logger.info("Loading world...")
 
         world = RSWorld(this, this.getGameContext())
+        logger.info("Loaded world in {}ms.", this.getStopwatch().elapsed(TimeUnit.MILLISECONDS))
+
+        logger.info("Preparing to load engine services...")
+        world.loadServices(this, serviceProperties = this.serviceProperties)
+
+        /**
+         * Start the server process.
+         */
+        this.getStopwatch().reset().start()
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////

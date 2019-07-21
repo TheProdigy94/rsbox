@@ -1,5 +1,7 @@
 package io.rsbox.api
 
+import mu.KLogging
+
 /**
  * [RSBox] is the api which holds the instance of the server where all the other API branches from.
  *
@@ -7,6 +9,8 @@ package io.rsbox.api
  */
 object RSBox {
     private var server: Server? = null
+
+    val logger = KLogging().logger
 
     /**
      * Sets the singleton instance of [Server] from the engine module.
