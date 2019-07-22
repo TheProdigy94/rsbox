@@ -37,10 +37,6 @@ sourceSets {
 }
 
 shadowJar {
-    from('./') {
-        exclude 'rsbox/'
-    }
-
     //noinspection GrDeprecatedAPIUsage
     shadowJar.baseName = 'rsbox'
 }

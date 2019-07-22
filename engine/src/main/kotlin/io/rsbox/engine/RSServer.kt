@@ -9,6 +9,7 @@ import io.rsbox.api.GameContext
 import io.rsbox.api.Server
 import io.rsbox.api.World
 import io.rsbox.engine.game.world.RSWorld
+import io.rsbox.engine.plugin.RSPluginLoader
 import io.rsbox.engine.server.ClientChannelInitializer
 import io.rsbox.engine.service.rsa.RsaService
 import io.rsbox.util.ServerProperties
@@ -43,6 +44,8 @@ class RSServer : Server {
 
     internal lateinit var world: World
 
+    private val pluginLoader = RSPluginLoader(this)
+
     /**
      * RSBox directories to create
      */
@@ -53,8 +56,9 @@ class RSServer : Server {
         "./rsbox/data/cache",
         "./rsbox/data/xteas",
         "./rsbox/data/rsa",
-        ".rsbox/data/saves",
-        ".rsbox/data/defs"
+        "./rsbox/data/saves",
+        "./rsbox/data/defs",
+        "./rsbox/plugins"
     )
 
     private val resources = hashMapOf(
@@ -161,6 +165,13 @@ class RSServer : Server {
         val port = getServerProperties().getOrDefault("server-port", 43594)
         bootstrap.bind(InetSocketAddress(port)).sync().awaitUninterruptibly()
         logger.info("Server start. Listening for incoming connections on port $port.")
+
+        logger.info("Loading plugins...")
+        File("./rsbox/plugins").walk().forEach { file ->
+            if(file.extension == "jar") {
+                pluginLoader.loadPlugin(file)
+            }
+        }
 
         System.gc()
     }
