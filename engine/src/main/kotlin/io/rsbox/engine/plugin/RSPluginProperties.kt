@@ -2,7 +2,6 @@ package io.rsbox.engine.plugin
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
-import jdk.internal.util.xml.impl.Input
 import java.io.InputStream
 
 /**

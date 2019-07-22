@@ -14,6 +14,9 @@ import io.rsbox.engine.server.ClientChannelInitializer
 import io.rsbox.engine.service.rsa.RsaService
 import io.rsbox.util.ServerProperties
 import mu.KLogging
+import org.apache.commons.io.FileUtils
+import org.apache.commons.io.IOUtils
+import org.springframework.core.io.ClassPathResource
 import org.springframework.util.ResourceUtils
 import java.io.File
 import java.lang.NullPointerException
@@ -62,13 +65,13 @@ class RSServer : Server {
     )
 
     private val resources = hashMapOf(
-        Pair("./rsbox/config/server.properties.yml", ResourceUtils.getFile("classpath:config/server.properties.yml")),
-        Pair("./rsbox/config/services.yml", ResourceUtils.getFile("classpath:config/services.yml")),
-        Pair("./rsbox/data/blocks.yml", ResourceUtils.getFile("classpath:data/blocks.yml")),
-        Pair("./rsbox/data/packets.yml", ResourceUtils.getFile("classpath:data/packets.yml")),
-        Pair("./rsbox/data/defs/items.yml", ResourceUtils.getFile("classpath:data/items.yml")),
-        Pair("./rsbox/data/defs/npcs.yml", ResourceUtils.getFile("classpath:data/npcs.yml")),
-        Pair("./rsbox/data/defs/objs.yml", ResourceUtils.getFile("classpath:data/objs.yml"))
+        Pair("rsbox/config/server.properties.yml", ClassPathResource("config/server.properties.yml").inputStream),
+        Pair("rsbox/config/services.yml", ClassPathResource("config/services.yml").inputStream),
+        Pair("rsbox/data/blocks.yml", ClassPathResource("data/blocks.yml").inputStream),
+        Pair("rsbox/data/packets.yml", ClassPathResource("data/packets.yml").inputStream),
+        Pair("rsbox/data/defs/items.yml", ClassPathResource("data/items.yml").inputStream),
+        Pair("rsbox/data/defs/npcs.yml", ClassPathResource("data/npcs.yml").inputStream),
+        Pair("rsbox/data/defs/objs.yml", ClassPathResource("data/objs.yml").inputStream)
     )
 
     /**
@@ -99,7 +102,8 @@ class RSServer : Server {
         resources.forEach { path, resource ->
             val file = File(path)
             if(!file.exists()) {
-                resource.copyTo(file)
+                FileUtils.copyInputStreamToFile(resource, file)
+                IOUtils.closeQuietly(resource)
             }
         }
 

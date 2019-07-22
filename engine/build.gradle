@@ -40,6 +40,11 @@ sourceSets {
 shadowJar {
     //noinspection GrDeprecatedAPIUsage
     shadowJar.baseName = 'rsbox'
+    manifest {
+        attributes(
+                'Main-Class': mainClassName
+        )
+    }
 }
 
 gitPublish {
