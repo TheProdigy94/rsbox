@@ -1,70 +1,39 @@
 package io.rsbox.engine.plugin
 
-import org.yaml.snakeyaml.Yaml
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
+import jdk.internal.util.xml.impl.Input
 import java.io.InputStream
-import java.lang.Exception
-import java.util.regex.Pattern
 
 /**
  * @author Kyle Escobar
  */
 
+@Suppress("UNCHECKED_CAST")
 class RSPluginProperties(val inputStream: InputStream) {
+    private val properties = hashMapOf<String, Any?>()
 
-    private val VALID_NAME = Pattern.compile("^[A-Za-z0-9 _.-]+$")
-    private val YAML: ThreadLocal<Yaml> = ThreadLocal()
+    fun <T> getOrDefault(key: String, default: T): T = properties[key] as? T ?: default
 
-    private lateinit var name: String
-    private lateinit var main: String
-    private lateinit var description: String
-    private lateinit var version: String
-    private var revision: Int = 0
-    private var authors: ArrayList<String> = arrayListOf()
+    fun <T> get(key: String): T? = properties[key] as? T
 
-    init {
-        loadMap(asMap(YAML.get().load(inputStream)))
-    }
+    fun has(key: String): Boolean = properties.containsKey(key)
 
-    private fun loadMap(map: Map<*, *>) {
-        name = map.get("name").toString()
+    fun loadYaml(): RSPluginProperties {
+        check(properties.isEmpty())
 
-        if(!VALID_NAME.matcher(name).matches()) {
-            throw Exception("name '$name' contains invalid characters.")
-        }
+        val content = inputStream.bufferedReader().use { it.readText() }
 
-        name = name.replace(" ", "_")
+        val mapper = ObjectMapper(YAMLFactory())
+        val values = mapper.readValue(content, HashMap<String, Any>().javaClass)
 
-        version = map.get("version").toString()
-
-        main = map.get("main").toString()
-
-        description = map.get("description").toString()
-
-        revision = map.get("revision").toString().toInt()
-
-        if(map.get("authors") != null) {
-            if(map.get("author") != null) {
-                authors.add(map.get("author").toString())
-            }
-
-            @Suppress("UNCHECKED_CAST")
-            (map.get("authors") as Array<String>).forEach { author ->
-                authors.add(author)
+        values.forEach { key,value ->
+            if(value is String && value.isEmpty()) {
+                properties[key] = null
+            } else {
+                properties[key] = value
             }
         }
+        return this
     }
-
-    private fun asMap(obj: Any): Map<*, *> {
-        if(obj is Map<*, *>) {
-            return obj
-        }
-        throw Exception("$obj is not properly structured.")
-    }
-
-    fun getName(): String { return name }
-    fun getMainClass(): String { return main }
-    fun getVersion(): String { return version }
-    fun getDescription(): String { return description }
-    fun getRevision(): Int { return revision }
-    fun getAuthors(): ArrayList<String> { return authors }
 }

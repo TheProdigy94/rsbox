@@ -1,5 +1,6 @@
 plugins {
     id 'org.jetbrains.dokka' version '0.9.18'
+    id 'org.ajoberstar.git-publish' version '2.1.1'
 }
 
 apply plugin: 'application'
@@ -39,4 +40,13 @@ sourceSets {
 shadowJar {
     //noinspection GrDeprecatedAPIUsage
     shadowJar.baseName = 'rsbox'
+}
+
+gitPublish {
+    branch = 'gh-pages'
+    commitMessage = 'Publishing to gradle.'
+    
+    contents {
+        from 'src/main/kotlin'
+    }
 }

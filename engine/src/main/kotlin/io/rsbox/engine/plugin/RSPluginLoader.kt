@@ -2,10 +2,14 @@ package io.rsbox.engine.plugin
 
 import io.rsbox.api.Server
 import mu.KLogging
+import org.yaml.snakeyaml.error.YAMLException
 import java.io.File
 import java.io.FileNotFoundException
+import java.io.IOException
+import java.io.InputStream
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
+import java.util.jar.JarEntry
 import java.util.jar.JarFile
 import java.util.regex.Pattern
 
@@ -28,32 +32,49 @@ class RSPluginLoader(val server: Server) {
 
         val config = loadPluginConfigFile(file)
 
-        val dataFolder = File(file.parentFile, config.getName())
+        val dataFolder = File(file.parentFile, config.get<String>("name"))
 
         if(!dataFolder.exists()) {
             dataFolder.mkdirs()
-            KLogging().logger.info { "${config.getName()} plugin folder did not exist. Creating one." }
+            KLogging().logger.info { "${config.get<String>("name")} plugin folder did not exist. Creating one." }
         }
 
         // TODO Load classes and create / store plugin main class instance.
 
-        KLogging().logger.info { "Loaded plugin ${config.getName()}." }
+        KLogging().logger.info { "Loaded plugin ${config.get<String>("name")}." }
 
     }
 
     fun loadPluginConfigFile(file: File): RSPluginProperties {
-        val jar = JarFile(file)
-        val entry = jar.getJarEntry("plugin.yml")
+        var jar: JarFile? = null
+        var entry: JarEntry? = null
+        var stream: InputStream? = null
+        try {
+            jar = JarFile(file)
+            entry = jar.getJarEntry("plugin.yml")
 
-        if(entry == null) {
-            throw FileNotFoundException("Jar does not contain plugin.yml")
+            if(entry == null) {
+                throw FileNotFoundException("Jar does not contain plugin.yml")
+            }
+
+            stream = jar.getInputStream(entry)
+
+            return RSPluginProperties(stream).loadYaml()
+        } catch (e: IOException) {
+            throw IOException(e)
+        } catch(e: YAMLException) {
+            throw YAMLException(e)
+        } finally {
+            if(jar != null) {
+                try {
+                    jar.close()
+                } catch(e: IOException) {}
+            }
+            if(stream != null) {
+                try {
+                    stream.close()
+                } catch(e: IOException) {}
+            }
         }
-
-        val stream = jar.getInputStream(entry)
-
-        jar.close()
-        stream.close()
-
-        return RSPluginProperties(stream)
     }
 }
