@@ -9,10 +9,6 @@ import java.io.InputStream
  */
 
 class PluginPropertiesFile(private val inputStream: InputStream) {
-    private lateinit var name: String
-    private lateinit var version: String
-    private lateinit var main: String
-
     private val properties = hashMapOf<String, Any?>()
 
     @Suppress("UNCHECKED_CAST")
@@ -36,10 +32,7 @@ class PluginPropertiesFile(private val inputStream: InputStream) {
                 properties[key] = value
             }
         }
+
         return this
     }
-
-    fun getName(): String { return name }
-    fun getVersion(): String { return version }
-    fun getMainClass(): String { return main }
 }

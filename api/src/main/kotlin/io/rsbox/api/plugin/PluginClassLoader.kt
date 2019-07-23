@@ -31,9 +31,9 @@ class PluginClassLoader(private val loader: PluginLoader?, parent: ClassLoader, 
         try {
             val jarClass: Class<*>
             try {
-                jarClass = Class.forName(pluginProperties.getMainClass(), true, this)
+                jarClass = Class.forName(pluginProperties.get<String>("main"), true, this)
             } catch(e: ClassNotFoundException) {
-                throw InvalidPluginException("Cannot find main class '${pluginProperties.getMainClass()}'", e)
+                throw InvalidPluginException("Cannot find main class '${pluginProperties.get<String>("main")}'", e)
             }
 
             val pluginClass: Class<out RSBoxPlugin>
@@ -41,7 +41,7 @@ class PluginClassLoader(private val loader: PluginLoader?, parent: ClassLoader, 
             try {
                 pluginClass = jarClass.asSubclass(RSBoxPlugin::class.java)
             } catch(e: ClassCastException) {
-                throw InvalidPluginException("Main class '${pluginProperties.getMainClass()}' does not extend RSBoxPlugin", e)
+                throw InvalidPluginException("Main class '${pluginProperties.get<String>("main")}' does not extend RSBoxPlugin", e)
             }
 
             plugin = pluginClass.newInstance()

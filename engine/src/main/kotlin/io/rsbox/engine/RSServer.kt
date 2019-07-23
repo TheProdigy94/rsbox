@@ -17,6 +17,7 @@ import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.nio.NioServerSocketChannel
 import io.rsbox.api.Server
 import io.rsbox.api.World
+import io.rsbox.api.plugin.PluginLoader
 import mu.KLogger
 import mu.KLogging
 import net.runelite.cache.fs.Store
@@ -246,15 +247,28 @@ class RSServer : Server {
          */
         world.bindServices(this)
 
+
+        /*
+         * Load all plugins
+         */
+
+        val pluginLoader = PluginLoader(this as Server)
+
+        logger.info("Loading plugins...")
+        File("./rsbox/plugins").walk().forEach { file ->
+            if(file.extension == "jar") {
+                pluginLoader.loadPlugin(file)
+            }
+        }
+        logger.info("Loaded {} total plugins.", pluginLoader.getPluginCount())
+
         /*
          * Bind the game port.
          */
         val port = gameProperties.getOrDefault("game-port", 43594)
         bootstrap.bind(InetSocketAddress(port)).sync().awaitUninterruptibly()
         logger.info("Now listening for incoming connections on port $port...")
-
         System.gc()
-
         return world
     }
 

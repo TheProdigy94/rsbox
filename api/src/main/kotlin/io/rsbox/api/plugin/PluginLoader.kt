@@ -25,6 +25,8 @@ class  PluginLoader(val server: Server) {
     private val classes: Map<String, Class<*>> = ConcurrentHashMap()
     private val loaders = CopyOnWriteArrayList<PluginClassLoader>()
 
+    fun getPluginCount(): Int { return loaders.size }
+
     fun loadPlugin(file: File) {
         if(!file.exists()) {
             throw FileNotFoundException("${file.path} does not exist.")

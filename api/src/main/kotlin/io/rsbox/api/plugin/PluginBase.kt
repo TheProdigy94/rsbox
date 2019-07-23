@@ -13,7 +13,7 @@ abstract class PluginBase : Plugin {
     }
 
     override fun getName(): String {
-        return getProperties().getName()
+        return getProperties().get<String>("name")!!
     }
 
     override fun hashCode(): Int {
