@@ -14,17 +14,15 @@ interface Plugin {
 
     fun getProperties(): PluginPropertiesFile
 
+    fun isEnabled(): Boolean
 
     fun getPluginLoader(): PluginLoader
 
     fun getServer(): Server
 
-
     fun onEnable()
 
     fun onDisable()
-
-    fun getLogger(): KLogger
 
     fun getName(): String
 }

@@ -1,16 +1,17 @@
 package io.rsbox.api.plugin
 
 import io.rsbox.api.Server
+import io.rsbox.api.event.EventException
+import io.rsbox.api.event.EventListener
+import io.rsbox.api.event.RegisteredListener
 import mu.KLogger
-import mu.KLogging
 import java.io.File
-import java.io.InputStream
 
 /**
  * @author Kyle Escobar
  */
 
-abstract class RSBoxPlugin() : PluginBase() {
+abstract class RSBoxPlugin : PluginBase() {
     private var _isEnabled = false
     private var _loader: PluginLoader? = null
     private var _server: Server? = null
@@ -20,16 +21,7 @@ abstract class RSBoxPlugin() : PluginBase() {
     private var _classLoader: PluginClassLoader? = null
     private var _logger: KLogger? = null
 
-    init {
-        val classLoader = this.javaClass.classLoader
-        if(classLoader is PluginClassLoader) {
-
-        }
-    }
-
-    constructor(loader: PluginLoader, pluginProperties: PluginPropertiesFile, dataFolder: File, file: File) : this() {
-
-    }
+    private val _listeners = arrayListOf<RegisteredListener>()
 
     override fun getServer(): Server {
         return this._server!!
@@ -37,10 +29,6 @@ abstract class RSBoxPlugin() : PluginBase() {
 
     override fun getDataFolder(): File {
         return this._dataFolder!!
-    }
-
-    override fun getLogger(): KLogger {
-        return this._logger!!
     }
 
     override fun getProperties(): PluginPropertiesFile {
@@ -51,6 +39,14 @@ abstract class RSBoxPlugin() : PluginBase() {
         return this._loader!!
     }
 
+    override fun isEnabled(): Boolean {
+        return this._isEnabled
+    }
+
+    fun getClassLoader(): PluginClassLoader {
+        return this._classLoader!!
+    }
+
     fun init(loader: PluginLoader, server: Server, pluginProperties: PluginPropertiesFile, dataFolder: File, file: File, classLoader: PluginClassLoader) {
         this._loader = loader
         this._server = server
@@ -58,5 +54,43 @@ abstract class RSBoxPlugin() : PluginBase() {
         this._pluginProperties = pluginProperties
         this._dataFolder = dataFolder
         this._classLoader = classLoader
+        this._logger = this._server!!.getLogger()
+
+        this._loader!!.enablePlugin(this)
+    }
+
+    fun setEnabled(enabled: Boolean) {
+        if(this._isEnabled != enabled) {
+            this._isEnabled = enabled
+
+            if(this._isEnabled) {
+                onEnable()
+                PluginManager.plugins.add(this)
+            } else {
+                onDisable()
+                PluginManager.plugins.remove(this)
+            }
+        }
+    }
+
+    private fun getRegisteredListener(listener: EventListener): EventListener? {
+        this._listeners.forEach { l ->
+            if(l.listener.javaClass.simpleName == listener.javaClass.simpleName) {
+                return l.listener
+            }
+        }
+        return null
+    }
+
+    fun registerListener(listener: EventListener) {
+        if(this.getRegisteredListener(listener) != null) {
+            throw EventException("Listener ${listener.javaClass.simpleName} has already been registered.")
+        }
+
+        this._listeners.add(RegisteredListener(listener, this))
+    }
+
+    fun getEventListeners(): ArrayList<RegisteredListener> {
+        return this._listeners
     }
 }

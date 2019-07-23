@@ -125,10 +125,11 @@ class PluginClassLoader(private val loader: PluginLoader?, parent: ClassLoader, 
         if(rsboxPlugin == null) {
             throw Exception("Initializing plugin cannot be null.")
         }
-        if(rsboxPlugin.javaClass.classLoader == this) {
-            throw Exception("Cannot initialize plugin outside of this class loader.")
-        }
 
         rsboxPlugin.init(loader!!, loader.server, pluginProperties, dataFolder, file, this)
+    }
+
+    fun getPlugin(): RSBoxPlugin {
+        return plugin
     }
 }

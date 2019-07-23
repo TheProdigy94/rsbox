@@ -22,7 +22,7 @@ class  PluginLoader(val server: Server) {
         Pattern.compile("\\.jar$")
     )
 
-    private val classes: Map<String, Class<*>> = ConcurrentHashMap()
+    private val classes: ConcurrentHashMap<String, Class<*>> = ConcurrentHashMap()
     private val loaders = CopyOnWriteArrayList<PluginClassLoader>()
 
     fun getPluginCount(): Int { return loaders.size }
@@ -51,6 +51,7 @@ class  PluginLoader(val server: Server) {
                 }
 
         loaders.add(loader)
+        loader.initialize(loader.getPlugin())
     }
 
     fun loadPluginConfigFile(file: File): PluginPropertiesFile {
@@ -82,6 +83,48 @@ class  PluginLoader(val server: Server) {
                 try {
                     stream.close()
                 } catch(e: IOException) {}
+            }
+        }
+    }
+
+    private fun removeClass(name: String) {
+        classes.remove(name)
+    }
+
+    fun enablePlugin(plugin: Plugin) {
+        if(!plugin.isEnabled()) {
+            server.getLogger().info { "Enabling ${plugin.getProperties().get<String>("name")}" }
+
+            val jplugin = plugin as RSBoxPlugin
+            val pluginLoader = jplugin.getPluginLoader()
+
+            try {
+                plugin.setEnabled(true)
+            } catch (e : Throwable) {
+                server.getLogger().error { "Error occured while enabling ${plugin.getProperties().get<String>("name")}" }
+            }
+        }
+    }
+
+    fun disablePlugin(plugin: Plugin) {
+        if(plugin.isEnabled()) {
+            server.getLogger().info { "Disabling ${plugin.getProperties().get<String>("name")}" }
+
+            val jplugin = plugin as RSBoxPlugin
+            val cloader = jplugin.getClassLoader()
+
+            try {
+                jplugin.setEnabled(false)
+            } catch(e : Throwable) {
+                server.getLogger().error { "Error occurred when disabling ${plugin.getProperties().get<String>("name")} " }
+            }
+
+            loaders.remove(cloader)
+
+            val names = cloader.getClasses()
+
+            for(name in names) {
+                removeClass(name)
             }
         }
     }
