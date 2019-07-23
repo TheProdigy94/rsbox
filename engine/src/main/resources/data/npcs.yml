@@ -1048,7 +1048,7 @@
 - id: 538
   examine: "Helps the shop keeper sell swords."
 - id: 539
-  examine: "A player."
+  examine: "A model."
 - id: 540
   examine: "An amazing piece of Crafting."
 - id: 541
@@ -5035,13 +5035,13 @@
 - id: 2658
   examine: "Despite his name, rarely actually cooks heads."
 - id: 2659
-  examine: "A player."
+  examine: "A model."
 - id: 2660
-  examine: "A player."
+  examine: "A model."
 - id: 2661
-  examine: "A player."
+  examine: "A model."
 - id: 2662
-  examine: "A player."
+  examine: "A model."
 - id: 2663
   examine: "Perhaps this gardener might look after your crops for you."
 - id: 2664
@@ -5097,7 +5097,7 @@
 - id: 2689
   examine: "Perhaps this gardener might look after your tree for you."
 - id: 2690
-  examine: "A player."
+  examine: "A model."
 - id: 2692
   examine: "Yep. Definitely a chicken."
 - id: 2693

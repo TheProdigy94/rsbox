@@ -3976,9 +3976,9 @@
 - id: 3577
   examine: "I see dead people."
 - id: 3578
-  examine: "It's a small step for a player, a giant leap for player kind."
+  examine: "It's a small step for a model, a giant leap for model kind."
 - id: 3579
-  examine: "It's a small step for a player, a giant leap for player kind."
+  examine: "It's a small step for a model, a giant leap for model kind."
 - id: 3580
   examine: "Makes sliced human."
 - id: 3581
@@ -15376,11 +15376,11 @@
 - id: 13493
   examine: "Only the finest smiths can work runite."
 - id: 13494
-  examine: "Armour won by a great Castle Wars player."
+  examine: "Armour won by a great Castle Wars model."
 - id: 13495
-  examine: "Armour won by a great Castle Wars player."
+  examine: "Armour won by a great Castle Wars model."
 - id: 13496
-  examine: "Armour won by a great Castle Wars player."
+  examine: "Armour won by a great Castle Wars model."
 - id: 13497
   examine: "I can climb these stairs."
 - id: 13498
@@ -30925,7 +30925,7 @@
 - id: 29163
   examine: "A large display of Skotizo in his dark lair."
 - id: 29164
-  examine: "A display of player killing mastery... or possibly a wanted criminal..."
+  examine: "A display of model killing mastery... or possibly a wanted criminal..."
 - id: 29165
   examine: "100 million of your finest coins!"
 - id: 29166
@@ -34077,7 +34077,7 @@
 - id: 31916
   examine: "Master clue scrolls were added to the game on July 6th, 2016."
 - id: 31917
-  examine: "Runite Minor, the player who designed the Motherload Mine. Released on\
+  examine: "Runite Minor, the model who designed the Motherload Mine. Released on\
     \ April 24th, 2014."
 - id: 31918
   examine: "Raids I"
@@ -34118,7 +34118,7 @@
     \ May 6th, 2016."
 - id: 31935
   examine: "Rooftop agility courses were added to the game on December 5th, 2013.\
-    \ They were designed by the player BigRedJapan."
+    \ They were designed by the model BigRedJapan."
 - id: 31936
   examine: "The Nightmare Zone was added to the game on September 5th, 2013."
 - id: 31939

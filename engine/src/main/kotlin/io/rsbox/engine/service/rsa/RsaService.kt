@@ -1,9 +1,8 @@
 package io.rsbox.engine.service.rsa
 
-import io.rsbox.api.RSBox
-import io.rsbox.api.Server
-import io.rsbox.api.Service
-import io.rsbox.api.World
+import io.rsbox.engine.Server
+import io.rsbox.engine.model.World
+import io.rsbox.engine.service.Service
 import io.rsbox.util.ServerProperties
 import mu.KLogging
 import org.bouncycastle.jce.provider.BouncyCastleProvider
@@ -24,10 +23,10 @@ import java.security.spec.PKCS8EncodedKeySpec
 import java.util.*
 
 /**
- * @author Kyle Escobar
+ * @author Tom <rspsmods@gmail.com>
  */
-
 class RsaService : Service {
+
     private lateinit var keyPath: Path
 
     private lateinit var exponent: BigInteger
@@ -36,23 +35,22 @@ class RsaService : Service {
 
     private var radix = -1
 
-    override fun init(server: Server, world: World, serverProperties: ServerProperties) {
-        keyPath = Paths.get(serverProperties.getOrDefault("path", "./rsbox/data/rsa/private.key"))
-        radix = serverProperties.getOrDefault("radix", 16)
+    override fun init(server: Server, world: World, serviceProperties: ServerProperties) {
+        keyPath = Paths.get(serviceProperties.getOrDefault("path", "./rsbox/data/rsa/key.pem"))
+        radix = serviceProperties.getOrDefault("radix", 16)
 
-        if(!Files.exists(keyPath)) {
+        if (!Files.exists(keyPath)) {
             val scanner = Scanner(System.`in`)
             println("Private RSA key was not found in path: $keyPath")
-            println("Would you like to create one? (y/n")
+            println("Would you like to create one? (y/n)")
 
-            val create = if(scanner.hasNext()) scanner.nextLine() in arrayOf("yes", "y", "true", "yeh") else true
-            if(create) {
-                RSBox.logger.info("Generating RSA key pair...")
-                createPair(bitCount = serverProperties.getOrDefault("bit-count", 2048))
+            val create = if (scanner.hasNext()) scanner.nextLine() in arrayOf("yes", "y", "true") else true
+            if (create) {
+                logger.info("Generating RSA key pair...")
+                createPair(bitCount = serviceProperties.getOrDefault("bit-count", 2048))
                 println("Please follow the instructions on console and continue once you've done so.")
-                System.exit(1)
                 scanner.next()
-                init(server, world, serverProperties)
+                init(server, world, serviceProperties)
             } else {
                 throw RuntimeException("Private RSA key was not found! Please follow the instructions on console.")
             }
@@ -76,15 +74,12 @@ class RsaService : Service {
     }
 
     override fun postLoad(server: Server, world: World) {
-
     }
 
     override fun bindNet(server: Server, world: World) {
-
     }
 
     override fun terminate(server: Server, world: World) {
-
     }
 
     /**

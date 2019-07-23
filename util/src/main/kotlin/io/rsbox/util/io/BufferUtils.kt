@@ -3,9 +3,8 @@ package io.rsbox.util.io
 import io.netty.buffer.ByteBuf
 
 /**
- * @author Kyle Escobar
+ * @author Tom <rspsmods@gmail.com>
  */
-
 object BufferUtils {
     fun ByteBuf.readString(): String {
         if (isReadable) {

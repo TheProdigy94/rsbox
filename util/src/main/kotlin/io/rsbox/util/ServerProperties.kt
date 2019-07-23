@@ -5,48 +5,37 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import java.io.File
 
 /**
- * @author Kyle Escobar
- */
-
-/**
- * [ServerProperties] defines the settings used by the Engine
+ * Holds a map of properties that can be used by the server
+ * at any point.
+ *
+ * @author Tom <rspsmods@gmail.com>
  */
 class ServerProperties {
+
     private val properties = hashMapOf<String, Any?>()
 
     /**
-     * Gets a property value associated with [key]. Retruns [default] if value is not defined
-     * @param key           Key property as string
-     * @param default       Default value if [key] is not found
-     *
-     * @return [T]          Returns generic type
+     * Gets the property associated with the [key]. If it cannot be found, it will
+     * return the [default] value instead.
      */
     @Suppress("UNCHECKED_CAST")
     fun <T> getOrDefault(key: String, default: T): T = properties[key] as? T ?: default
 
     /**
-     * Gets a property value associated with [key].
-     * @param key           Key property as String
-     *
-     * @return [T]          Returns generic type
+     * Gets the property associated with the [key]. If it cannot be found, it will
+     * return null instead.
      */
     @Suppress("UNCHECKED_CAST")
     fun <T> get(key: String): T? = properties[key] as? T
 
     /**
-     * Checks to see if a given property [key] exists.
-     *
-     * @param key           Key property as String
-     *
-     * @return [Boolean]    Returns boolean
+     * Checks if [properties] contains a value associated with [key].
      */
     fun has(key: String): Boolean = properties.containsKey(key)
 
     /**
-     * Loads a [File] and parses it into [ServerProperties] instance
-     * @param File          [File] to load. Must be (.yml)
-     *
-     * @return [ServerProperties]
+     * Loads a YAML (.yml) file and puts all the found keys & values
+     * into the [properties] map.
      */
     fun loadYaml(file: File): ServerProperties {
         check(properties.isEmpty())
@@ -55,13 +44,12 @@ class ServerProperties {
         val values = mapper.readValue(file, HashMap<String, Any>().javaClass)
 
         values.forEach { key, value ->
-            if(value is String && value.isEmpty()) {
+            if (value is String && value.isEmpty()) {
                 properties[key] = null
             } else {
                 properties[key] = value
             }
         }
-
         return this
     }
 
@@ -69,13 +57,15 @@ class ServerProperties {
         check(properties.isEmpty())
 
         data.forEach { key, value ->
-            if(value is String && value.isEmpty()) {
+            if (value is String && value.isEmpty()) {
                 properties[key] = null
             } else {
                 properties[key] = value
             }
         }
-
         return this
     }
+
+    @Suppress("UNCHECKED_CAST")
+    fun extract(key: String): ServerProperties = ServerProperties().loadMap(get<Map<*, *>>(key) as Map<String, Any>)
 }

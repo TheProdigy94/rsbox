@@ -1,0 +1,18 @@
+package io.rsbox.engine.message.encoder
+
+import io.rsbox.engine.message.MessageEncoder
+import io.rsbox.engine.message.impl.IfMoveSubMessage
+
+/**
+ * @author Tom <rspsmods@gmail.com>
+ */
+class IfMoveSubEncoder : MessageEncoder<IfMoveSubMessage>() {
+
+    override fun extract(message: IfMoveSubMessage, key: String): Number = when (key) {
+        "from" -> message.from
+        "to" -> message.to
+        else -> throw Exception("Unhandled value key.")
+    }
+
+    override fun extractBytes(message: IfMoveSubMessage, key: String): ByteArray = throw Exception("Unhandled value key.")
+}

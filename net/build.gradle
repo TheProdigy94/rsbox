@@ -1,0 +1,5 @@
+description = 'RSBox Network'
+
+dependencies {
+    implementation project(':util')
+}

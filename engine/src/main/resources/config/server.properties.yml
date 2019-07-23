@@ -1,6 +1,53 @@
-# Server Settings
+# Game values
+# You want to edit these to fit your game.
 name: "RSBox"
+game-port: 43594
 revision: 180
-server-port: 43594
-tickSpeed: 600
-maxPlayers: 2000
+
+# The coordinates for the home location.
+home-x: 3221
+home-z: 3218
+
+# Privileges
+# Any privilege you want to be represented in-game you define here.
+privileges:
+  - id: 0
+    icon: 0
+    name: "player"
+    powers: []
+  - id: 1
+    icon: 1
+    name: "moderator"
+    powers: ["mod"]
+  - id: 2
+    icon: 2
+    name: "administrator"
+    powers: ["mod", "admin"]
+  - id: 3
+    icon: 2
+    name: "owner"
+    powers: ["mod", "dev", "admin", "owner"]
+
+# Game services
+# You can pick and choose which services you want to run.
+services:
+  - class: io.rsbox.engine.service.serializer.json.JsonPlayerSerializer
+
+  - class: io.rsbox.engine.service.xtea.XteaKeyService
+
+  - class: io.rsbox.engine.service.game.ItemMetadataService
+
+  - class: io.rsbox.engine.service.game.NpcMetadataService
+
+  - class: io.rsbox.engine.service.game.ObjectMetadataService
+
+  - class: io.rsbox.engine.service.game.DumpEntityIdService
+    cache-path: "./data/cache/"
+    output-path: "./game/plugins/src/main/kotlin/gg/rsmod/plugins/api/cfg/"
+    dump: false
+
+  - class: io.rsbox.engine.service.rsa.RsaService
+
+  - class: io.rsbox.engine.service.GameService
+
+  - class: io.rsbox.engine.service.login.LoginService

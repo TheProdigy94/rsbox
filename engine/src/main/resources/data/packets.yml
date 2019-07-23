@@ -3,14 +3,14 @@
 
 out-packets:
 
-  - message: gg.rsmod.game.message.impl.UpdateRebootTimerMessage
+  - message: io.rsbox.engine.message.impl.UpdateRebootTimerMessage
     type: FIXED
     opcode: 72
     structure:
       - name: cycles
         type: SHORT
 
-  - message: gg.rsmod.game.message.impl.HintArrowMessage
+  - message: io.rsbox.engine.message.impl.HintArrowMessage
     type: FIXED
     opcode: 36
     structure:
@@ -25,7 +25,7 @@ out-packets:
         sign: UNSIGNED
         type: BYTE
 
-  - message: gg.rsmod.game.message.impl.SetCameraPosMessage
+  - message: io.rsbox.engine.message.impl.SetCameraPosMessage
     type: FIXED
     opcode: 75
     structure:
@@ -45,7 +45,7 @@ out-packets:
         type: BYTE
         sign: UNSIGNED
 
-  - message: gg.rsmod.game.message.impl.SetCameraAngleMessage
+  - message: io.rsbox.engine.message.impl.SetCameraAngleMessage
     type: FIXED
     opcode: 83
     structure:
@@ -65,7 +65,7 @@ out-packets:
         sign: UNSIGNED
         type: BYTE
 
-  - message: gg.rsmod.game.message.impl.GrandExchangeOfferMessage
+  - message: io.rsbox.engine.message.impl.GrandExchangeOfferMessage
     type: FIXED
     opcode: 55
     structure:
@@ -86,11 +86,11 @@ out-packets:
       - name: spent
         type: INT
 
-  - message: gg.rsmod.game.message.impl.TriggerOnDialogAbortMessage
+  - message: io.rsbox.engine.message.impl.TriggerOnDialogAbortMessage
     type: FIXED
     opcode: 52
 
-  - message: gg.rsmod.game.message.impl.SetOpPlayerMessage
+  - message: io.rsbox.engine.message.impl.SetOpPlayerMessage
     type: VARIABLE_BYTE
     opcode: 66
     structure:
@@ -103,7 +103,7 @@ out-packets:
       - name: option
         type: BYTES
 
-  - message: gg.rsmod.game.message.impl.SoundAreaMessage
+  - message: io.rsbox.engine.message.impl.SoundAreaMessage
     type: FIXED
     opcode: 12
     structure:
@@ -120,7 +120,7 @@ out-packets:
         type: SHORT
         trans: ADD
 
-  - message: gg.rsmod.game.message.impl.MapProjAnimMessage
+  - message: io.rsbox.engine.message.impl.MapProjAnimMessage
     type: FIXED
     opcode: 11
     structure:
@@ -156,7 +156,7 @@ out-packets:
         type: BYTE
         trans: NEGATE
 
-  - message: gg.rsmod.game.message.impl.IfMoveSubMessage
+  - message: io.rsbox.engine.message.impl.IfMoveSubMessage
     type: FIXED
     opcode: 82
     structure:
@@ -165,7 +165,7 @@ out-packets:
       - name: from
         type: INT
 
-  - message: gg.rsmod.game.message.impl.RebuildLoginMessage
+  - message: io.rsbox.engine.message.impl.RebuildLoginMessage
     type: VARIABLE_SHORT
     opcode: 0
     structure:
@@ -181,7 +181,7 @@ out-packets:
       - name: xteas
         type: BYTES
 
-  - message: gg.rsmod.game.message.impl.RebuildNormalMessage
+  - message: io.rsbox.engine.message.impl.RebuildNormalMessage
     type: VARIABLE_SHORT
     opcode: 0
     structure:
@@ -195,7 +195,7 @@ out-packets:
       - name: xteas
         type: BYTES
 
-  - message: gg.rsmod.game.message.impl.RebuildRegionMessage
+  - message: io.rsbox.engine.message.impl.RebuildRegionMessage
     type: VARIABLE_SHORT
     opcode: 51
     structure:
@@ -211,7 +211,7 @@ out-packets:
       - name: data
         type: BYTES
 
-  - message: gg.rsmod.game.message.impl.IfOpenTopMessage
+  - message: io.rsbox.engine.message.impl.IfOpenTopMessage
     type: FIXED
     opcode: 84
     structure:
@@ -220,7 +220,7 @@ out-packets:
         type: SHORT
         trans: ADD
 
-  - message: gg.rsmod.game.message.impl.IfOpenSubMessage
+  - message: io.rsbox.engine.message.impl.IfOpenSubMessage
     type: FIXED
     opcode: 77
     structure:
@@ -235,7 +235,7 @@ out-packets:
         type: SHORT
         trans: ADD
 
-  - message: gg.rsmod.game.message.impl.UpdateZonePartialFollowsMessage
+  - message: io.rsbox.engine.message.impl.UpdateZonePartialFollowsMessage
     type: FIXED
     opcode: 64
     structure:
@@ -246,7 +246,7 @@ out-packets:
         type: BYTE
         trans: SUBTRACT
 
-  - message: gg.rsmod.game.message.impl.UpdateZonePartialEnclosedMessage
+  - message: io.rsbox.engine.message.impl.UpdateZonePartialEnclosedMessage
     type: VARIABLE_SHORT
     opcode: 17
     structure:
@@ -259,7 +259,7 @@ out-packets:
       - name: payload
         type: BYTES
 
-  - message: gg.rsmod.game.message.impl.LocAddChangeMessage
+  - message: io.rsbox.engine.message.impl.LocAddChangeMessage
     type: FIXED
     opcode: 6
     structure:
@@ -273,7 +273,7 @@ out-packets:
         type: SHORT
         trans: ADD
 
-  - message: gg.rsmod.game.message.impl.LocDelMessage
+  - message: io.rsbox.engine.message.impl.LocDelMessage
     type: FIXED
     opcode: 13
     structure:
@@ -284,7 +284,7 @@ out-packets:
         type: BYTE
         trans: SUBTRACT
 
-  - message: gg.rsmod.game.message.impl.ObjAddMessage
+  - message: io.rsbox.engine.message.impl.ObjAddMessage
     type: FIXED
     opcode: 26
     structure:
@@ -299,7 +299,7 @@ out-packets:
         type: BYTE
         trans: ADD
 
-  - message: gg.rsmod.game.message.impl.ObjDelMessage
+  - message: io.rsbox.engine.message.impl.ObjDelMessage
     type: FIXED
     opcode: 14
     structure:
@@ -311,7 +311,7 @@ out-packets:
         type: SHORT
         trans: ADD
 
-  - message: gg.rsmod.game.message.impl.ObjCountMessage
+  - message: io.rsbox.engine.message.impl.ObjCountMessage
     type: FIXED
     opcode: 15
     structure:
@@ -329,7 +329,7 @@ out-packets:
         type: BYTE
         trans: ADD
 
-  - message: gg.rsmod.game.message.impl.VarpSmallMessage
+  - message: io.rsbox.engine.message.impl.VarpSmallMessage
     type: FIXED
     opcode: 63
     structure:
@@ -340,7 +340,7 @@ out-packets:
         type: SHORT
         trans: ADD
 
-  - message: gg.rsmod.game.message.impl.VarpLargeMessage
+  - message: io.rsbox.engine.message.impl.VarpLargeMessage
     type: FIXED
     opcode: 4
     structure:
@@ -349,7 +349,7 @@ out-packets:
       - name: value
         type: INT
 
-  - message: gg.rsmod.game.message.impl.RunClientScriptMessage
+  - message: io.rsbox.engine.message.impl.RunClientScriptMessage
     type: VARIABLE_SHORT
     opcode: 62
     structure:
@@ -360,7 +360,7 @@ out-packets:
       - name: id
         type: INT
 
-  - message: gg.rsmod.game.message.impl.MessageGameMessage
+  - message: io.rsbox.engine.message.impl.MessageGameMessage
     type: VARIABLE_BYTE
     opcode: 3
     structure:
@@ -373,11 +373,11 @@ out-packets:
       - name: message
         type: BYTES
 
-  - message: gg.rsmod.game.message.impl.LogoutFullMessage
+  - message: io.rsbox.engine.message.impl.LogoutFullMessage
     type: FIXED
     opcode: 1
 
-  - message: gg.rsmod.game.message.impl.UpdateStatMessage
+  - message: io.rsbox.engine.message.impl.UpdateStatMessage
     type: FIXED
     opcode: 22
     structure:
@@ -390,7 +390,7 @@ out-packets:
       - name: level
         type: BYTE
 
-  - message: gg.rsmod.game.message.impl.IfSetTextMessage
+  - message: io.rsbox.engine.message.impl.IfSetTextMessage
     type: VARIABLE_SHORT
     opcode: 19
     structure:
@@ -399,21 +399,21 @@ out-packets:
       - name: text
         type: BYTES
 
-  - message: gg.rsmod.game.message.impl.UpdateRunEnergyMessage
+  - message: io.rsbox.engine.message.impl.UpdateRunEnergyMessage
     type: FIXED
     opcode: 60
     structure:
       - name: energy
         type: BYTE
 
-  - message: gg.rsmod.game.message.impl.IfCloseSubMessage
+  - message: io.rsbox.engine.message.impl.IfCloseSubMessage
     type: FIXED
     opcode: 9
     structure:
       - name: hash
         type: INT
 
-  - message: gg.rsmod.game.message.impl.IfSetEventsMessage
+  - message: io.rsbox.engine.message.impl.IfSetEventsMessage
     type: FIXED
     opcode: 48
     structure:
@@ -429,7 +429,7 @@ out-packets:
       - name: from
         type: SHORT
 
-  - message: gg.rsmod.game.message.impl.IfSetHideMessage
+  - message: io.rsbox.engine.message.impl.IfSetHideMessage
     type: FIXED
     opcode: 21
     structure:
@@ -438,7 +438,7 @@ out-packets:
       - name: hidden
         type: BYTE
 
-  - message: gg.rsmod.game.message.impl.IfSetObjectMessage
+  - message: io.rsbox.engine.message.impl.IfSetObjectMessage
     type: FIXED
     opcode: 20
     structure:
@@ -450,7 +450,7 @@ out-packets:
         type: INT
         order: INVERSED_MIDDLE
 
-  - message: gg.rsmod.game.message.impl.IfSetNpcHeadMessage
+  - message: io.rsbox.engine.message.impl.IfSetNpcHeadMessage
     type: FIXED
     opcode: 35
     structure:
@@ -462,7 +462,7 @@ out-packets:
         type: INT
         order: INVERSED_MIDDLE
 
-  - message: gg.rsmod.game.message.impl.IfSetPlayerHeadMessage
+  - message: io.rsbox.engine.message.impl.IfSetPlayerHeadMessage
     type: FIXED
     opcode: 30
     structure:
@@ -470,7 +470,7 @@ out-packets:
         type: INT
         order: INVERSED_MIDDLE
 
-  - message: gg.rsmod.game.message.impl.IfSetAnimMessage
+  - message: io.rsbox.engine.message.impl.IfSetAnimMessage
     type: FIXED
     opcode: 61
     structure:
@@ -480,7 +480,7 @@ out-packets:
         type: INT
         order: INVERSED_MIDDLE
 
-  - message: gg.rsmod.game.message.impl.SetMapFlagMessage
+  - message: io.rsbox.engine.message.impl.SetMapFlagMessage
     type: FIXED
     opcode: 67
     structure:
@@ -489,7 +489,7 @@ out-packets:
       - name: z
         type: BYTE
 
-  - message: gg.rsmod.game.message.impl.UpdateInvFullMessage
+  - message: io.rsbox.engine.message.impl.UpdateInvFullMessage
     type: VARIABLE_SHORT
     opcode: 70
     structure:
@@ -502,7 +502,7 @@ out-packets:
       - name: items
         type: BYTES
 
-  - message: gg.rsmod.game.message.impl.UpdateInvPartialMessage
+  - message: io.rsbox.engine.message.impl.UpdateInvPartialMessage
     type: VARIABLE_SHORT
     opcode: 44
     structure:
@@ -513,7 +513,7 @@ out-packets:
       - name: items
         type: BYTES
 
-  - message: gg.rsmod.game.message.impl.SynthSoundMessage
+  - message: io.rsbox.engine.message.impl.SynthSoundMessage
     type: FIXED
     opcode: 65
     structure:
@@ -524,7 +524,7 @@ out-packets:
       - name: delay
         type: SHORT
 
-  - message: gg.rsmod.game.message.impl.MidiSongMessage
+  - message: io.rsbox.engine.message.impl.MidiSongMessage
     type: FIXED
     opcode: 23
     structure:
@@ -533,7 +533,7 @@ out-packets:
         type: SHORT
         trans: ADD
 
-  - message: gg.rsmod.game.message.impl.UpdateRunWeightMessage
+  - message: io.rsbox.engine.message.impl.UpdateRunWeightMessage
     type: FIXED
     opcode: 71
     structure:
@@ -542,7 +542,7 @@ out-packets:
 
 in-packets:
 
-  - message: gg.rsmod.game.message.impl.ClickWorldMapMessage
+  - message: io.rsbox.engine.message.impl.ClickWorldMapMessage
     type: FIXED
     opcode: 45
     length: 4
@@ -551,7 +551,7 @@ in-packets:
         type: INT
         order: MIDDLE
 
-  - message: gg.rsmod.game.message.impl.OpLocUMessage
+  - message: io.rsbox.engine.message.impl.OpLocUMessage
     type: FIXED
     opcode: 44
     length: 15
@@ -586,7 +586,7 @@ in-packets:
         type: SHORT
         order: LITTLE
 
-  - message: gg.rsmod.game.message.impl.IfButtonDMessage
+  - message: io.rsbox.engine.message.impl.IfButtonDMessage
     type: FIXED
     opcode: 57
     length: 16
@@ -612,7 +612,7 @@ in-packets:
         sign: UNSIGNED
         type: SHORT
 
-  - message: gg.rsmod.game.message.impl.OpHeldDMessage
+  - message: io.rsbox.engine.message.impl.OpHeldDMessage
     type: FIXED
     opcode: 80
     length: 9
@@ -628,7 +628,7 @@ in-packets:
         type: BYTE
         trans: NEGATE
 
-  - message: gg.rsmod.game.message.impl.OpHeldUMessage
+  - message: io.rsbox.engine.message.impl.OpHeldUMessage
     type: FIXED
     opcode: 63
     length: 16
@@ -654,7 +654,7 @@ in-packets:
         type: SHORT
         trans: ADD
 
-  - message: gg.rsmod.game.message.impl.OpNpcTMessage
+  - message: io.rsbox.engine.message.impl.OpNpcTMessage
     type: FIXED
     opcode: 86
     length: 9
@@ -673,7 +673,7 @@ in-packets:
         type: SHORT
         trans: ADD
 
-  - message: gg.rsmod.game.message.impl.OpNpcUMessage
+  - message: io.rsbox.engine.message.impl.OpNpcUMessage
     type: FIXED
     opcode: 23
     length: 11
@@ -697,7 +697,7 @@ in-packets:
       - name: component_hash
         type: INT
 
-  - message: gg.rsmod.game.message.impl.OpNpc1Message
+  - message: io.rsbox.engine.message.impl.OpNpc1Message
     type: FIXED
     opcode: 71
     length: 3
@@ -709,7 +709,7 @@ in-packets:
         order: LITTLE
         type: SHORT
 
-  - message: gg.rsmod.game.message.impl.OpNpc2Message
+  - message: io.rsbox.engine.message.impl.OpNpc2Message
     type: FIXED
     opcode: 1
     length: 3
@@ -720,7 +720,7 @@ in-packets:
       - name: movement_type
         type: BYTE
 
-  - message: gg.rsmod.game.message.impl.OpNpc3Message
+  - message: io.rsbox.engine.message.impl.OpNpc3Message
     type: FIXED
     opcode: 33
     length: 3
@@ -732,7 +732,7 @@ in-packets:
       - name: movement_type
         type: BYTE
 
-  - message: gg.rsmod.game.message.impl.OpNpc4Message
+  - message: io.rsbox.engine.message.impl.OpNpc4Message
     type: FIXED
     opcode: 59
     length: 3
@@ -743,7 +743,7 @@ in-packets:
         type: BYTE
         trans: ADD
 
-  - message: gg.rsmod.game.message.impl.OpNpc5Message
+  - message: io.rsbox.engine.message.impl.OpNpc5Message
     type: FIXED
     opcode: 31
     length: 3
@@ -754,7 +754,7 @@ in-packets:
         type: SHORT
         trans: ADD
 
-  - message: gg.rsmod.game.message.impl.OpNpc6Message
+  - message: io.rsbox.engine.message.impl.OpNpc6Message
     type: FIXED
     opcode: 30
     length: 2
@@ -764,7 +764,7 @@ in-packets:
         type: SHORT
         trans: ADD
 
-  - message: gg.rsmod.game.message.impl.OpObj1Message
+  - message: io.rsbox.engine.message.impl.OpObj1Message
     type: FIXED
     opcode: 5
     length: 7
@@ -782,7 +782,7 @@ in-packets:
       - name: movement_type
         type: BYTE
 
-  - message: gg.rsmod.game.message.impl.OpObj3Message
+  - message: io.rsbox.engine.message.impl.OpObj3Message
     type: FIXED
     opcode: 6
     length: 7
@@ -800,7 +800,7 @@ in-packets:
         order: LITTLE
         type: SHORT
 
-  - message: gg.rsmod.game.message.impl.OpObj4Message
+  - message: io.rsbox.engine.message.impl.OpObj4Message
     type: FIXED
     opcode: 29
     length: 7
@@ -817,7 +817,7 @@ in-packets:
         type: BYTE
         trans: SUBTRACT
 
-  - message: gg.rsmod.game.message.impl.OpObjUMessage
+  - message: io.rsbox.engine.message.impl.OpObjUMessage
     type: FIXED
     opcode: 18
     length: 15
@@ -852,7 +852,7 @@ in-packets:
         order: LITTLE
         type: SHORT
 
-  - message: gg.rsmod.game.message.impl.ResumePObjDialogMessage
+  - message: io.rsbox.engine.message.impl.ResumePObjDialogMessage
     type: FIXED
     opcode: 42
     length: 2
@@ -861,21 +861,21 @@ in-packets:
         type: SHORT
         sign: UNSIGNED
 
-  - message: gg.rsmod.game.message.impl.ResumePStringDialogMessage
+  - message: io.rsbox.engine.message.impl.ResumePStringDialogMessage
     type: VARIABLE_BYTE
     opcode: 8
     structure:
       - name: input
         type: STRING
 
-  - message: gg.rsmod.game.message.impl.ClientCheatMessage
+  - message: io.rsbox.engine.message.impl.ClientCheatMessage
     type: VARIABLE_BYTE
     opcode: 60
     structure:
       - name: command
         type: STRING
 
-  - message: gg.rsmod.game.message.impl.WindowStatusMessage
+  - message: io.rsbox.engine.message.impl.WindowStatusMessage
     type: FIXED
     opcode: 35
     length: 5
@@ -889,7 +889,7 @@ in-packets:
         sign: UNSIGNED
         type: SHORT
 
-  - message: gg.rsmod.game.message.impl.MoveGameClickMessage
+  - message: io.rsbox.engine.message.impl.MoveGameClickMessage
     type: VARIABLE_BYTE
     opcode: 96
     structure:
@@ -905,7 +905,7 @@ in-packets:
         type: BYTE
         trans: ADD
 
-  - message: gg.rsmod.game.message.impl.MoveMinimapClickMessage
+  - message: io.rsbox.engine.message.impl.MoveMinimapClickMessage
     type: VARIABLE_BYTE
     opcode: 52
     structure:
@@ -921,7 +921,7 @@ in-packets:
         type: BYTE
         trans: ADD
 
-  - message: gg.rsmod.game.message.impl.TeleportMessage
+  - message: io.rsbox.engine.message.impl.TeleportMessage
     type: FIXED
     opcode: 61
     length: 9
@@ -940,7 +940,7 @@ in-packets:
         sign: UNSIGNED
         type: SHORT
 
-  - message: gg.rsmod.game.message.impl.OpLoc1Message
+  - message: io.rsbox.engine.message.impl.OpLoc1Message
     type: FIXED
     opcode: 10
     length: 7
@@ -961,7 +961,7 @@ in-packets:
         type: SHORT
         trans: ADD
 
-  - message: gg.rsmod.game.message.impl.OpLoc2Message
+  - message: io.rsbox.engine.message.impl.OpLoc2Message
     type: FIXED
     opcode: 79
     length: 7
@@ -979,7 +979,7 @@ in-packets:
         sign: UNSIGNED
         type: SHORT
 
-  - message: gg.rsmod.game.message.impl.OpLoc3Message
+  - message: io.rsbox.engine.message.impl.OpLoc3Message
     type: FIXED
     opcode: 89
     length: 7
@@ -1002,7 +1002,7 @@ in-packets:
         type: BYTE
         trans: ADD
 
-  - message: gg.rsmod.game.message.impl.OpLoc4Message
+  - message: io.rsbox.engine.message.impl.OpLoc4Message
     type: FIXED
     opcode: 3
     length: 7
@@ -1023,7 +1023,7 @@ in-packets:
         order: LITTLE
         type: SHORT
 
-  - message: gg.rsmod.game.message.impl.OpLoc5Message
+  - message: io.rsbox.engine.message.impl.OpLoc5Message
     type: FIXED
     opcode: 94
     length: 7
@@ -1044,7 +1044,7 @@ in-packets:
         type: SHORT
         trans: ADD
 
-  - message: gg.rsmod.game.message.impl.IfButtonMessage
+  - message: io.rsbox.engine.message.impl.IfButtonMessage
     type: FIXED
     opcodes: 68,21,48,19,40,66,85,14,84,0
     length: 8
@@ -1058,7 +1058,7 @@ in-packets:
         sign: UNSIGNED
         type: SHORT
 
-  - message: gg.rsmod.game.message.impl.ResumePauseButtonMessage
+  - message: io.rsbox.engine.message.impl.ResumePauseButtonMessage
     type: FIXED
     opcode: 70
     length: 6
@@ -1071,7 +1071,7 @@ in-packets:
         type: SHORT
         trans: ADD
 
-  - message: gg.rsmod.game.message.impl.ResumePCountDialogMessage
+  - message: io.rsbox.engine.message.impl.ResumePCountDialogMessage
     type: FIXED
     opcode: 17
     length: 4
@@ -1079,7 +1079,7 @@ in-packets:
       - name: input
         type: INT
 
-  - message: gg.rsmod.game.message.impl.OpLoc6Message
+  - message: io.rsbox.engine.message.impl.OpLoc6Message
     type: FIXED
     opcode: 36
     length: 2
@@ -1089,7 +1089,7 @@ in-packets:
         type: SHORT
         trans: ADD
 
-  - message: gg.rsmod.game.message.impl.OpHeld1Message
+  - message: io.rsbox.engine.message.impl.OpHeld1Message
     type: FIXED
     opcode: 87
     length: 8
@@ -1105,7 +1105,7 @@ in-packets:
         type: SHORT
         sign: UNSIGNED
 
-  - message: gg.rsmod.game.message.impl.OpHeld2Message
+  - message: io.rsbox.engine.message.impl.OpHeld2Message
     type: FIXED
     opcode: 98
     length: 8
@@ -1123,7 +1123,7 @@ in-packets:
         type: SHORT
         trans: ADD
 
-  - message: gg.rsmod.game.message.impl.OpHeld3Message
+  - message: io.rsbox.engine.message.impl.OpHeld3Message
     type: FIXED
     opcode: 72
     length: 8
@@ -1142,7 +1142,7 @@ in-packets:
         type: SHORT
         trans: ADD
 
-  - message: gg.rsmod.game.message.impl.OpHeld4Message
+  - message: io.rsbox.engine.message.impl.OpHeld4Message
     type: FIXED
     opcode: 7
     length: 8
@@ -1160,7 +1160,7 @@ in-packets:
         type: SHORT
         trans: ADD
 
-  - message: gg.rsmod.game.message.impl.OpHeld5Message
+  - message: io.rsbox.engine.message.impl.OpHeld5Message
     type: FIXED
     opcode: 58
     length: 8
@@ -1174,7 +1174,7 @@ in-packets:
         sign: UNSIGNED
         type: SHORT
 
-  - message: gg.rsmod.game.message.impl.OpHeld6Message
+  - message: io.rsbox.engine.message.impl.OpHeld6Message
     type: FIXED
     opcode: 24
     length: 2
@@ -1184,7 +1184,7 @@ in-packets:
         order: LITTLE
         type: SHORT
 
-  - message: gg.rsmod.game.message.impl.OpHeldTMessage
+  - message: io.rsbox.engine.message.impl.OpHeldTMessage
     type: FIXED
     opcode: 2
     length: 14
@@ -1206,19 +1206,19 @@ in-packets:
         order: LITTLE
         type: SHORT
 
-  - message: gg.rsmod.game.message.impl.CloseModalMessage
+  - message: io.rsbox.engine.message.impl.CloseModalMessage
     type: FIXED
     opcode: 20
     length: 0
 
-  - message: gg.rsmod.game.message.impl.ClanJoinChatLeaveChatMessage
+  - message: io.rsbox.engine.message.impl.ClanJoinChatLeaveChatMessage
     type: VARIABLE_BYTE
     opcode: 78
     structure:
       - name: name
         type: STRING
 
-  - message: gg.rsmod.game.message.impl.EventCameraPositionMessage
+  - message: io.rsbox.engine.message.impl.EventCameraPositionMessage
     type: FIXED
     opcode: 39
     length: 4
@@ -1231,17 +1231,17 @@ in-packets:
         order: LITTLE
         type: SHORT
 
-  - message: gg.rsmod.game.message.impl.EventMouseIdleMessage
+  - message: io.rsbox.engine.message.impl.EventMouseIdleMessage
     type: FIXED
     opcode: 49
     length: 0
 
-  - message: gg.rsmod.game.message.impl.EventMouseMoveMessage # TODO: need to refactor code to see what values are received
+  - message: io.rsbox.engine.message.impl.EventMouseMoveMessage # TODO: need to refactor code to see what values are received
     type: VARIABLE_BYTE
     opcode: 34
     ignore: true
 
-  - message: gg.rsmod.game.message.impl.DetectModifiedClientMessage
+  - message: io.rsbox.engine.message.impl.DetectModifiedClientMessage
     type: FIXED
     opcode: 9
     length: 4
@@ -1249,7 +1249,7 @@ in-packets:
       - name: dummy
         type: INT
 
-  - message: gg.rsmod.game.message.impl.UpdateAppearanceMessage
+  - message: io.rsbox.engine.message.impl.UpdateAppearanceMessage
     type: FIXED
     opcode: 12
     length: 13
@@ -1294,13 +1294,13 @@ in-packets:
         sign: UNSIGNED
         type: BYTE
 
-  - message: gg.rsmod.game.message.impl.NoTimeoutMessage
+  - message: io.rsbox.engine.message.impl.NoTimeoutMessage
     type: FIXED
     opcode: 22
     length: 0
     ignore: true
 
-  - message: gg.rsmod.game.message.impl.MessagePublicMessage
+  - message: io.rsbox.engine.message.impl.MessagePublicMessage
     type: VARIABLE_BYTE
     opcode: 97
     structure:
@@ -1311,29 +1311,29 @@ in-packets:
       - name: effect
         type: BYTE
 
-  - message: gg.rsmod.game.message.impl.IgnoreMessage # Unknown message
+  - message: io.rsbox.engine.message.impl.IgnoreMessage # Unknown message
     type: VARIABLE_BYTE
     opcode: 4
     ignore: true
 
-  - message: gg.rsmod.game.message.impl.IgnoreMessage # TODO: PING_STATISTICS - need to refactor code to see what values are received
+  - message: io.rsbox.engine.message.impl.IgnoreMessage # TODO: PING_STATISTICS - need to refactor code to see what values are received
     type: FIXED
     opcode: 11
     length: 10
     ignore: true
 
-  - message: gg.rsmod.game.message.impl.IgnoreMessage # TODO: EVENT_MOUSE_CLICK - need to refactor code to see what values are received
+  - message: io.rsbox.engine.message.impl.IgnoreMessage # TODO: EVENT_MOUSE_CLICK - need to refactor code to see what values are received
     type: FIXED
     opcode: 41
     length: 6
     ignore: true
 
-  - message: gg.rsmod.game.message.impl.MapBuildCompleteMessage
+  - message: io.rsbox.engine.message.impl.MapBuildCompleteMessage
     type: FIXED
     opcode: 76
     length: 0
 
-  - message: gg.rsmod.game.message.impl.EventAppletFocusMessage
+  - message: io.rsbox.engine.message.impl.EventAppletFocusMessage
     type: FIXED
     opcode: 73
     length: 1
@@ -1341,7 +1341,7 @@ in-packets:
       - name: state
         type: BYTE
 
-  - message: gg.rsmod.game.message.impl.EventKeyboardMessage
+  - message: io.rsbox.engine.message.impl.EventKeyboardMessage
     type: VARIABLE_SHORT
     opcode: 67
     structure:
@@ -1351,33 +1351,33 @@ in-packets:
       - name: last_key_press
         type: TRI_BYTE
 
-  - message: gg.rsmod.game.message.impl.IgnoreMessage # TODO: CLAN_KICKUSER
+  - message: io.rsbox.engine.message.impl.IgnoreMessage # TODO: CLAN_KICKUSER
     type: VARIABLE_BYTE
     opcode: 13
     ignore: true
 
-  - message: gg.rsmod.game.message.impl.IgnoreMessage # TODO: CHAT_SETMODE
+  - message: io.rsbox.engine.message.impl.IgnoreMessage # TODO: CHAT_SETMODE
     type: FIXED
     opcode: 15
     length: 3
     ignore: true
 
-  - message: gg.rsmod.game.message.impl.IgnoreMessage # TODO: BUG_REPORT
+  - message: io.rsbox.engine.message.impl.IgnoreMessage # TODO: BUG_REPORT
     type: VARIABLE_SHORT
     opcode: 16
 
-  - message: gg.rsmod.game.message.impl.IgnoreMessage # TODO: MESSAGE_PRIVATE
+  - message: io.rsbox.engine.message.impl.IgnoreMessage # TODO: MESSAGE_PRIVATE
     type: VARIABLE_SHORT
     opcode: 25
     ignore: true
 
-  - message: gg.rsmod.game.message.impl.IgnoreMessage # TODO: IF1_BUTTON2
+  - message: io.rsbox.engine.message.impl.IgnoreMessage # TODO: IF1_BUTTON2
     type: FIXED
     opcode: 26
     length: 8
     ignore: true
 
-  - message: gg.rsmod.game.message.impl.OpPlayer4Message
+  - message: io.rsbox.engine.message.impl.OpPlayer4Message
     type: FIXED
     opcode: 27
     length: 3
@@ -1390,40 +1390,40 @@ in-packets:
         type: BYTE
         trans: NEGATE
 
-  - message: gg.rsmod.game.message.impl.IgnoreMessage # TODO: IGNORELIST_DEL
+  - message: io.rsbox.engine.message.impl.IgnoreMessage # TODO: IGNORELIST_DEL
     type: VARIABLE_BYTE
     opcode: 28
     ignore: true
 
-  - message: gg.rsmod.game.message.impl.IgnoreMessage # TODO: IF1_BUTTON5
+  - message: io.rsbox.engine.message.impl.IgnoreMessage # TODO: IF1_BUTTON5
     type: FIXED
     opcode: 32
     length: 8
     ignore: true
 
-  - message: gg.rsmod.game.message.impl.IgnoreMessage # TODO: FREECAM_EXIT
+  - message: io.rsbox.engine.message.impl.IgnoreMessage # TODO: FREECAM_EXIT
     type: FIXED
     opcode: 37
     length: 0
     ignore: true
 
-  - message: gg.rsmod.game.message.impl.IgnoreMessage # TODO: SEND_SNAPSHOT
+  - message: io.rsbox.engine.message.impl.IgnoreMessage # TODO: SEND_SNAPSHOT
     type: VARIABLE_BYTE
     opcode: 38
     ignore: true
 
-  - message: gg.rsmod.game.message.impl.IgnoreMessage # Unknown
+  - message: io.rsbox.engine.message.impl.IgnoreMessage # Unknown
     type: VARIABLE_BYTE
     opcode: 43
     ignore: true
 
-  - message: gg.rsmod.game.message.impl.IgnoreMessage # TODO: IF1_BUTTON1
+  - message: io.rsbox.engine.message.impl.IgnoreMessage # TODO: IF1_BUTTON1
     type: FIXED
     opcode: 46
     length: 8
     ignore: true
 
-  - message: gg.rsmod.game.message.impl.OpPlayer1Message
+  - message: io.rsbox.engine.message.impl.OpPlayer1Message
     type: FIXED
     opcode: 47
     length: 3
@@ -1434,7 +1434,7 @@ in-packets:
         type: BYTE
         trans: NEGATE
 
-  - message: gg.rsmod.game.message.impl.OpPlayer8Message
+  - message: io.rsbox.engine.message.impl.OpPlayer8Message
     type: FIXED
     opcode: 50
     length: 3
@@ -1447,30 +1447,30 @@ in-packets:
         order: LITTLE
         trans: ADD
 
-  - message: gg.rsmod.game.message.impl.IgnoreMessage # TODO: OPOBJ5
+  - message: io.rsbox.engine.message.impl.IgnoreMessage # TODO: OPOBJ5
     type: FIXED
     opcode: 51
     length: 7
     ignore: true
 
-  - message: gg.rsmod.game.message.impl.IgnoreMessage # TODO: OPOBJT
+  - message: io.rsbox.engine.message.impl.IgnoreMessage # TODO: OPOBJT
     type: FIXED
     opcode: 53
     length: 13
     ignore: true
 
-  - message: gg.rsmod.game.message.impl.IgnoreMessage # TODO: FRIENDLIST_DEL
+  - message: io.rsbox.engine.message.impl.IgnoreMessage # TODO: FRIENDLIST_DEL
     type: VARIABLE_BYTE
     opcode: 54
     ignore: true
 
-  - message: gg.rsmod.game.message.impl.IgnoreMessage # TODO: OPPLAYERT
+  - message: io.rsbox.engine.message.impl.IgnoreMessage # TODO: OPPLAYERT
     type: FIXED
     opcode: 55
     length: 9
     ignore: true
 
-  - message: gg.rsmod.game.message.impl.OpPlayer2Message
+  - message: io.rsbox.engine.message.impl.OpPlayer2Message
     type: FIXED
     opcode: 56
     length: 3
@@ -1482,7 +1482,7 @@ in-packets:
         type: SHORT
         trans: ADD
 
-  - message: gg.rsmod.game.message.impl.OpPlayer3Message
+  - message: io.rsbox.engine.message.impl.OpPlayer3Message
     type: FIXED
     opcode: 62
     length: 3
@@ -1493,31 +1493,31 @@ in-packets:
       - name: unknown
         type: BYTE
 
-  - message: gg.rsmod.game.message.impl.IgnoreMessage # TODO: IF1_BUTTON4
+  - message: io.rsbox.engine.message.impl.IgnoreMessage # TODO: IF1_BUTTON4
     type: FIXED
     opcode: 64
     length: 8
     ignore: true
 
-  - message: gg.rsmod.game.message.impl.IgnoreMessage # TODO: IF1_BUTTON3
+  - message: io.rsbox.engine.message.impl.IgnoreMessage # TODO: IF1_BUTTON3
     type: FIXED
     opcode: 65
     length: 8
     ignore: true
 
-  - message: gg.rsmod.game.message.impl.IgnoreMessage # Unknown
+  - message: io.rsbox.engine.message.impl.IgnoreMessage # Unknown
     type: FIXED
     opcode: 69
     length: 4
     ignore: true
 
-  - message: gg.rsmod.game.message.impl.IgnoreMessage # TODO: OPOBJ2
+  - message: io.rsbox.engine.message.impl.IgnoreMessage # TODO: OPOBJ2
     type: FIXED
     opcode: 74
     length: 7
     ignore: true
 
-  - message: gg.rsmod.game.message.impl.OpPlayer7Message
+  - message: io.rsbox.engine.message.impl.OpPlayer7Message
     type: FIXED
     opcode: 75
     length: 3
@@ -1529,25 +1529,25 @@ in-packets:
         type: SHORT
         order: LITTLE
 
-  - message: gg.rsmod.game.message.impl.IgnoreMessage # TODO: FRIEND_SETRANK
+  - message: io.rsbox.engine.message.impl.IgnoreMessage # TODO: FRIEND_SETRANK
     type: VARIABLE_BYTE
     opcode: 77
     length: -1
     ignore: true
 
-  - message: gg.rsmod.game.message.impl.IgnoreMessage # TODO: OPPLAYERU
+  - message: io.rsbox.engine.message.impl.IgnoreMessage # TODO: OPPLAYERU
     type: FIXED
     opcode: 81
     length: 11
     ignore: true
 
-  - message: gg.rsmod.game.message.impl.IgnoreMessage # TODO: IF_BUTTONT
+  - message: io.rsbox.engine.message.impl.IgnoreMessage # TODO: IF_BUTTONT
     type: FIXED
     opcode: 82
     length: 16
     ignore: true
 
-  - message: gg.rsmod.game.message.impl.OpPlayer5Message
+  - message: io.rsbox.engine.message.impl.OpPlayer5Message
     type: FIXED
     opcode: 83
     length: 3
@@ -1559,31 +1559,31 @@ in-packets:
         type: SHORT
         trans: ADD
 
-  - message: gg.rsmod.game.message.impl.IgnoreMessage # TODO: FRIENDLIST_ADD
+  - message: io.rsbox.engine.message.impl.IgnoreMessage # TODO: FRIENDLIST_ADD
     type: VARIABLE_BYTE
     opcode: 88
     length: -1
     ignore: true
 
-  - message: gg.rsmod.game.message.impl.IgnoreMessage # TODO: IGNORELIST_ADD
+  - message: io.rsbox.engine.message.impl.IgnoreMessage # TODO: IGNORELIST_ADD
     type: VARIABLE_BYTE
     opcode: 90
     length: -1
     ignore: true
 
-  - message: gg.rsmod.game.message.impl.IgnoreMessage # TODO: REFLECTION_CHECK_REPLY
+  - message: io.rsbox.engine.message.impl.IgnoreMessage # TODO: REFLECTION_CHECK_REPLY
     type: VARIABLE_BYTE
     opcode: 91
     length: -1
     ignore: true
 
-  - message: gg.rsmod.game.message.impl.IgnoreMessage # TODO: OPLOCT
+  - message: io.rsbox.engine.message.impl.IgnoreMessage # TODO: OPLOCT
     type: FIXED
     opcode: 92
     length: 13
     ignore: true
 
-  - message: gg.rsmod.game.message.impl.OpPlayer6Message
+  - message: io.rsbox.engine.message.impl.OpPlayer6Message
     type: FIXED
     opcode: 93
     length: 3
@@ -1595,7 +1595,7 @@ in-packets:
         type: BYTE
         trans: SUBTRACT
 
-  - message: gg.rsmod.game.message.impl.ResumePNameDialogMessage
+  - message: io.rsbox.engine.message.impl.ResumePNameDialogMessage
     type: VARIABLE_BYTE
     opcode: 95
     length: -1
@@ -1603,7 +1603,7 @@ in-packets:
       - name: name
         type: STRING
 
-  - message: gg.rsmod.game.message.impl.IgnoreMessage # Unknown
+  - message: io.rsbox.engine.message.impl.IgnoreMessage # Unknown
     type: FIXED
     opcode: 99
     length: 7
