@@ -1,8 +1,8 @@
 package io.rsbox.engine.service.xtea
 
 import com.google.gson.Gson
-import io.rsbox.engine.Server
-import io.rsbox.engine.model.World
+import io.rsbox.engine.RSServer
+import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.service.Service
 import io.rsbox.util.ServerProperties
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap
@@ -26,7 +26,7 @@ class XteaKeyService : Service {
     val validRegions: IntArray
         get() = keys.keys.toIntArray()
 
-    override fun init(server: Server, world: World, serviceProperties: ServerProperties) {
+    override fun init(server: RSServer, world: RSWorld, serviceProperties: ServerProperties) {
         val path = Paths.get(serviceProperties.getOrDefault("path", "./rsbox/data/xteas/"))
         if (!Files.exists(path)) {
             throw FileNotFoundException("Path does not exist. $path")
@@ -41,13 +41,13 @@ class XteaKeyService : Service {
         loadKeys(world)
     }
 
-    override fun postLoad(server: Server, world: World) {
+    override fun postLoad(server: RSServer, world: RSWorld) {
     }
 
-    override fun bindNet(server: Server, world: World) {
+    override fun bindNet(server: RSServer, world: RSWorld) {
     }
 
-    override fun terminate(server: Server, world: World) {
+    override fun terminate(server: RSServer, world: RSWorld) {
     }
 
     fun get(region: Int): IntArray {
@@ -58,7 +58,7 @@ class XteaKeyService : Service {
         return keys[region]!!
     }
 
-    private fun loadKeys(world: World) {
+    private fun loadKeys(world: RSWorld) {
         /*
          * Get the total amount of valid regions and which keys we are missing.
          */
@@ -93,7 +93,7 @@ class XteaKeyService : Service {
         }
 
         /*
-         * Set the XTEA service for the [World].
+         * Set the XTEA service for the [RSWorld].
          */
         world.xteaKeyService = this
 

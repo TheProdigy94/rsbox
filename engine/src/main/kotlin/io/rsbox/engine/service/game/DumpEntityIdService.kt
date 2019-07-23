@@ -1,11 +1,11 @@
 package io.rsbox.engine.service.game
 
-import io.rsbox.engine.Server
+import io.rsbox.engine.RSServer
 import io.rsbox.engine.fs.DefinitionSet
 import io.rsbox.engine.fs.def.ItemDef
 import io.rsbox.engine.fs.def.NpcDef
 import io.rsbox.engine.fs.def.ObjectDef
-import io.rsbox.engine.model.World
+import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.service.Service
 import io.rsbox.util.ServerProperties
 import mu.KLogging
@@ -26,7 +26,7 @@ class DumpEntityIdService : Service {
 
     private var outputPath: Path? = null
 
-    override fun init(server: Server, world: World, serviceProperties: ServerProperties) {
+    override fun init(server: RSServer, world: RSWorld, serviceProperties: ServerProperties) {
         dump = serviceProperties.getOrDefault("dump", false)
         if (dump) {
             cachePath = Paths.get(serviceProperties.get<String>("cache-path")!!)
@@ -41,7 +41,7 @@ class DumpEntityIdService : Service {
         }
     }
 
-    override fun postLoad(server: Server, world: World) {
+    override fun postLoad(server: RSServer, world: RSWorld) {
         if (!dump) {
             return
         }
@@ -53,10 +53,10 @@ class DumpEntityIdService : Service {
         writeObjs(definitions, namer)
     }
 
-    override fun bindNet(server: Server, world: World) {
+    override fun bindNet(server: RSServer, world: RSWorld) {
     }
 
-    override fun terminate(server: Server, world: World) {
+    override fun terminate(server: RSServer, world: RSWorld) {
     }
 
     private fun writeItems(definitions: DefinitionSet, namer: Namer) {

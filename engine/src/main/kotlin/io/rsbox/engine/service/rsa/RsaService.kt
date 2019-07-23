@@ -1,7 +1,7 @@
 package io.rsbox.engine.service.rsa
 
-import io.rsbox.engine.Server
-import io.rsbox.engine.model.World
+import io.rsbox.engine.RSServer
+import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.service.Service
 import io.rsbox.util.ServerProperties
 import mu.KLogging
@@ -35,7 +35,7 @@ class RsaService : Service {
 
     private var radix = -1
 
-    override fun init(server: Server, world: World, serviceProperties: ServerProperties) {
+    override fun init(server: RSServer, world: RSWorld, serviceProperties: ServerProperties) {
         keyPath = Paths.get(serviceProperties.getOrDefault("path", "./rsbox/data/rsa/key.pem"))
         radix = serviceProperties.getOrDefault("radix", 16)
 
@@ -73,13 +73,13 @@ class RsaService : Service {
         }
     }
 
-    override fun postLoad(server: Server, world: World) {
+    override fun postLoad(server: RSServer, world: RSWorld) {
     }
 
-    override fun bindNet(server: Server, world: World) {
+    override fun bindNet(server: RSServer, world: RSWorld) {
     }
 
-    override fun terminate(server: Server, world: World) {
+    override fun terminate(server: RSServer, world: RSWorld) {
     }
 
     /**

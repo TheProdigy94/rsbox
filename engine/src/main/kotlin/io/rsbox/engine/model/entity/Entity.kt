@@ -2,7 +2,7 @@ package io.rsbox.engine.model.entity
 
 import io.rsbox.engine.model.EntityType
 import io.rsbox.engine.model.Tile
-import io.rsbox.engine.model.World
+import io.rsbox.engine.model.RSWorld
 
 /**
  * An [Entity] can be anything in the world that that maintains a [Tile].
@@ -12,7 +12,7 @@ import io.rsbox.engine.model.World
 abstract class Entity {
 
     /**
-     * The current 3D [Tile] that this [Pawn] is standing on in the [World].
+     * The current 3D [Tile] that this [Pawn] is standing on in the [RSWorld].
      */
     lateinit var tile: Tile
 

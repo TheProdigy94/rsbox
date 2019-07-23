@@ -1,6 +1,6 @@
 package io.rsbox.engine.message
 
-import io.rsbox.engine.model.World
+import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.model.entity.Client
 import io.rsbox.engine.service.log.LoggerService
 import mu.KLogging
@@ -17,7 +17,7 @@ interface MessageHandler<T : Message> {
      * Handles the [message] on the game-thread with the ability to read and write
      * to the [Client].
      */
-    fun handle(client: Client, world: World, message: T)
+    fun handle(client: Client, world: RSWorld, message: T)
 
     /**
      * A default method to log the handlers.

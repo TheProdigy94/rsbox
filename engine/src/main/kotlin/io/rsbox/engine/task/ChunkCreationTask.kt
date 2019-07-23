@@ -1,7 +1,7 @@
 package io.rsbox.engine.task
 
 import io.rsbox.engine.model.Tile
-import io.rsbox.engine.model.World
+import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.model.entity.Pawn
 import io.rsbox.engine.service.GameService
 
@@ -14,7 +14,7 @@ import io.rsbox.engine.service.GameService
  */
 class ChunkCreationTask : GameTask {
 
-    override fun execute(world: World, service: GameService) {
+    override fun execute(world: RSWorld, service: GameService) {
         world.players.forEach { p ->
             p.changeChunks(world, createChunkIfNeeded = true)
         }
@@ -26,7 +26,7 @@ class ChunkCreationTask : GameTask {
         }
     }
 
-    private fun <T : Pawn> T.changeChunks(world: World, createChunkIfNeeded: Boolean) {
+    private fun <T : Pawn> T.changeChunks(world: RSWorld, createChunkIfNeeded: Boolean) {
         val lastTile = lastChunkTile
         val sameTile = lastTile?.sameAs(tile) ?: false
 

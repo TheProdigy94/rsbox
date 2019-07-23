@@ -1,8 +1,8 @@
 package io.rsbox.engine.service.world
 
-import io.rsbox.engine.Server
+import io.rsbox.engine.RSServer
 import io.rsbox.engine.model.PlayerUID
-import io.rsbox.engine.model.World
+import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.service.Service
 import io.rsbox.net.codec.login.LoginResultType
 import io.rsbox.util.ServerProperties
@@ -12,16 +12,16 @@ import io.rsbox.util.ServerProperties
  */
 interface WorldVerificationService : Service {
 
-    override fun init(server: Server, world: World, serviceProperties: ServerProperties) {
+    override fun init(server: RSServer, world: RSWorld, serviceProperties: ServerProperties) {
     }
 
-    override fun postLoad(server: Server, world: World) {
+    override fun postLoad(server: RSServer, world: RSWorld) {
     }
 
-    override fun bindNet(server: Server, world: World) {
+    override fun bindNet(server: RSServer, world: RSWorld) {
     }
 
-    override fun terminate(server: Server, world: World) {
+    override fun terminate(server: RSServer, world: RSWorld) {
     }
 
     /**
@@ -29,5 +29,5 @@ interface WorldVerificationService : Service {
      *
      * @return null if the player can log in successfully without
      */
-    fun interceptLoginResult(world: World, uid: PlayerUID, displayName: String, loginName: String): LoginResultType?
+    fun interceptLoginResult(world: RSWorld, uid: PlayerUID, displayName: String, loginName: String): LoginResultType?
 }

@@ -2,7 +2,7 @@ package io.rsbox.engine.message.handler
 
 import io.rsbox.engine.message.MessageHandler
 import io.rsbox.engine.message.impl.OpNpcTMessage
-import io.rsbox.engine.model.World
+import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.model.attr.INTERACTING_COMPONENT_CHILD
 import io.rsbox.engine.model.attr.INTERACTING_COMPONENT_PARENT
 import io.rsbox.engine.model.attr.INTERACTING_NPC_ATTR
@@ -16,7 +16,7 @@ import java.lang.ref.WeakReference
  */
 class OpNpcTHandler : MessageHandler<OpNpcTMessage> {
 
-    override fun handle(client: Client, world: World, message: OpNpcTMessage) {
+    override fun handle(client: Client, world: RSWorld, message: OpNpcTMessage) {
         val npc = world.npcs[message.npcIndex] ?: return
         val parent = message.componentHash shr 16
         val child = message.componentHash and 0xFFFF

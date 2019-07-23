@@ -1,8 +1,8 @@
 package io.rsbox.engine.service.login
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder
-import io.rsbox.engine.Server
-import io.rsbox.engine.model.World
+import io.rsbox.engine.RSServer
+import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.model.entity.Client
 import io.rsbox.engine.protocol.GameHandler
 import io.rsbox.engine.protocol.GameMessageEncoder
@@ -43,11 +43,11 @@ class LoginService : Service {
 
     private var threadCount = 1
 
-    override fun init(server: Server, world: World, serviceProperties: ServerProperties) {
+    override fun init(server: RSServer, world: RSWorld, serviceProperties: ServerProperties) {
         threadCount = serviceProperties.getOrDefault("thread-count", 3)
     }
 
-    override fun postLoad(server: Server, world: World) {
+    override fun postLoad(server: RSServer, world: RSWorld) {
         serializer = world.getService(PlayerSerializerService::class.java, searchSubclasses = true)!!
 
         val worldVerificationService = world.getService(WorldVerificationService::class.java, searchSubclasses = true) ?: SimpleWorldVerificationService()
@@ -58,18 +58,18 @@ class LoginService : Service {
         }
     }
 
-    override fun bindNet(server: Server, world: World) {
+    override fun bindNet(server: RSServer, world: RSWorld) {
     }
 
-    override fun terminate(server: Server, world: World) {
+    override fun terminate(server: RSServer, world: RSWorld) {
     }
 
-    fun addLoginRequest(world: World, request: LoginRequest) {
+    fun addLoginRequest(world: RSWorld, request: LoginRequest) {
         val serviceRequest = LoginServiceRequest(world, request)
         requests.offer(serviceRequest)
     }
 
-    fun successfulLogin(client: Client, world: World, encodeRandom: IsaacRandom, decodeRandom: IsaacRandom) {
+    fun successfulLogin(client: Client, world: RSWorld, encodeRandom: IsaacRandom, decodeRandom: IsaacRandom) {
         val gameSystem = GameSystem(
                 channel = client.channel, world = world, client = client,
                 service = client.world.getService(GameService::class.java)!!)

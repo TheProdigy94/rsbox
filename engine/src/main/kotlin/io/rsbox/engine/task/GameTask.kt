@@ -1,6 +1,6 @@
 package io.rsbox.engine.task
 
-import io.rsbox.engine.model.World
+import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.service.GameService
 
 /**
@@ -14,5 +14,5 @@ interface GameTask {
     /**
      * Executes the [GameTask] logic.
      */
-    fun execute(world: World, service: GameService)
+    fun execute(world: RSWorld, service: GameService)
 }

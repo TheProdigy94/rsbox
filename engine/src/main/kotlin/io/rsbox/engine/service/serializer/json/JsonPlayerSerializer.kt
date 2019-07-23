@@ -3,7 +3,7 @@ package io.rsbox.engine.service.serializer.json
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import io.rsbox.engine.Server
+import io.rsbox.engine.RSServer
 import io.rsbox.engine.model.*
 import io.rsbox.engine.model.attr.AttributeKey
 import io.rsbox.engine.model.container.ItemContainer
@@ -27,7 +27,7 @@ class JsonPlayerSerializer : PlayerSerializerService() {
 
     private lateinit var path: Path
 
-    override fun initSerializer(server: Server, world: World, serviceProperties: ServerProperties) {
+    override fun initSerializer(server: RSServer, world: RSWorld, serviceProperties: ServerProperties) {
         path = Paths.get(serviceProperties.getOrDefault("path", "./rsbox/data/saves/"))
         if (!Files.exists(path)) {
             Files.createDirectory(path)
@@ -84,7 +84,7 @@ class JsonPlayerSerializer : PlayerSerializerService() {
             data.itemContainers.forEach {
                 val key = world.plugins.containerKeys.firstOrNull { other -> other.name == it.name }
                 if (key == null) {
-                    logger.error { "Container was found in serialized data, but is not registered to our World. [key=${it.name}]" }
+                    logger.error { "Container was found in serialized data, but is not registered to our RSWorld. [key=${it.name}]" }
                     return@forEach
                 }
                 val container = if (client.containers.containsKey(key)) client.containers[key] else {

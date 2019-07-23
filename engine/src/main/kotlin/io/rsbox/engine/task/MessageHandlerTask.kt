@@ -1,6 +1,6 @@
 package io.rsbox.engine.task
 
-import io.rsbox.engine.model.World
+import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.service.GameService
 
 /**
@@ -11,7 +11,7 @@ import io.rsbox.engine.service.GameService
  */
 class MessageHandlerTask : GameTask {
 
-    override fun execute(world: World, service: GameService) {
+    override fun execute(world: RSWorld, service: GameService) {
         world.players.forEach { p ->
             val start = System.currentTimeMillis()
             p.handleMessages()

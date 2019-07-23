@@ -29,7 +29,7 @@ enum class EntityType {
     STATIC_OBJECT,
 
     /**
-     * A game object that is spawned in by the [io.rsbox.engine.model.World].
+     * A game object that is spawned in by the [io.rsbox.engine.model.RSWorld].
      */
     DYNAMIC_OBJECT,
 

@@ -3,7 +3,7 @@ package io.rsbox.engine.fs
 import io.rsbox.engine.fs.def.*
 import io.rsbox.engine.model.Direction
 import io.rsbox.engine.model.Tile
-import io.rsbox.engine.model.World
+import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.model.collision.CollisionManager
 import io.rsbox.engine.model.collision.CollisionUpdate
 import io.rsbox.engine.model.entity.StaticObject
@@ -80,7 +80,7 @@ class DefinitionSet {
         logger.info("Loaded ${getCount(ObjectDef::class.java)} object definitions.")
     }
 
-    fun loadRegions(world: World, chunks: ChunkSet, regions: IntArray) {
+    fun loadRegions(world: RSWorld, chunks: ChunkSet, regions: IntArray) {
         val start = System.currentTimeMillis()
 
         var loaded = 0
@@ -151,7 +151,7 @@ class DefinitionSet {
     /**
      * Creates an 8x8 [io.rsbox.engine.model.region.Chunk] region.
      */
-    fun createRegion(world: World, id: Int): Boolean {
+    fun createRegion(world: RSWorld, id: Int): Boolean {
         if (xteaService == null) {
             xteaService = world.getService(XteaKeyService::class.java)
         }

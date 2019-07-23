@@ -1,7 +1,7 @@
 package io.rsbox.engine.game
 
 import io.rsbox.engine.fs.def.EnumDef
-import io.rsbox.engine.model.World
+import io.rsbox.engine.model.RSWorld
 
 /**
  * @author Kyle Escobar
@@ -36,7 +36,7 @@ object Skills {
     const val MIN_COMBAT_LVL = 3
     const val MAX_COMBAT_LVL = 126
 
-    fun getSkillName(world: World, skill: Int): String {
+    fun getSkillName(world: RSWorld, skill: Int): String {
         val enum = world.definitions.get(EnumDef::class.java, 680)
         return enum.getString(skill)
     }
@@ -47,7 +47,7 @@ object Skills {
         else -> false
     }
 
-    fun getSkillForName(world: World, maxSkills: Int, skillName: String): Int {
+    fun getSkillForName(world: RSWorld, maxSkills: Int, skillName: String): Int {
         for (i in 0 until maxSkills) {
             if (getSkillName(world, i).toLowerCase() == skillName) {
                 return i

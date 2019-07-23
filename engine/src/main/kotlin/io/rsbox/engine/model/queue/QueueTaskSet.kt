@@ -32,11 +32,11 @@ abstract class QueueTaskSet {
     }
 
     /**
-     * In-game events sometimes must return a value to a plugin. An example are
+     * In-game events sometimes must return a value to a oldplugin. An example are
      * dialogs which must return values such as input, button click, etc.
      *
      * @param value
-     * The return value that the plugin has asked for.
+     * The return value that the oldplugin has asked for.
      */
     fun submitReturnValue(value: Any) {
         val task = queue.peek() ?: return // Shouldn't call this method without a queued task.

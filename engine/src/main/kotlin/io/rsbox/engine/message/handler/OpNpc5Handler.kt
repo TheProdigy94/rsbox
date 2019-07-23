@@ -3,7 +3,7 @@ package io.rsbox.engine.message.handler
 import io.rsbox.engine.action.PawnPathAction
 import io.rsbox.engine.message.MessageHandler
 import io.rsbox.engine.message.impl.OpNpc5Message
-import io.rsbox.engine.model.World
+import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.model.attr.INTERACTING_NPC_ATTR
 import io.rsbox.engine.model.attr.INTERACTING_OPT_ATTR
 import io.rsbox.engine.model.entity.Client
@@ -15,7 +15,7 @@ import java.lang.ref.WeakReference
  */
 class OpNpc5Handler : MessageHandler<OpNpc5Message> {
 
-    override fun handle(client: Client, world: World, message: OpNpc5Message) {
+    override fun handle(client: Client, world: RSWorld, message: OpNpc5Message) {
         val npc = world.npcs[message.index] ?: return
 
         if (!client.lock.canNpcInteract()) {

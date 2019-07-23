@@ -1,6 +1,6 @@
 package io.rsbox.engine.task.parallel
 
-import io.rsbox.engine.model.World
+import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.service.GameService
 import io.rsbox.engine.task.GameTask
 import io.rsbox.util.concurrency.PhasedTask
@@ -19,7 +19,7 @@ class ParallelPlayerPostCycleTask(private val executor: ExecutorService) : GameT
 
     private val phaser = Phaser(1)
 
-    override fun execute(world: World, service: GameService) {
+    override fun execute(world: RSWorld, service: GameService) {
         val worldPlayers = world.players
         val playerCount = worldPlayers.count()
 

@@ -3,7 +3,7 @@ package io.rsbox.engine.message.handler
 import io.rsbox.engine.action.PawnPathAction
 import io.rsbox.engine.message.MessageHandler
 import io.rsbox.engine.message.impl.OpPlayer7Message
-import io.rsbox.engine.model.World
+import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.model.attr.INTERACTING_OPT_ATTR
 import io.rsbox.engine.model.attr.INTERACTING_PLAYER_ATTR
 import io.rsbox.engine.model.entity.Client
@@ -14,7 +14,7 @@ import java.lang.ref.WeakReference
  */
 class OpPlayer7Handler : MessageHandler<OpPlayer7Message> {
 
-    override fun handle(client: Client, world: World, message: OpPlayer7Message) {
+    override fun handle(client: Client, world: RSWorld, message: OpPlayer7Message) {
         val index = message.index
         // The interaction option id.
         val option = 7

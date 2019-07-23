@@ -1,6 +1,6 @@
 package io.rsbox.engine.protocol
 
-import io.rsbox.engine.model.World
+import io.rsbox.engine.model.RSWorld
 import io.netty.channel.ChannelInitializer
 import io.netty.channel.socket.SocketChannel
 import io.netty.handler.timeout.IdleStateHandler
@@ -16,7 +16,7 @@ import java.util.concurrent.Executors
  * @author Tom <rspsmods@gmail.com>
  */
 class ClientChannelInitializer(private val revision: Int, private val rsaExponent: BigInteger?, private val rsaModulus: BigInteger?,
-                               private val filestore: Store, world: World) : ChannelInitializer<SocketChannel>() {
+                               private val filestore: Store, world: RSWorld) : ChannelInitializer<SocketChannel>() {
 
     /**
      * A global traffic handler that limits the amount of bandwidth all channels

@@ -16,7 +16,6 @@ import io.rsbox.engine.model.path.PathRequest
 import io.rsbox.engine.model.path.Route
 import io.rsbox.engine.model.path.strategy.BFSPathFindingStrategy
 import io.rsbox.engine.model.path.strategy.NpcPathFindingStrategy
-import io.rsbox.engine.model.path.strategy.SimplePathFindingStrategy
 import io.rsbox.engine.model.queue.QueueTask
 import io.rsbox.engine.model.queue.QueueTaskSet
 import io.rsbox.engine.model.queue.TaskPriority
@@ -26,7 +25,7 @@ import io.rsbox.engine.model.timer.FROZEN_TIMER
 import io.rsbox.engine.model.timer.RESET_PAWN_FACING_TIMER
 import io.rsbox.engine.model.timer.STUN_TIMER
 import io.rsbox.engine.model.timer.TimerMap
-import io.rsbox.engine.plugin.Plugin
+import io.rsbox.engine.oldplugin.Plugin
 import io.rsbox.engine.service.log.LoggerService
 import io.rsbox.engine.sync.block.UpdateBlockBuffer
 import io.rsbox.engine.sync.block.UpdateBlockType
@@ -41,7 +40,7 @@ import java.util.Queue
  *
  * @author Tom <rspsmods@gmail.com>
  */
-abstract class Pawn(val world: World) : Entity() {
+abstract class Pawn(val world: RSWorld) : Entity() {
 
     /**
      * The index assigned when this [Pawn] is successfully added to a [PawnList].
@@ -253,7 +252,7 @@ abstract class Pawn(val world: World) : Entity() {
 
         /*
          * Players always have the default combat, and npcs will use default
-         * combat <strong>unless</strong> they have a custom npc combat plugin
+         * combat <strong>unless</strong> they have a custom npc combat oldplugin
          * bound to their npc id.
          */
         if (entityType.isPlayer || this is Npc && !world.plugins.executeNpcCombat(this)) {
@@ -596,7 +595,7 @@ abstract class Pawn(val world: World) : Entity() {
     }
 
     /**
-     * Executes a plugin with this [Pawn] as its context.
+     * Executes a oldplugin with this [Pawn] as its context.
      */
     fun <T> executePlugin(logic: Plugin.() -> T): T {
         val plugin = Plugin(this)

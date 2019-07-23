@@ -3,7 +3,7 @@ package io.rsbox.engine.model.entity
 import com.google.common.base.MoreObjects
 import io.rsbox.engine.message.Message
 import io.rsbox.engine.model.EntityType
-import io.rsbox.engine.model.World
+import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.service.serializer.PlayerSerializerService
 import io.rsbox.engine.system.GameSystem
 import io.rsbox.net.codec.login.LoginRequest
@@ -19,11 +19,11 @@ import io.netty.channel.Channel
  * The [Channel] used to write and read [Message]s to and from the client.
  *
  * @param world
- * The [World] that this client is registered to.
+ * The [RSWorld] that this client is registered to.
  *
  * @author Tom <rspsmods@gmail.com>
  */
-class Client(val channel: Channel, world: World) : Player(world) {
+class Client(val channel: Channel, world: RSWorld) : Player(world) {
 
     /**
      * The [System] that will handle [Message]s, write [Message]s and flush the
@@ -120,7 +120,7 @@ class Client(val channel: Channel, world: World) : Player(world) {
         /**
          * Constructs a [Client] based on the [LoginRequest].
          */
-        fun fromRequest(world: World, request: LoginRequest): Client {
+        fun fromRequest(world: RSWorld, request: LoginRequest): Client {
             val client = Client(request.channel, world)
             client.clientWidth = request.clientWidth
             client.clientHeight = request.clientHeight

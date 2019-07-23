@@ -4,7 +4,7 @@ import io.rsbox.engine.message.MessageHandler
 import io.rsbox.engine.message.impl.MoveGameClickMessage
 import io.rsbox.engine.message.impl.SetMapFlagMessage
 import io.rsbox.engine.model.MovementQueue
-import io.rsbox.engine.model.World
+import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.model.attr.NO_CLIP_ATTR
 import io.rsbox.engine.model.entity.Client
 import io.rsbox.engine.model.entity.Entity
@@ -16,7 +16,7 @@ import io.rsbox.engine.model.timer.STUN_TIMER
  */
 class ClickMapHandler : MessageHandler<MoveGameClickMessage> {
 
-    override fun handle(client: Client, world: World, message: MoveGameClickMessage) {
+    override fun handle(client: Client, world: RSWorld, message: MoveGameClickMessage) {
         if (!client.lock.canMove()) {
             return
         }

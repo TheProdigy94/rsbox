@@ -13,7 +13,7 @@ import io.rsbox.engine.model.entity.Player
 import io.rsbox.engine.model.item.Item
 import io.rsbox.engine.model.queue.QueueTask
 import io.rsbox.engine.model.queue.TaskPriority
-import io.rsbox.engine.plugin.Plugin
+import io.rsbox.engine.oldplugin.Plugin
 import io.rsbox.engine.service.log.LoggerService
 import java.lang.ref.WeakReference
 

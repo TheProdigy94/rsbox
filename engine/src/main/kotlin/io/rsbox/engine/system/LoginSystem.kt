@@ -1,6 +1,6 @@
 package io.rsbox.engine.system
 
-import io.rsbox.engine.model.World
+import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.service.login.LoginService
 import io.rsbox.net.codec.login.LoginRequest
 import io.netty.channel.Channel
@@ -11,7 +11,7 @@ import io.netty.channel.ChannelHandlerContext
  *
  * @author Tom <rspsmods@gmail.com>
  */
-class LoginSystem(channel: Channel, private val world: World) : ServerSystem(channel) {
+class LoginSystem(channel: Channel, private val world: RSWorld) : ServerSystem(channel) {
 
     override fun receiveMessage(ctx: ChannelHandlerContext, msg: Any) {
         if (msg is LoginRequest) {

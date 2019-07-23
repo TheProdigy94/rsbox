@@ -1,7 +1,7 @@
 package io.rsbox.engine.model.region
 
 import io.rsbox.engine.model.Tile
-import io.rsbox.engine.model.World
+import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.model.collision.CollisionMatrix
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
@@ -11,7 +11,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
  *
  * @author Tom <rspsmods@gmail.com>
  */
-class ChunkSet(val world: World) {
+class ChunkSet(val world: RSWorld) {
 
     /**
      * Copies the [CollisionMatrix] data from all [Chunk]s that are within

@@ -4,7 +4,7 @@ import com.google.common.base.MoreObjects
 import io.rsbox.engine.model.EntityType
 import io.rsbox.engine.model.PlayerUID
 import io.rsbox.engine.model.Tile
-import io.rsbox.engine.model.World
+import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.model.item.Item
 import io.rsbox.engine.model.item.ItemAttribute
 import java.util.EnumMap
@@ -50,7 +50,7 @@ class GroundItem private constructor(val item: Int, var amount: Int, internal va
         return this
     }
 
-    fun isSpawned(world: World): Boolean = world.isSpawned(this)
+    fun isSpawned(world: RSWorld): Boolean = world.isSpawned(this)
 
     override fun toString(): String = MoreObjects.toStringHelper(this).add("item", item).add("amount", amount).add("tile", tile.toString()).add("owner", ownerUID).toString()
 

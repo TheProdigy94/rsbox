@@ -3,7 +3,7 @@ package io.rsbox.engine.message.handler
 import io.rsbox.engine.action.EquipAction
 import io.rsbox.engine.message.MessageHandler
 import io.rsbox.engine.message.impl.OpHeld2Message
-import io.rsbox.engine.model.World
+import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.model.attr.INTERACTING_ITEM
 import io.rsbox.engine.model.attr.INTERACTING_ITEM_ID
 import io.rsbox.engine.model.attr.INTERACTING_ITEM_SLOT
@@ -15,7 +15,7 @@ import java.lang.ref.WeakReference
  */
 class OpHeld2Handler : MessageHandler<OpHeld2Message> {
 
-    override fun handle(client: Client, world: World, message: OpHeld2Message) {
+    override fun handle(client: Client, world: RSWorld, message: OpHeld2Message) {
         @Suppress("unused")
         val interfaceId = message.componentHash shr 16
         @Suppress("unused")

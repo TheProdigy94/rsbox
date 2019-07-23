@@ -1,6 +1,6 @@
 package io.rsbox.engine.model.shop
 
-import io.rsbox.engine.model.World
+import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.model.entity.Player
 
 /**
@@ -24,12 +24,12 @@ interface ShopCurrency {
     /**
      * Get the price at which the shop will sell [item] for.
      */
-    fun getSellPrice(world: World, item: Int): Int
+    fun getSellPrice(world: RSWorld, item: Int): Int
 
     /**
      * Get the price at which the shop will buy [item] for.
      */
-    fun getBuyPrice(world: World, item: Int): Int
+    fun getBuyPrice(world: RSWorld, item: Int): Int
 
     /**
      * Called when a player attempts to buy a [ShopItem].

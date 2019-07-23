@@ -2,7 +2,7 @@ package io.rsbox.engine.message.handler
 
 import io.rsbox.engine.message.MessageHandler
 import io.rsbox.engine.message.impl.ResumePCountDialogMessage
-import io.rsbox.engine.model.World
+import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.model.entity.Client
 
 /**
@@ -10,7 +10,7 @@ import io.rsbox.engine.model.entity.Client
  */
 class ResumePCountDialogHandler : MessageHandler<ResumePCountDialogMessage> {
 
-    override fun handle(client: Client, world: World, message: ResumePCountDialogMessage) {
+    override fun handle(client: Client, world: RSWorld, message: ResumePCountDialogMessage) {
         log(client, "Integer input dialog: input=%d", message.input)
         client.queues.submitReturnValue(Math.max(0, message.input))
     }

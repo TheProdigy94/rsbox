@@ -2,7 +2,7 @@ package io.rsbox.engine.message.handler
 
 import io.rsbox.engine.message.MessageHandler
 import io.rsbox.engine.message.impl.ResumePStringDialogMessage
-import io.rsbox.engine.model.World
+import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.model.entity.Client
 
 /**
@@ -10,7 +10,7 @@ import io.rsbox.engine.model.entity.Client
  */
 class ResumePStringDialogHandler : MessageHandler<ResumePStringDialogMessage> {
 
-    override fun handle(client: Client, world: World, message: ResumePStringDialogMessage) {
+    override fun handle(client: Client, world: RSWorld, message: ResumePStringDialogMessage) {
         log(client, "String input dialog: input=%s", message.input)
         client.queues.submitReturnValue(message.input)
     }

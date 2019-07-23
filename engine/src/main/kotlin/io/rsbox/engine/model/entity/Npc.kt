@@ -5,7 +5,7 @@ import io.rsbox.engine.fs.def.NpcDef
 import io.rsbox.engine.fs.def.VarbitDef
 import io.rsbox.engine.model.EntityType
 import io.rsbox.engine.model.Tile
-import io.rsbox.engine.model.World
+import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.model.combat.AttackStyle
 import io.rsbox.engine.model.combat.CombatClass
 import io.rsbox.engine.model.combat.CombatStyle
@@ -16,13 +16,13 @@ import io.rsbox.engine.sync.block.UpdateBlockType
 /**
  * @author Tom <rspsmods@gmail.com>
  */
-open class Npc private constructor(val id: Int, world: World, val spawnTile: Tile) : Pawn(world) {
+open class Npc private constructor(val id: Int, world: RSWorld, val spawnTile: Tile) : Pawn(world) {
 
-    constructor(id: Int, tile: Tile, world: World) : this(id, world, spawnTile = Tile(tile)) {
+    constructor(id: Int, tile: Tile, world: RSWorld) : this(id, world, spawnTile = Tile(tile)) {
         this.tile = tile
     }
 
-    constructor(owner: Player, id: Int, tile: Tile, world: World) : this(id, world, spawnTile = Tile(tile)) {
+    constructor(owner: Player, id: Int, tile: Tile, world: RSWorld) : this(id, world, spawnTile = Tile(tile)) {
         this.tile = tile
         this.owner = owner
     }

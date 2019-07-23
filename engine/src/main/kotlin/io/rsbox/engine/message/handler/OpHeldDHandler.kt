@@ -3,7 +3,7 @@ package io.rsbox.engine.message.handler
 import io.rsbox.engine.game.Game
 import io.rsbox.engine.message.MessageHandler
 import io.rsbox.engine.message.impl.OpHeldDMessage
-import io.rsbox.engine.model.World
+import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.model.attr.INTERACTING_ITEM_SLOT
 import io.rsbox.engine.model.attr.OTHER_ITEM_SLOT_ATTR
 import io.rsbox.engine.model.entity.Client
@@ -13,7 +13,7 @@ import io.rsbox.engine.model.entity.Client
  */
 class OpHeldDHandler : MessageHandler<OpHeldDMessage> {
 
-    override fun handle(client: Client, world: World, message: OpHeldDMessage) {
+    override fun handle(client: Client, world: RSWorld, message: OpHeldDMessage) {
         val interfaceId = message.componentHash shr 16
         val component = message.componentHash and 0xFFFF
         val fromSlot = message.srcSlot

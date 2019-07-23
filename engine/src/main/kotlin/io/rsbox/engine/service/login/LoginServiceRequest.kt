@@ -1,6 +1,6 @@
 package io.rsbox.engine.service.login
 
-import io.rsbox.engine.model.World
+import io.rsbox.engine.model.RSWorld
 import io.rsbox.net.codec.login.LoginRequest
 
 /**
@@ -8,4 +8,4 @@ import io.rsbox.net.codec.login.LoginRequest
  *
  * @author Tom <rspsmods@gmail.com>
  */
-data class LoginServiceRequest(val world: World, val login: LoginRequest)
+data class LoginServiceRequest(val world: RSWorld, val login: LoginRequest)

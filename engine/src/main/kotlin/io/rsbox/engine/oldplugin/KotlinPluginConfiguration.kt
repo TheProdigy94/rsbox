@@ -1,4 +1,4 @@
-package io.rsbox.engine.plugin
+package io.rsbox.engine.oldplugin
 
 import kotlin.script.experimental.api.ScriptCompilationConfiguration
 import kotlin.script.experimental.api.defaultImports
@@ -19,7 +19,7 @@ object KotlinPluginConfiguration : ScriptCompilationConfiguration({
             "io.rsbox.engine.model.shop.PurchasePolicy",
             "io.rsbox.engine.model.shop.StockType",
 
-            "io.rsbox.engine.plugin.Plugin",
+            "io.rsbox.engine.oldplugin.Plugin",
 
             "io.rsbox.plugins.api.*",
             "io.rsbox.plugins.api.ext.*",

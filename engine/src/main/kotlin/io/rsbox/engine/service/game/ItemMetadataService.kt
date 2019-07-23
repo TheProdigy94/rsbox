@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
-import io.rsbox.engine.Server
+import io.rsbox.engine.RSServer
 import io.rsbox.engine.fs.DefinitionSet
 import io.rsbox.engine.fs.def.ItemDef
-import io.rsbox.engine.model.World
+import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.service.Service
 import io.rsbox.util.ServerProperties
 import it.unimi.dsi.fastutil.bytes.Byte2ByteOpenHashMap
@@ -22,7 +22,7 @@ import java.nio.file.Paths
  */
 class ItemMetadataService : Service {
 
-    override fun init(server: Server, world: World, serviceProperties: ServerProperties) {
+    override fun init(server: RSServer, world: RSWorld, serviceProperties: ServerProperties) {
         val path = Paths.get(serviceProperties.getOrDefault("path", "./rsbox/data/defs/items.yml"))
         if (!Files.exists(path)) {
             throw FileNotFoundException("Path does not exist. $path")
@@ -33,13 +33,13 @@ class ItemMetadataService : Service {
         }
     }
 
-    override fun postLoad(server: Server, world: World) {
+    override fun postLoad(server: RSServer, world: RSWorld) {
     }
 
-    override fun bindNet(server: Server, world: World) {
+    override fun bindNet(server: RSServer, world: RSWorld) {
     }
 
-    override fun terminate(server: Server, world: World) {
+    override fun terminate(server: RSServer, world: RSWorld) {
     }
 
     private fun load(definitions: DefinitionSet, reader: BufferedReader) {

@@ -2,7 +2,7 @@ package io.rsbox.engine.message.handler
 
 import io.rsbox.engine.message.MessageHandler
 import io.rsbox.engine.message.impl.ResumePObjDialogMessage
-import io.rsbox.engine.model.World
+import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.model.entity.Client
 
 /**
@@ -10,7 +10,7 @@ import io.rsbox.engine.model.entity.Client
  */
 class ResumePObjDialogHandler : MessageHandler<ResumePObjDialogMessage> {
 
-    override fun handle(client: Client, world: World, message: ResumePObjDialogMessage) {
+    override fun handle(client: Client, world: RSWorld, message: ResumePObjDialogMessage) {
         log(client, "Searched item: item=%d", message.item)
         client.queues.submitReturnValue(message.item)
     }

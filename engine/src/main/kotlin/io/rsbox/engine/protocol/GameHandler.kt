@@ -1,6 +1,6 @@
 package io.rsbox.engine.protocol
 
-import io.rsbox.engine.model.World
+import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.system.FilestoreSystem
 import io.rsbox.engine.system.LoginSystem
 import io.rsbox.engine.system.ServerSystem
@@ -21,7 +21,7 @@ import net.runelite.cache.fs.Store
  * @author Tom <rspsmods@gmail.com>
  */
 @ChannelHandler.Sharable
-class GameHandler(private val filestore: Store, private val world: World) : ChannelInboundHandlerAdapter() {
+class GameHandler(private val filestore: Store, private val world: RSWorld) : ChannelInboundHandlerAdapter() {
 
     override fun channelInactive(ctx: ChannelHandlerContext) {
         val session = ctx.channel().attr(SYSTEM_KEY).andRemove

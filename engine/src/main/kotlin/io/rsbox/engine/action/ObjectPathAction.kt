@@ -18,7 +18,7 @@ import io.rsbox.engine.model.queue.QueueTask
 import io.rsbox.engine.model.queue.TaskPriority
 import io.rsbox.engine.model.timer.FROZEN_TIMER
 import io.rsbox.engine.model.timer.STUN_TIMER
-import io.rsbox.engine.plugin.Plugin
+import io.rsbox.engine.oldplugin.Plugin
 import io.rsbox.util.AabbUtil
 import io.rsbox.util.DataConstants
 import java.util.ArrayDeque

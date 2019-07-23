@@ -5,7 +5,7 @@ import io.rsbox.engine.fs.DefinitionSet
 import io.rsbox.engine.fs.def.ObjectDef
 import io.rsbox.engine.fs.def.VarbitDef
 import io.rsbox.engine.model.Tile
-import io.rsbox.engine.model.World
+import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.model.attr.AttributeMap
 import io.rsbox.engine.model.timer.TimerMap
 
@@ -50,7 +50,7 @@ abstract class GameObject : Entity {
 
     fun getDef(definitions: DefinitionSet): ObjectDef = definitions.get(ObjectDef::class.java, id)
 
-    fun isSpawned(world: World): Boolean = world.isSpawned(this)
+    fun isSpawned(world: RSWorld): Boolean = world.isSpawned(this)
 
     /**
      * This method will get the "visually correct" object id for this npc from

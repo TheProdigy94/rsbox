@@ -1,4 +1,4 @@
-package io.rsbox.engine.plugin
+package io.rsbox.engine.oldplugin
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
@@ -10,14 +10,14 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * extension. This name should be unique enough so that no two plugins would
  * ever share the same name, otherwise there may be conflicting issues.
  *
- * @param name the name of our plugin. There are no restrictions to what you can
- * name a plugin.
+ * @param name the name of our oldplugin. There are no restrictions to what you can
+ * name a oldplugin.
  *
- * @param description a short description of the plugin.
+ * @param description a short description of the oldplugin.
  *
- * @param authors a collection of the plugin authors.
+ * @param authors a collection of the oldplugin authors.
  *
- * @param properties a map of properties that can be accessed by the plugin.
+ * @param properties a map of properties that can be accessed by the oldplugin.
  *
  * @author Tom <rspsmods@gmail.com>
  */

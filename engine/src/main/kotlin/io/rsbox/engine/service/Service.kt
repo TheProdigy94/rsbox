@@ -1,7 +1,7 @@
 package io.rsbox.engine.service
 
-import io.rsbox.engine.Server
-import io.rsbox.engine.model.World
+import io.rsbox.engine.RSServer
+import io.rsbox.engine.model.RSWorld
 import io.rsbox.util.ServerProperties
 
 /**
@@ -14,20 +14,20 @@ interface Service {
     /**
      * Called when the server is starting up.
      */
-    fun init(server: Server, world: World, serviceProperties: ServerProperties)
+    fun init(server: RSServer, world: RSWorld, serviceProperties: ServerProperties)
 
     /**
      * Called after the server has finished started up.
      */
-    fun postLoad(server: Server, world: World)
+    fun postLoad(server: RSServer, world: RSWorld)
 
     /**
      * Called after the server sets its bootstrap's children and parameters.
      */
-    fun bindNet(server: Server, world: World)
+    fun bindNet(server: RSServer, world: RSWorld)
 
     /**
      * Called when the server is shutting off.
      */
-    fun terminate(server: Server, world: World)
+    fun terminate(server: RSServer, world: RSWorld)
 }

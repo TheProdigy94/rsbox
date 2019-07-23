@@ -2,7 +2,7 @@ package io.rsbox.engine
 
 import com.google.common.base.Stopwatch
 import io.rsbox.engine.model.Tile
-import io.rsbox.engine.model.World
+import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.model.entity.GroundItem
 import io.rsbox.engine.model.entity.Npc
 import io.rsbox.engine.model.skill.SkillSet
@@ -15,6 +15,9 @@ import io.netty.bootstrap.ServerBootstrap
 import io.netty.channel.ChannelOption
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.nio.NioServerSocketChannel
+import io.rsbox.api.Server
+import io.rsbox.api.World
+import mu.KLogger
 import mu.KLogging
 import net.runelite.cache.fs.Store
 import org.apache.commons.io.FileUtils
@@ -29,17 +32,19 @@ import java.text.DecimalFormat
 import java.util.concurrent.TimeUnit
 
 /**
- * The [Server] is responsible for starting any and all games.
+ * The [RSServer] is responsible for starting any and all games.
  *
  * @author Tom <rspsmods@gmail.com>
  */
-class Server {
+class RSServer : Server {
 
     private val acceptGroup = NioEventLoopGroup(2)
 
     private val ioGroup = NioEventLoopGroup(1)
 
     val bootstrap = ServerBootstrap()
+
+    internal lateinit var world: RSWorld
 
     /**
      * RSBox directories to create
@@ -110,7 +115,7 @@ class Server {
      * Due to being decoupled from the API logic that will always be used, you
      * can start multiple servers with different game property files.
      */
-    fun startGame(filestore: Path, gameProps: Path, packets: Path, blocks: Path, devProps: Path?, args: Array<String>): World {
+    fun startGame(filestore: Path, gameProps: Path, packets: Path, blocks: Path, devProps: Path?, args: Array<String>): RSWorld {
         val stopwatch = Stopwatch.createStarted()
         val individualStopwatch = Stopwatch.createUnstarted()
 
@@ -149,7 +154,7 @@ class Server {
                 debugItemActions = devProperties.getOrDefault("debug-items", false),
                 debugMagicSpells = devProperties.getOrDefault("debug-spells", false))
 
-        val world = World(gameContext, devContext)
+        world = RSWorld(gameContext, devContext)
 
         /*
          * Load the file store.
@@ -210,7 +215,7 @@ class Server {
         individualStopwatch.reset().start()
         world.plugins.init(
                 server = this, world = world,
-                jarPluginsDirectory = gameProperties.getOrDefault("plugin-packed-path", "./plugins"))
+                jarPluginsDirectory = gameProperties.getOrDefault("oldplugin-packed-path", "./plugins"))
         logger.info("Loaded {} plugins in {}ms.", DecimalFormat().format(world.plugins.getPluginCount()), individualStopwatch.elapsed(TimeUnit.MILLISECONDS))
 
         /*
@@ -251,6 +256,14 @@ class Server {
         System.gc()
 
         return world
+    }
+
+    override fun getWorld(): World {
+        return world
+    }
+
+    override fun getLogger(): KLogger {
+        return logger
     }
 
     companion object : KLogging()

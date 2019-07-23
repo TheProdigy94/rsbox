@@ -1,14 +1,14 @@
-package io.rsbox.engine.plugin
+package io.rsbox.engine.oldplugin
 
 import com.google.gson.GsonBuilder
-import io.rsbox.engine.Server
+import io.rsbox.engine.RSServer
 import io.rsbox.engine.event.Event
 import io.rsbox.engine.fs.def.ItemDef
 import io.rsbox.engine.fs.def.NpcDef
 import io.rsbox.engine.fs.def.ObjectDef
 import io.rsbox.engine.model.Direction
 import io.rsbox.engine.model.Tile
-import io.rsbox.engine.model.World
+import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.model.combat.NpcCombatDef
 import io.rsbox.engine.model.container.key.ContainerKey
 import io.rsbox.engine.model.entity.DynamicObject
@@ -26,20 +26,20 @@ import java.nio.file.Paths
 import kotlin.script.experimental.annotations.KotlinScript
 
 /**
- * Represents a KotlinScript plugin.
+ * Represents a KotlinScript oldplugin.
  *
  * @author Tom <rspsmods@gmail.com>
  */
 @KotlinScript(
         displayName = "Kotlin Plugin",
-        fileExtension = "plugin.kts",
+        fileExtension = "oldplugin.kts",
         compilationConfiguration = KotlinPluginConfiguration::class
 )
-abstract class KotlinPlugin(private val r: PluginRepository, val world: World, val server: Server) {
+abstract class KotlinPlugin(private val r: PluginRepository, val world: RSWorld, val server: RSServer) {
 
     /**
      * A map of properties that will be copied from the [PluginMetadata] and
-     * exposed to the plugin.
+     * exposed to the oldplugin.
      */
     private lateinit var properties: MutableMap<String, Any>
 
@@ -50,7 +50,7 @@ abstract class KotlinPlugin(private val r: PluginRepository, val world: World, v
     fun <T> getProperty(key: String): T? = properties[key] as? T?
 
     /**
-     * Set the [PluginMetadata] for this plugin.
+     * Set the [PluginMetadata] for this oldplugin.
      */
     fun load_metadata(metadata: PluginMetadata) {
         checkNotNull(metadata.propertyFileName) { "Property file name must be set in order to load metadata." }
@@ -80,7 +80,7 @@ abstract class KotlinPlugin(private val r: PluginRepository, val world: World, v
     }
 
     /**
-     * Load [service] on plugin start-up.
+     * Load [service] on oldplugin start-up.
      */
     fun load_service(service: Service) {
         r.services.add(service)
@@ -138,7 +138,7 @@ abstract class KotlinPlugin(private val r: PluginRepository, val world: World, v
     }
 
     /**
-     * Create a [ContainerKey] to register to the [World] for serialization
+     * Create a [ContainerKey] to register to the [RSWorld] for serialization
      * later on.
      */
     fun register_container_key(key: ContainerKey) {
@@ -311,7 +311,7 @@ abstract class KotlinPlugin(private val r: PluginRepository, val world: World, v
     fun set_level_up_logic(logic: (Plugin).() -> Unit) = r.bindSkillLevelUp(logic)
 
     /**
-     * Invoke [logic] when [World.postLoad] is handled.
+     * Invoke [logic] when [RSWorld.postLoad] is handled.
      */
     fun on_world_init(logic: (Plugin).() -> Unit) = r.bindWorldInit(logic)
 
@@ -404,7 +404,7 @@ abstract class KotlinPlugin(private val r: PluginRepository, val world: World, v
     fun on_timer(key: TimerKey, logic: (Plugin).() -> Unit) = r.bindTimer(key, logic)
 
     /**
-     * Invoke [logic] when any npc is spawned into the game with [World.spawn].
+     * Invoke [logic] when any npc is spawned into the game with [RSWorld.spawn].
      */
     fun on_global_npc_spawn(logic: (Plugin).() -> Unit) = r.bindGlobalNpcSpawn(logic)
 
@@ -415,7 +415,7 @@ abstract class KotlinPlugin(private val r: PluginRepository, val world: World, v
 
     /**
      * Invoke [logic] when an npc with [Npc.id] matching [npc] is spawned into
-     * the game with [World.spawn].
+     * the game with [RSWorld.spawn].
      */
     fun on_npc_spawn(npc: Int, logic: (Plugin).() -> Unit) = r.bindNpcSpawn(npc, logic)
 

@@ -1,9 +1,9 @@
-package io.rsbox.engine.plugin
+package io.rsbox.engine.oldplugin
 
 import io.rsbox.engine.model.entity.Player
 
 /**
- * Represents a plugin that can be executed at any time by a context.
+ * Represents a oldplugin that can be executed at any time by a context.
  *
  * @param ctx
  * Can be anything from [Player] to [io.rsbox.engine.model.entity.Pawn].

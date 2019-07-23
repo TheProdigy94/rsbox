@@ -35,11 +35,11 @@ import java.util.Arrays
  *
  * @author Tom <rspsmods@gmail.com>
  */
-open class Player(world: World) : Pawn(world) {
+open class Player(world: RSWorld) : Pawn(world) {
 
     /**
      * A persistent and unique id. This is <strong>not</strong> the index
-     * of our [Player] when registered to the [World], it is a value determined
+     * of our [Player] when registered to the [RSWorld], it is a value determined
      * when the [Player] first registers their account.
      */
     lateinit var uid: PlayerUID
@@ -70,7 +70,7 @@ open class Player(world: World) : Pawn(world) {
 
     /**
      * The index that was assigned to a [Player] when they are first registered to the
-     * [World]. This is needed to remove local players from the synchronization task
+     * [RSWorld]. This is needed to remove local players from the synchronization task
      * as once that logic is reached, the local player would have an index of [-1].
      */
     var lastIndex = -1
@@ -214,7 +214,7 @@ open class Player(world: World) : Pawn(world) {
     var runEnergy = 100.0
 
     /**
-     * The current combat level. This must be set externally by a login plugin
+     * The current combat level. This must be set externally by a login oldplugin
      * that is used on whatever revision you want.
      */
     var combatLevel = 3
@@ -225,7 +225,7 @@ open class Player(world: World) : Pawn(world) {
 
     /**
      * The last cycle that this client has received the MAP_BUILD_COMPLETE
-     * message. This value is set to [World.currentCycle].
+     * message. This value is set to [RSWorld.currentCycle].
      *
      * @see [io.rsbox.engine.message.handler.MapBuildCompleteHandler]
      */

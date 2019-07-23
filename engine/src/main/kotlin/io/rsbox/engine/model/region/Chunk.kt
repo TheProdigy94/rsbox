@@ -5,7 +5,7 @@ import io.rsbox.engine.message.impl.UpdateZonePartialFollowsMessage
 import io.rsbox.engine.model.Direction
 import io.rsbox.engine.model.EntityType
 import io.rsbox.engine.model.Tile
-import io.rsbox.engine.model.World
+import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.model.collision.CollisionMatrix
 import io.rsbox.engine.model.collision.CollisionUpdate
 import io.rsbox.engine.model.entity.*
@@ -77,7 +77,7 @@ class Chunk(val coords: ChunkCoords, val heights: Int) {
 
     fun isClipped(tile: Tile): Boolean = matrices[tile.height].isClipped(tile.x % CHUNK_SIZE, tile.z % CHUNK_SIZE)
 
-    fun addEntity(world: World, entity: Entity, tile: Tile) {
+    fun addEntity(world: RSWorld, entity: Entity, tile: Tile) {
         /*
          * Objects will affect the collision map.
          */
@@ -122,7 +122,7 @@ class Chunk(val coords: ChunkCoords, val heights: Int) {
         }
     }
 
-    fun removeEntity(world: World, entity: Entity, tile: Tile) {
+    fun removeEntity(world: RSWorld, entity: Entity, tile: Tile) {
         /*
          * Transient entities do not get added to our [Chunk]'s tiles, so no use
          * in trying to remove it.
@@ -169,7 +169,7 @@ class Chunk(val coords: ChunkCoords, val heights: Int) {
     /**
      * Update the item amount of an existing [GroundItem] in [entities].
      */
-    fun updateGroundItem(world: World, item: GroundItem, oldAmount: Int, newAmount: Int) {
+    fun updateGroundItem(world: RSWorld, item: GroundItem, oldAmount: Int, newAmount: Int) {
         val update = ObjCountUpdate(EntityUpdateType.UPDATE_GROUND_ITEM, item, oldAmount, newAmount)
         sendUpdate(world, update)
 
@@ -182,7 +182,7 @@ class Chunk(val coords: ChunkCoords, val heights: Int) {
      * Send the [update] to any [Client] entities that are within view distance
      * of this chunk.
      */
-    private fun sendUpdate(world: World, update: EntityUpdate<*>) {
+    private fun sendUpdate(world: RSWorld, update: EntityUpdate<*>) {
         val surrounding = coords.getSurroundingCoords()
 
         for (coords in surrounding) {

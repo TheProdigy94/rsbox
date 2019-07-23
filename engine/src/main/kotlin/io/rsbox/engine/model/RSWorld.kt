@@ -1,9 +1,10 @@
 package io.rsbox.engine.model
 
 import com.google.common.base.Stopwatch
+import io.rsbox.api.World
 import io.rsbox.engine.DevContext
 import io.rsbox.engine.GameContext
-import io.rsbox.engine.Server
+import io.rsbox.engine.RSServer
 import io.rsbox.engine.fs.DefinitionSet
 import io.rsbox.engine.fs.def.ItemDef
 import io.rsbox.engine.fs.def.NpcDef
@@ -24,8 +25,8 @@ import io.rsbox.engine.model.queue.impl.WorldQueueTaskSet
 import io.rsbox.engine.model.region.ChunkSet
 import io.rsbox.engine.model.shop.Shop
 import io.rsbox.engine.model.timer.TimerMap
-import io.rsbox.engine.plugin.Plugin
-import io.rsbox.engine.plugin.PluginRepository
+import io.rsbox.engine.oldplugin.Plugin
+import io.rsbox.engine.oldplugin.PluginRepository
 import io.rsbox.engine.service.GameService
 import io.rsbox.engine.service.Service
 import io.rsbox.engine.service.xtea.XteaKeyService
@@ -52,7 +53,7 @@ import java.util.concurrent.TimeUnit
  *
  * @author Tom <rspsmods@gmail.com>
  */
-class World(val gameContext: GameContext, val devContext: DevContext) {
+class RSWorld(val gameContext: GameContext, val devContext: DevContext) : World {
 
     /**
      * The [Store] is responsible for handling the data in our cache.
@@ -95,7 +96,7 @@ class World(val gameContext: GameContext, val devContext: DevContext) {
     val instanceAllocator = InstancedMapAllocator()
 
     /**
-     * The plugin repository that's responsible for storing all the plugins found.
+     * The oldplugin repository that's responsible for storing all the plugins found.
      */
     var plugins = PluginRepository(this)
 
@@ -174,14 +175,14 @@ class World(val gameContext: GameContext, val devContext: DevContext) {
     internal var multiThreadPathFinding = false
 
     /**
-     * World timers.
+     * RSWorld timers.
      *
      * @see TimerMap
      */
     val timers = TimerMap()
 
     /**
-     * World attributes.
+     * RSWorld attributes.
      *
      * @see AttributeMap
      */
@@ -226,7 +227,7 @@ class World(val gameContext: GameContext, val devContext: DevContext) {
     internal fun cycle() {
         if (currentCycle++ >= Int.MAX_VALUE - 1) {
             currentCycle = 0
-            logger.info("World cycle has been reset.")
+            logger.info("RSWorld cycle has been reset.")
         }
 
         /*
@@ -591,7 +592,7 @@ class World(val gameContext: GameContext, val devContext: DevContext) {
     /**
      * Loads all the services listed on our game properties file.
      */
-    internal fun loadServices(server: Server, gameProperties: ServerProperties) {
+    internal fun loadServices(server: RSServer, gameProperties: ServerProperties) {
         val stopwatch = Stopwatch.createUnstarted()
         val foundServices = gameProperties.get<ArrayList<Any>>("services")!!
         foundServices.forEach { s ->
@@ -634,7 +635,7 @@ class World(val gameContext: GameContext, val devContext: DevContext) {
     /**
      * Invoke network related logic for all services.
      */
-    internal fun bindServices(server: Server) {
+    internal fun bindServices(server: RSServer) {
         services.forEach { it.bindNet(server, this) }
     }
 

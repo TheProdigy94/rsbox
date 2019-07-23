@@ -4,7 +4,7 @@ import io.rsbox.engine.model.EntityType
 import io.rsbox.engine.model.Tile
 
 /**
- * A [DynamicObject] is a game object that can be spawned by the [io.rsbox.engine.model.World].
+ * A [DynamicObject] is a game object that can be spawned by the [io.rsbox.engine.model.RSWorld].
  *
  * @author Tom <rspsmods@gmail.com>
  */

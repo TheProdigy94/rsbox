@@ -3,7 +3,7 @@ package io.rsbox.engine.model.queue.coroutine
 import kotlin.coroutines.Continuation
 
 /**
- * A step in suspendable logic that can be used to step through plugin logic.
+ * A step in suspendable logic that can be used to step through oldplugin logic.
  *
  * @author Tom <rspsmods@gmail.com>
  */

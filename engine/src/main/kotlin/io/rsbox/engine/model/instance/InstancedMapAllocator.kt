@@ -3,7 +3,7 @@ package io.rsbox.engine.model.instance
 import io.rsbox.engine.model.Area
 import io.rsbox.engine.model.EntityType
 import io.rsbox.engine.model.Tile
-import io.rsbox.engine.model.World
+import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.model.entity.DynamicObject
 import io.rsbox.engine.model.entity.Player
 import io.rsbox.engine.model.entity.StaticObject
@@ -31,13 +31,13 @@ class InstancedMapAllocator {
      * Allocate a new [InstancedMap] given [chunks].
      *
      * @param world
-     * The [World] that the instanced map is apart of.
+     * The [RSWorld] that the instanced map is apart of.
      *
      * @param chunks
      * The [InstancedChunkSet] that holds all the [InstancedChunk]s that will make
      * up the newly constructed [InstancedMap], if applicable.
      */
-    fun allocate(world: World, chunks: InstancedChunkSet, configs: InstancedMapConfiguration): InstancedMap? {
+    fun allocate(world: RSWorld, chunks: InstancedChunkSet, configs: InstancedMapConfiguration): InstancedMap? {
         val area = VALID_AREA
         val step = 64
 
@@ -70,7 +70,7 @@ class InstancedMapAllocator {
             InstancedMap(Area(x, z, x + chunks.regionSize * Chunk.REGION_SIZE, z + chunks.regionSize * Chunk.REGION_SIZE), chunks,
                     configs.exitTile, configs.owner, configs.attributes)
 
-    private fun deallocate(world: World, map: InstancedMap) {
+    private fun deallocate(world: RSWorld, map: InstancedMap) {
         if (maps.remove(map)) {
             removeCollision(world, map)
             world.removeAll(map.area)
@@ -117,7 +117,7 @@ class InstancedMapAllocator {
         }
     }
 
-    internal fun cycle(world: World) {
+    internal fun cycle(world: RSWorld) {
         if (deallocationScanCycle++ == SCAN_MAPS_CYCLES) {
 
             for (i in 0 until maps.size) {
@@ -142,7 +142,7 @@ class InstancedMapAllocator {
      */
     fun getMap(tile: Tile): InstancedMap? = maps.find { it.area.contains(tile) }
 
-    private fun applyCollision(world: World, map: InstancedMap, bypassObjectChunkBounds: Boolean) {
+    private fun applyCollision(world: RSWorld, map: InstancedMap, bypassObjectChunkBounds: Boolean) {
         val bounds = Chunk.CHUNKS_PER_REGION * map.chunks.regionSize
         val heights = Tile.TOTAL_HEIGHT_LEVELS
 
@@ -206,7 +206,7 @@ class InstancedMapAllocator {
         }
     }
 
-    private fun removeCollision(world: World, map: InstancedMap) {
+    private fun removeCollision(world: RSWorld, map: InstancedMap) {
         val regionCount = map.chunks.regionSize
         val chunks = world.chunks
 

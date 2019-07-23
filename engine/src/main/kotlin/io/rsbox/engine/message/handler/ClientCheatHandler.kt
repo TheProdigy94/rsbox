@@ -2,7 +2,7 @@ package io.rsbox.engine.message.handler
 
 import io.rsbox.engine.message.MessageHandler
 import io.rsbox.engine.message.impl.ClientCheatMessage
-import io.rsbox.engine.model.World
+import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.model.entity.Client
 import io.rsbox.engine.service.log.LoggerService
 import java.util.Arrays
@@ -12,7 +12,7 @@ import java.util.Arrays
  */
 class ClientCheatHandler : MessageHandler<ClientCheatMessage> {
 
-    override fun handle(client: Client, world: World, message: ClientCheatMessage) {
+    override fun handle(client: Client, world: RSWorld, message: ClientCheatMessage) {
         val values = message.command.split(" ")
         val command = values[0].toLowerCase()
         val args = if (values.size > 1) values.slice(1 until values.size).filter { it.isNotEmpty() }.toTypedArray() else null

@@ -1,7 +1,7 @@
 package io.rsbox.engine.model.shop
 
 import io.rsbox.engine.model.PlayerUID
-import io.rsbox.engine.model.World
+import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.model.attr.CURRENT_SHOP_ATTR
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet
 
@@ -41,7 +41,7 @@ data class Shop(val name: String, val stockType: StockType, val purchasePolicy: 
     /**
      * Refresh the shop for all [viewers].
      */
-    fun refresh(world: World) {
+    fun refresh(world: RSWorld) {
         val iterator = viewers.iterator()
         while (iterator.hasNext()) {
             val viewer = iterator.next()
@@ -58,7 +58,7 @@ data class Shop(val name: String, val stockType: StockType, val purchasePolicy: 
         }
     }
 
-    fun cycle(world: World) {
+    fun cycle(world: RSWorld) {
         var refresh = false
 
         for (i in 0 until items.size) {

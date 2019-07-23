@@ -2,7 +2,7 @@ package io.rsbox.engine.model.timer
 
 /**
  * A decoupled file that holds TimerKeys that require read-access from our
- * game module. Any timer keys that can be stored on the plugin classes themselves,
+ * game module. Any timer keys that can be stored on the oldplugin classes themselves,
  * should do so. When storing them in a class, remember the TimerKey must be
  * a singleton, meaning it should only have a single state.
  *

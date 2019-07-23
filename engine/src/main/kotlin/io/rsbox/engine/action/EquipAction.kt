@@ -14,7 +14,7 @@ object EquipAction {
 
     // Temporary way of loading skill names until we figure out the best solution.
     //  1) We can have a map of <skill, name> and populate it via plugins
-    //  2) Execute a plugin when skill requirement is not met that will handle
+    //  2) Execute a oldplugin when skill requirement is not met that will handle
     //      the messages
     //  3) Load skill names via external configs which would be used throughout
     //      the game and plugins module

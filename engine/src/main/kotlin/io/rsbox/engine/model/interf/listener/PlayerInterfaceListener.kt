@@ -1,7 +1,7 @@
 package io.rsbox.engine.model.interf.listener
 
 import io.rsbox.engine.model.entity.Player
-import io.rsbox.engine.plugin.PluginRepository
+import io.rsbox.engine.oldplugin.PluginRepository
 
 /**
  * @author Tom <rspsmods@gmail.com>

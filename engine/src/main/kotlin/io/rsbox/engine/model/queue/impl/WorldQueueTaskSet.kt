@@ -4,7 +4,7 @@ import io.rsbox.engine.model.queue.QueueTaskSet
 import kotlin.coroutines.resume
 
 /**
- * A [QueueTaskSet] implementation for [io.rsbox.engine.model.World].
+ * A [QueueTaskSet] implementation for [io.rsbox.engine.model.RSWorld].
  * All [io.rsbox.engine.model.queue.QueueTask]s are handled every tick.
  *
  * @author Tom <rspsmods@gmail.com>

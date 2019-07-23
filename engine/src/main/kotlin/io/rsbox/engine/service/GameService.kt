@@ -1,11 +1,11 @@
 package io.rsbox.engine.service
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder
-import io.rsbox.engine.Server
+import io.rsbox.engine.RSServer
 import io.rsbox.engine.message.MessageDecoderSet
 import io.rsbox.engine.message.MessageEncoderSet
 import io.rsbox.engine.message.MessageStructureSet
-import io.rsbox.engine.model.World
+import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.task.*
 import io.rsbox.engine.task.parallel.ParallelNpcCycleTask
 import io.rsbox.engine.task.parallel.ParallelPlayerCycleTask
@@ -35,7 +35,7 @@ class GameService : Service {
     /**
      * The associated world with our current game.
      */
-    lateinit var world: World
+    lateinit var world: RSWorld
 
     /**
      * The max amount of incoming [io.rsbox.engine.message.Message]s that can be
@@ -100,7 +100,7 @@ class GameService : Service {
 
     /**
      * The amount of active [io.rsbox.engine.model.queue.QueueTask]s throughout
-     * the [io.rsbox.engine.model.World].
+     * the [io.rsbox.engine.model.RSWorld].
      */
     internal var totalWorldQueues = 0
 
@@ -122,17 +122,17 @@ class GameService : Service {
      */
     internal var pause = false
 
-    override fun init(server: Server, world: World, serviceProperties: ServerProperties) {
+    override fun init(server: RSServer, world: RSWorld, serviceProperties: ServerProperties) {
         this.world = world
         populateTasks(serviceProperties)
         maxMessagesPerCycle = serviceProperties.getOrDefault("messages-per-cycle", 30)
         executor.scheduleAtFixedRate(this::cycle, 0, world.gameContext.cycleTime.toLong(), TimeUnit.MILLISECONDS)
     }
 
-    override fun postLoad(server: Server, world: World) {
+    override fun postLoad(server: RSServer, world: RSWorld) {
     }
 
-    override fun terminate(server: Server, world: World) {
+    override fun terminate(server: RSServer, world: RSWorld) {
     }
 
     private fun populateTasks(serviceProperties: ServerProperties) {
@@ -178,7 +178,7 @@ class GameService : Service {
         }
     }
 
-    override fun bindNet(server: Server, world: World) {
+    override fun bindNet(server: RSServer, world: RSWorld) {
     }
 
     /**

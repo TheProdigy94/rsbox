@@ -1,8 +1,8 @@
 package io.rsbox.engine.service.serializer
 
-import io.rsbox.engine.Server
+import io.rsbox.engine.RSServer
 import io.rsbox.engine.model.Tile
-import io.rsbox.engine.model.World
+import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.model.attr.NEW_ACCOUNT_ATTR
 import io.rsbox.engine.model.entity.Client
 import io.rsbox.engine.service.Service
@@ -19,18 +19,18 @@ abstract class PlayerSerializerService : Service {
 
     private lateinit var startTile: Tile
 
-    final override fun init(server: Server, world: World, serviceProperties: ServerProperties) {
+    final override fun init(server: RSServer, world: RSWorld, serviceProperties: ServerProperties) {
         startTile = Tile(world.gameContext.home)
         initSerializer(server, world, serviceProperties)
     }
 
-    override fun postLoad(server: Server, world: World) {
+    override fun postLoad(server: RSServer, world: RSWorld) {
     }
 
-    override fun bindNet(server: Server, world: World) {
+    override fun bindNet(server: RSServer, world: RSWorld) {
     }
 
-    override fun terminate(server: Server, world: World) {
+    override fun terminate(server: RSServer, world: RSWorld) {
     }
 
     fun configureNewPlayer(client: Client, request: LoginRequest) {
@@ -40,7 +40,7 @@ abstract class PlayerSerializerService : Service {
         client.tile = startTile
     }
 
-    abstract fun initSerializer(server: Server, world: World, serviceProperties: ServerProperties)
+    abstract fun initSerializer(server: RSServer, world: RSWorld, serviceProperties: ServerProperties)
 
     abstract fun loadClientData(client: Client, request: LoginRequest): PlayerLoadResult
 

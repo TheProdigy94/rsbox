@@ -2,7 +2,7 @@ package io.rsbox.engine.message.handler
 
 import io.rsbox.engine.message.MessageHandler
 import io.rsbox.engine.message.impl.IfButtonMessage
-import io.rsbox.engine.model.World
+import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.model.attr.INTERACTING_ITEM_ID
 import io.rsbox.engine.model.attr.INTERACTING_OPT_ATTR
 import io.rsbox.engine.model.attr.INTERACTING_SLOT_ATTR
@@ -13,7 +13,7 @@ import io.rsbox.engine.model.entity.Client
  */
 class IfButton1Handler : MessageHandler<IfButtonMessage> {
 
-    override fun handle(client: Client, world: World, message: IfButtonMessage) {
+    override fun handle(client: Client, world: RSWorld, message: IfButtonMessage) {
         val interfaceId = message.hash shr 16
         val component = message.hash and 0xFFFF
         val option = message.option + 1
