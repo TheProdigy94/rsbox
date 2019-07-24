@@ -1,11 +1,12 @@
 package io.rsbox.engine.model.entity
 
 import com.google.common.base.MoreObjects
+import io.rsbox.api.entity.GroundItem
 import io.rsbox.engine.model.EntityType
 import io.rsbox.engine.model.PlayerUID
-import io.rsbox.engine.model.Tile
+import io.rsbox.engine.model.RSTile
 import io.rsbox.engine.model.RSWorld
-import io.rsbox.engine.model.item.Item
+import io.rsbox.engine.model.item.RSItem
 import io.rsbox.engine.model.item.ItemAttribute
 import java.util.EnumMap
 
@@ -14,18 +15,18 @@ import java.util.EnumMap
  *
  * @param ownerUID
  * If null, the item will be visible and can be interacted with by any player
- * in the world. Otherwise, it will only be visible to the player who's [Player.uid]
+ * in the world. Otherwise, it will only be visible to the player who's [RSPlayer.uid]
  * matches [ownerUID].
  *
  * @author Tom <rspsmods@gmail.com>
  */
-class GroundItem private constructor(val item: Int, var amount: Int, internal var ownerUID: PlayerUID?) : Entity() {
+class RSGroundItem private constructor(val item: Int, var amount: Int, internal var ownerUID: PlayerUID?) : RSEntity(), GroundItem {
 
-    constructor(item: Int, amount: Int, tile: Tile, owner: Player? = null) : this(item, amount, owner?.uid) {
+    constructor(item: Int, amount: Int, tile: RSTile, owner: RSPlayer? = null) : this(item, amount, owner?.uid) {
         this.tile = tile
     }
 
-    constructor(item: Item, tile: Tile, owner: Player? = null) : this(item.id, item.amount, tile, owner)
+    constructor(item: RSItem, tile: RSTile, owner: RSPlayer? = null) : this(item.id, item.amount, tile, owner)
 
     internal var currentCycle = 0
 
@@ -35,17 +36,17 @@ class GroundItem private constructor(val item: Int, var amount: Int, internal va
 
     override val entityType: EntityType = EntityType.GROUND_ITEM
 
-    fun isOwnedBy(p: Player): Boolean = ownerUID != null && p.uid.value == ownerUID!!.value
+    fun isOwnedBy(p: RSPlayer): Boolean = ownerUID != null && p.uid.value == ownerUID!!.value
 
     fun isPublic(): Boolean = ownerUID == null
 
-    fun canBeViewedBy(p: Player): Boolean = isPublic() || isOwnedBy(p)
+    fun canBeViewedBy(p: RSPlayer): Boolean = isPublic() || isOwnedBy(p)
 
     fun removeOwner() {
         ownerUID = null
     }
 
-    fun copyAttr(attributes: Map<ItemAttribute, Int>): GroundItem {
+    fun copyAttr(attributes: Map<ItemAttribute, Int>): RSGroundItem {
         attr.putAll(attributes)
         return this
     }

@@ -1,15 +1,18 @@
 package io.rsbox.engine.model
 
+import io.rsbox.api.Appearance
+
 /**
  * @author Tom <rspsmods@gmail.com>
  */
-data class Appearance(val looks: IntArray, val colors: IntArray, val gender: Gender) {
+data class RSAppearance(var looks: IntArray, var colors: IntArray, var gender: RSGender) :
+    Appearance {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as Appearance
+        other as RSAppearance
 
         if (!looks.contentEquals(other.looks)) return false
         if (!colors.contentEquals(other.colors)) return false
@@ -31,6 +34,6 @@ data class Appearance(val looks: IntArray, val colors: IntArray, val gender: Gen
 
         private val DEFAULT_COLORS = intArrayOf(0, 3, 2, 0, 0)
 
-        val DEFAULT = Appearance(DEFAULT_LOOKS, DEFAULT_COLORS, Gender.MALE)
+        val DEFAULT = RSAppearance(DEFAULT_LOOKS, DEFAULT_COLORS, RSGender.MALE)
     }
 }

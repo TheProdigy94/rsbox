@@ -1,22 +1,20 @@
 package io.rsbox.engine.model.npcdrops
 
-import io.rsbox.engine.model.Tile
-import io.rsbox.engine.model.entity.GroundItem
-import io.rsbox.engine.model.entity.Npc
-import io.rsbox.engine.model.entity.Player
-import java.lang.Math.random
-import kotlin.math.nextUp
+import io.rsbox.engine.model.RSTile
+import io.rsbox.engine.model.entity.RSGroundItem
+import io.rsbox.engine.model.entity.RSNpc
+import io.rsbox.engine.model.entity.RSPlayer
 import kotlin.random.Random
 
 class NpcDropHandler {
     companion object {
-        fun processDrop(npc: Npc, killer: Player, deathTile: Tile) {
+        fun processDrop(npc: RSNpc, killer: RSPlayer, deathTile: RSTile) {
             val dropDef = npc.dropTableDef
 
             // Spawn always table items
             dropDef.always_table.forEach { drop ->
                 val preItem = drop.getItem()
-                npc.world.spawn(GroundItem(preItem.id, preItem.amount, deathTile, killer))
+                npc.world.spawn(RSGroundItem(preItem.id, preItem.amount, deathTile, killer))
             }
 
             // For each roll
@@ -55,7 +53,7 @@ class NpcDropHandler {
                     }
 
                     val item = table.get(tableItemIndex).getItem()
-                    npc.world.spawn(GroundItem(item.id, item.amount, deathTile, killer))
+                    npc.world.spawn(RSGroundItem(item.id, item.amount, deathTile, killer))
                 }
                 roll++
             }

@@ -1,5 +1,6 @@
 package io.rsbox.api.event
 
+import io.rsbox.api.event.login.PlayerLoginEvent
 import io.rsbox.api.plugin.PluginManager
 
 /**
@@ -10,6 +11,7 @@ object EventManager {
     private val events = arrayListOf<Event>()
 
     init {
+        register(PlayerLoginEvent::class.java)
     }
 
     fun fireEvent(eventClass: Class<out Event>, vararg args: Any?): Boolean {
@@ -38,5 +40,10 @@ object EventManager {
                 }
             }
         }
+    }
+
+    fun register(clazz: Class<out Event>) {
+        val event = clazz.newInstance()
+        events.add(event)
     }
 }

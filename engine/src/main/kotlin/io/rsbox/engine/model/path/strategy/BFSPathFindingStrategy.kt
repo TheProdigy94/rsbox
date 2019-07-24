@@ -1,7 +1,7 @@
 package io.rsbox.engine.model.path.strategy
 
 import io.rsbox.engine.model.Direction
-import io.rsbox.engine.model.Tile
+import io.rsbox.engine.model.RSTile
 import io.rsbox.engine.model.collision.CollisionManager
 import io.rsbox.engine.model.path.PathFindingStrategy
 import io.rsbox.engine.model.path.PathRequest
@@ -84,7 +84,7 @@ class BFSPathFindingStrategy(collision: CollisionManager) : PathFindingStrategy(
 
         val last = tail?.tile
 
-        val path = ArrayDeque<Tile>()
+        val path = ArrayDeque<RSTile>()
         while (tail?.parent != null) {
             path.addFirst(tail.tile)
             tail = tail.parent
@@ -93,9 +93,9 @@ class BFSPathFindingStrategy(collision: CollisionManager) : PathFindingStrategy(
         return Route(path = path, success = success, tail = last ?: start)
     }
 
-    private fun isTileBlocked(node: Tile, link: Tile): Boolean = !collision.canTraverse(node, Direction.between(node, link), projectile = false)
+    private fun isTileBlocked(node: RSTile, link: RSTile): Boolean = !collision.canTraverse(node, Direction.between(node, link), projectile = false)
 
-    private fun isStepBlocked(node: Tile, link: Tile, width: Int, length: Int, clipNode: Boolean, clipLink: Boolean): Boolean {
+    private fun isStepBlocked(node: RSTile, link: RSTile, width: Int, length: Int, clipNode: Boolean, clipLink: Boolean): Boolean {
         if (!clipNode && !clipLink) {
             return false
         }
@@ -118,7 +118,7 @@ class BFSPathFindingStrategy(collision: CollisionManager) : PathFindingStrategy(
     /**
      * Checks if the direction outwards of the target is blocked.
      */
-    private fun isTargetDirectionBlocked(node: Tile, end: Tile, targetWidth: Int, targetLength: Int,
+    private fun isTargetDirectionBlocked(node: RSTile, end: RSTile, targetWidth: Int, targetLength: Int,
                                          blockedDirection: Set<Direction>): Boolean {
         val x = node.x
         val z = node.z
@@ -136,7 +136,7 @@ class BFSPathFindingStrategy(collision: CollisionManager) : PathFindingStrategy(
         return blockedDirection.contains(face.getOpposite())
     }
 
-    private fun isDirectionBlocked(node: Tile, end: Tile, targetWidth: Int, targetLength: Int,
+    private fun isDirectionBlocked(node: RSTile, end: RSTile, targetWidth: Int, targetLength: Int,
                                    projectilePath: Boolean): Boolean {
         val x = node.x
         val z = node.z
@@ -154,7 +154,7 @@ class BFSPathFindingStrategy(collision: CollisionManager) : PathFindingStrategy(
         return collision.isBlocked(node, face, projectile = projectilePath)
     }
 
-    private fun isDiagonalTile(current: Tile, end: Tile, targetWidth: Int, targetLength: Int): Boolean {
+    private fun isDiagonalTile(current: RSTile, end: RSTile, targetWidth: Int, targetLength: Int): Boolean {
         val curX = current.x
         val curZ = current.z
         val endX = end.x
@@ -168,7 +168,7 @@ class BFSPathFindingStrategy(collision: CollisionManager) : PathFindingStrategy(
         return southWest || southEast || northWest || northEast
     }
 
-    private fun isTileOverlapping(tile: Tile, target: Tile, targetWidth: Int, targetLength: Int): Boolean {
+    private fun isTileOverlapping(tile: RSTile, target: RSTile, targetWidth: Int, targetLength: Int): Boolean {
         val curX = tile.x
         val curZ = tile.z
         val endX = target.x
@@ -177,7 +177,7 @@ class BFSPathFindingStrategy(collision: CollisionManager) : PathFindingStrategy(
         return (curX >= endX && curX < endX + targetWidth && curZ >= endZ && curZ < endZ + targetLength)
     }
 
-    private fun getEndTiles(request: PathRequest): Set<Tile> {
+    private fun getEndTiles(request: PathRequest): Set<RSTile> {
         val end = request.end
         val targetWidth = request.targetWidth
         val targetLength = request.targetLength
@@ -188,7 +188,7 @@ class BFSPathFindingStrategy(collision: CollisionManager) : PathFindingStrategy(
         val clipDirections = request.clipFlags.contains(PathRequest.ClipFlag.DIRECTIONS)
         val clipOverlapping = request.clipFlags.contains(PathRequest.ClipFlag.OVERLAP)
 
-        val validTiles = hashSetOf<Tile>()
+        val validTiles = hashSetOf<RSTile>()
 
         if (targetWidth == 0 && targetLength == 0) {
             validTiles.add(end)
@@ -229,7 +229,7 @@ class BFSPathFindingStrategy(collision: CollisionManager) : PathFindingStrategy(
      * A [Node] represents an single tile in a path, which can have the previous
      * tile in the path attached to it as a parent node.
      */
-    private data class Node(val tile: Tile, var parent: Node?) {
+    private data class Node(val tile: RSTile, var parent: Node?) {
 
         /**
          * The amount of interconnected nodes from this node to its parents,

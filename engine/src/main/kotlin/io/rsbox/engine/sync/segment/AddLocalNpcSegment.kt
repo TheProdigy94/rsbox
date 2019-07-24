@@ -1,32 +1,32 @@
 package io.rsbox.engine.sync.segment
 
 import io.rsbox.engine.model.Direction
-import io.rsbox.engine.model.entity.Npc
-import io.rsbox.engine.model.entity.Player
+import io.rsbox.engine.model.entity.RSNpc
+import io.rsbox.engine.model.entity.RSPlayer
 import io.rsbox.engine.sync.SynchronizationSegment
 import io.rsbox.net.packet.GamePacketBuilder
 
 /**
  * @author Tom <rspsmods@gmail.com>
  */
-class AddLocalNpcSegment(val player: Player, val npc: Npc, private val requiresBlockUpdate: Boolean,
+class AddLocalNpcSegment(val player: RSPlayer, val npc: RSNpc, private val requiresBlockUpdate: Boolean,
                          private val largeScene: Boolean) : SynchronizationSegment {
 
     override fun encode(buf: GamePacketBuilder) {
         var dx = npc.tile.x - player.tile.x
         var dz = npc.tile.z - player.tile.z
         if (!largeScene) {
-            if (dx < Player.NORMAL_VIEW_DISTANCE) {
+            if (dx < RSPlayer.NORMAL_VIEW_DISTANCE) {
                 dx += 32
             }
-            if (dz < Player.NORMAL_VIEW_DISTANCE) {
+            if (dz < RSPlayer.NORMAL_VIEW_DISTANCE) {
                 dz += 32
             }
         } else {
-            if (dx < Player.LARGE_VIEW_DISTANCE) {
+            if (dx < RSPlayer.LARGE_VIEW_DISTANCE) {
                 dx += 256
             }
-            if (dz < Player.LARGE_VIEW_DISTANCE) {
+            if (dz < RSPlayer.LARGE_VIEW_DISTANCE) {
                 dz += 256
             }
         }

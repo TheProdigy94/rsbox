@@ -1,5 +1,6 @@
 package io.rsbox.engine.model.container
 
+import io.rsbox.api.ItemTransaction
 import io.rsbox.engine.model.item.SlotItem
 
 /**
@@ -22,7 +23,7 @@ import io.rsbox.engine.model.item.SlotItem
  *
  * @author Tom <rspsmods@gmail.com>
  */
-data class ItemTransaction(val requested: Int, val completed: Int, val items: List<SlotItem>) : Iterable<SlotItem> {
+data class RSItemTransaction(val requested: Int, val completed: Int, val items: List<SlotItem>) : Iterable<SlotItem>, ItemTransaction {
 
     override fun iterator(): Iterator<SlotItem> = items.iterator()
 

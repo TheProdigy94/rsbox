@@ -1,5 +1,6 @@
 package io.rsbox.engine.model.queue
 
+import io.rsbox.api.TaskPriority
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import java.util.*

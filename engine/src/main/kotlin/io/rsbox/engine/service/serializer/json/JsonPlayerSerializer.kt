@@ -5,11 +5,11 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import io.rsbox.engine.RSServer
 import io.rsbox.engine.model.*
-import io.rsbox.engine.model.attr.AttributeKey
+import io.rsbox.api.AttributeKey
 import io.rsbox.engine.model.container.ItemContainer
 import io.rsbox.engine.model.entity.Client
 import io.rsbox.engine.model.interf.DisplayMode
-import io.rsbox.engine.model.item.Item
+import io.rsbox.engine.model.item.RSItem
 import io.rsbox.engine.model.priv.Privilege
 import io.rsbox.engine.model.timer.TimerKey
 import io.rsbox.engine.service.serializer.PlayerLoadResult
@@ -72,11 +72,11 @@ class JsonPlayerSerializer : PlayerSerializerService() {
             client.uid = PlayerUID(data.username)
             client.username = data.displayName
             client.passwordHash = data.passwordHash
-            client.tile = Tile(data.x, data.z, data.height)
+            client.tile = RSTile(data.x, data.z, data.height)
             client.privilege = world.privileges.get(data.privilege) ?: Privilege.DEFAULT
             client.runEnergy = data.runEnergy
             client.interfaces.displayMode = DisplayMode.values.firstOrNull { it.id == data.displayMode } ?: DisplayMode.FIXED
-            client.appearance = Appearance(data.appearance.looks, data.appearance.colors, Gender.values.firstOrNull { it.id == data.appearance.gender } ?: Gender.MALE)
+            client.appearance = RSAppearance(data.appearance.looks, data.appearance.colors, RSGender.values.firstOrNull { it.id == data.appearance.gender } ?: RSGender.MALE)
             data.skills.forEach { skill ->
                 client.getSkills().setXp(skill.skill, skill.xp)
                 client.getSkills().setCurrentLevel(skill.skill, skill.lvl)
@@ -166,7 +166,7 @@ class JsonPlayerSerializer : PlayerSerializerService() {
                                     @JsonProperty("colors") val colors: IntArray)
 
     data class PersistentContainer(@JsonProperty("name") val name: String,
-                                   @JsonProperty("items") val items: Map<Int, Item>)
+                                   @JsonProperty("items") val items: Map<Int, RSItem>)
 
     data class PersistentSkill(@JsonProperty("skill") val skill: Int,
                                @JsonProperty("xp") val xp: Double,

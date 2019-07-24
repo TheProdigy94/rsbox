@@ -1,6 +1,7 @@
 package io.rsbox.engine.model
 
 import com.google.common.base.MoreObjects
+import io.rsbox.api.Tile
 import io.rsbox.engine.model.region.Chunk
 import io.rsbox.engine.model.region.ChunkCoords
 
@@ -9,18 +10,18 @@ import io.rsbox.engine.model.region.ChunkCoords
  *
  * @author Tom <rspsmods@gmail.com>
  */
-class Tile {
+class RSTile : Tile {
 
     /**
      * A bit-packed integer that holds and represents the [x], [z] and [height] of the tile.
      */
     private val coordinate: Int
 
-    val x: Int get() = coordinate and 0x7FFF
+    override val x: Int get() = coordinate and 0x7FFF
 
-    val z: Int get() = (coordinate shr 15) and 0x7FFF
+    override val z: Int get() = (coordinate shr 15) and 0x7FFF
 
-    val height: Int get() = coordinate ushr 30
+    override val height: Int get() = coordinate ushr 30
 
     val topLeftRegionX: Int get() = (x shr 3) - 6
 
@@ -29,12 +30,12 @@ class Tile {
     /**
      * Get the region id based on these coordinates.
      */
-    val regionId: Int get() = ((x shr 6) shl 8) or (z shr 6)
+    override val regionId: Int get() = ((x shr 6) shl 8) or (z shr 6)
 
     /**
      * Returns the base tile of our region relative to the current [x], [z] and [Chunk.MAX_VIEWPORT].
      */
-    val regionBase: Tile get() = Tile(((x shr 3) - (Chunk.MAX_VIEWPORT shr 4)) shl 3, ((z shr 3) - (Chunk.MAX_VIEWPORT shr 4)) shl 3, height)
+    val regionBase: RSTile get() = RSTile(((x shr 3) - (Chunk.MAX_VIEWPORT shr 4)) shl 3, ((z shr 3) - (Chunk.MAX_VIEWPORT shr 4)) shl 3, height)
 
     val chunkCoords: ChunkCoords get() = ChunkCoords.fromTile(this)
 
@@ -43,28 +44,28 @@ class Tile {
      */
     val as30BitInteger: Int get() = (z and 0x3FFF) or ((x and 0x3FFF) shl 14) or ((height and 0x3) shl 28)
 
-    val asTileHashMultiplier: Int get() = (z shr 13) or ((x shr 13) shl 8) or ((height and 0x3) shl 16)
+    override val asTileHashMultiplier: Int get() = (z shr 13) or ((x shr 13) shl 8) or ((height and 0x3) shl 16)
 
     private constructor(coordinate: Int) {
         this.coordinate = coordinate
-        check(height < TOTAL_HEIGHT_LEVELS) { "Tile height level should not exceed maximum height! [height=$height]" }
+        check(height < TOTAL_HEIGHT_LEVELS) { "RSTile height level should not exceed maximum height! [height=$height]" }
     }
 
     constructor(x: Int, z: Int, height: Int = 0) : this((x and 0x7FFF) or ((z and 0x7FFF) shl 15) or (height shl 30))
 
-    constructor(other: Tile) : this(other.x, other.z, other.height)
+    constructor(other: RSTile) : this(other.x, other.z, other.height)
 
-    fun transform(x: Int, z: Int, height: Int) = Tile(this.x + x, this.z + z, this.height + height)
+    fun transform(x: Int, z: Int, height: Int) = RSTile(this.x + x, this.z + z, this.height + height)
 
-    fun transform(x: Int, z: Int): Tile = Tile(this.x + x, this.z + z, this.height)
+    fun transform(x: Int, z: Int): RSTile = RSTile(this.x + x, this.z + z, this.height)
 
-    fun transform(height: Int): Tile = Tile(this.x, this.z, this.height + height)
+    fun transform(height: Int): RSTile = RSTile(this.x, this.z, this.height + height)
 
-    fun viewableFrom(other: Tile, viewDistance: Int = 15): Boolean = getDistance(other) <= viewDistance
+    fun viewableFrom(other: RSTile, viewDistance: Int = 15): Boolean = getDistance(other) <= viewDistance
 
-    fun step(direction: Direction, num: Int = 1): Tile = Tile(this.x + (num * direction.getDeltaX()), this.z + (num * direction.getDeltaZ()), this.height)
+    fun step(direction: Direction, num: Int = 1): RSTile = RSTile(this.x + (num * direction.getDeltaX()), this.z + (num * direction.getDeltaZ()), this.height)
 
-    fun transformAndRotate(localX: Int, localZ: Int, orientation: Int, width: Int = 1, length: Int = 1): Tile {
+    fun transformAndRotate(localX: Int, localZ: Int, orientation: Int, width: Int = 1, length: Int = 1): RSTile {
         val localWidth = Chunk.CHUNK_SIZE - 1
         val localLength = Chunk.CHUNK_SIZE - 1
 
@@ -88,22 +89,22 @@ class Tile {
 
     /**
      * Checks if the [other] tile is within the [radius]x[radius] distance of
-     * this [Tile].
+     * this [RSTile].
      *
      * @return true
      * if the tiles are on the same height and within radius of [radius] tiles.
      */
-    fun isWithinRadius(other: Tile, radius: Int): Boolean = isWithinRadius(other.x, other.z, other.height, radius)
+    fun isWithinRadius(other: RSTile, radius: Int): Boolean = isWithinRadius(other.x, other.z, other.height, radius)
 
-    fun isInSameChunk(other: Tile): Boolean = (x shr 3) == (other.x shr 3) && (z shr 3) == (other.z shr 3)
+    fun isInSameChunk(other: RSTile): Boolean = (x shr 3) == (other.x shr 3) && (z shr 3) == (other.z shr 3)
 
-    fun getDistance(other: Tile): Int {
+    fun getDistance(other: RSTile): Int {
         val dx = x - other.x
         val dz = z - other.z
         return Math.ceil(Math.sqrt((dx * dx + dz * dz).toDouble())).toInt()
     }
 
-    fun getDelta(other: Tile): Int = Math.abs(x - other.x) + Math.abs(z - other.z)
+    fun getDelta(other: RSTile): Int = Math.abs(x - other.x) + Math.abs(z - other.z)
 
     /**
      * @return
@@ -111,7 +112,7 @@ class Tile {
      *
      * The [other] tile will always have coords equal to or greater than our own.
      */
-    fun toLocal(other: Tile): Tile = Tile(((other.x shr 3) - (x shr 3)) shl 3, ((other.z shr 3) - (z shr 3)) shl 3, height)
+    fun toLocal(other: RSTile): RSTile = RSTile(((other.x shr 3) - (x shr 3)) shl 3, ((other.z shr 3) - (z shr 3)) shl 3, height)
 
     /**
      * @return
@@ -123,16 +124,16 @@ class Tile {
     /**
      * Checks if the [other] tile has the same coordinates as this tile.
      */
-    fun sameAs(other: Tile): Boolean = other.x == x && other.z == z && other.height == height
+    override fun sameAs(other: Tile): Boolean = (other as RSTile).x == x && other.z == z && other.height == height
 
-    fun sameAs(x: Int, z: Int): Boolean = x == this.x && z == this.z
+    override fun sameAs(x: Int, z: Int): Boolean = x == this.x && z == this.z
 
     override fun toString(): String = MoreObjects.toStringHelper(this).add("x", x).add("z", z).add("height", height).toString()
 
     override fun hashCode(): Int = coordinate
 
     override fun equals(other: Any?): Boolean {
-        if (other is Tile) {
+        if (other is RSTile) {
             return other.coordinate == coordinate
         }
         return false
@@ -144,9 +145,9 @@ class Tile {
 
     operator fun component3() = height
 
-    operator fun minus(other: Tile): Tile = Tile(x - other.x, z - other.z, height - other.height)
+    operator fun minus(other: RSTile): RSTile = RSTile(x - other.x, z - other.z, height - other.height)
 
-    operator fun plus(other: Tile): Tile = Tile(x + other.x, z + other.z, height + other.height)
+    operator fun plus(other: RSTile): RSTile = RSTile(x + other.x, z + other.z, height + other.height)
 
     companion object {
         /**
@@ -154,24 +155,24 @@ class Tile {
          */
         const val TOTAL_HEIGHT_LEVELS = 4
 
-        fun fromRotatedHash(packed: Int): Tile {
+        fun fromRotatedHash(packed: Int): RSTile {
             val x = ((packed shr 14) and 0x3FF) shl 3
             val z = ((packed shr 3) and 0x7FF) shl 3
             val height = (packed shr 28) and 0x3
-            return Tile(x, z, height)
+            return RSTile(x, z, height)
         }
 
-        fun from30BitHash(packed: Int): Tile {
+        fun from30BitHash(packed: Int): RSTile {
             val x = ((packed shr 14) and 0x3FFF)
             val z = ((packed) and 0x3FFF)
             val height = (packed shr 28)
-            return Tile(x, z, height)
+            return RSTile(x, z, height)
         }
 
-        fun fromRegion(region: Int): Tile {
+        fun fromRegion(region: Int): RSTile {
             val x = ((region shr 8) shl 6)
             val z = ((region and 0xFF) shl 6)
-            return Tile(x, z)
+            return RSTile(x, z)
         }
     }
 }

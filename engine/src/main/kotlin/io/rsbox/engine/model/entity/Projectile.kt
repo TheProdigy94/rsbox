@@ -2,17 +2,17 @@ package io.rsbox.engine.model.entity
 
 import com.google.common.base.MoreObjects
 import io.rsbox.engine.model.EntityType
-import io.rsbox.engine.model.Tile
+import io.rsbox.engine.model.RSTile
 
 /**
  * A projectile that can be shot in the world.
  *
  * @param targetPawn
- * The [Pawn] that is being targeted by the projectile. Can be set to null if a
- * [Tile] is the target instead.
+ * The [RSPawn] that is being targeted by the projectile. Can be set to null if a
+ * [RSTile] is the target instead.
  *
  * @param targetTile
- * The [Tile] where the projectile will land. Can be set to null if [Pawn] is
+ * The [RSTile] where the projectile will land. Can be set to null if [RSPawn] is
  * being the target instead.
  *
  * @param gfx
@@ -38,9 +38,9 @@ import io.rsbox.engine.model.Tile
  *
  * @author Tom <rspsmods@gmail.com>
  */
-class Projectile private constructor(val targetPawn: Pawn?, val targetTile: Tile,
+class Projectile private constructor(val targetPawn: RSPawn?, val targetTile: RSTile,
                                      val gfx: Int, val startHeight: Int, val endHeight: Int,
-                                     val steepness: Int, val angle: Int, val delay: Int, val lifespan: Int) : Entity() {
+                                     val steepness: Int, val angle: Int, val delay: Int, val lifespan: Int) : RSEntity() {
 
     override val entityType: EntityType = EntityType.PROJECTILE
 
@@ -51,11 +51,11 @@ class Projectile private constructor(val targetPawn: Pawn?, val targetTile: Tile
 
     class Builder {
 
-        private var start: Tile? = null
+        private var start: RSTile? = null
 
-        private var targetPawn: Pawn? = null
+        private var targetPawn: RSPawn? = null
 
-        private var targetTile: Tile? = null
+        private var targetTile: RSTile? = null
 
         private var gfx = -1
 
@@ -108,17 +108,17 @@ class Projectile private constructor(val targetPawn: Pawn?, val targetTile: Tile
             return projectile
         }
 
-        fun setStart(start: Tile): Builder {
+        fun setStart(start: RSTile): Builder {
             this.start = start
             return this
         }
 
-        fun setTarget(pawn: Pawn): Builder {
+        fun setTarget(pawn: RSPawn): Builder {
             this.targetPawn = pawn
             return this
         }
 
-        fun setTarget(tile: Tile): Builder {
+        fun setTarget(tile: RSTile): Builder {
             this.targetTile = tile
             return this
         }
@@ -158,13 +158,13 @@ class Projectile private constructor(val targetPawn: Pawn?, val targetTile: Tile
             return this
         }
 
-        fun setTiles(start: Tile, target: Tile): Builder {
+        fun setTiles(start: RSTile, target: RSTile): Builder {
             this.start = start
             this.targetTile = target
             return this
         }
 
-        fun setTiles(start: Tile, target: Pawn): Builder {
+        fun setTiles(start: RSTile, target: RSPawn): Builder {
             this.start = start
             this.targetPawn = target
             return this

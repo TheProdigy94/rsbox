@@ -1,9 +1,7 @@
-package io.rsbox.engine.model.attr
+package io.rsbox.api
 
-import io.rsbox.engine.model.container.ItemTransaction
-import io.rsbox.engine.model.entity.*
-import io.rsbox.engine.model.item.Item
-import io.rsbox.engine.model.shop.Shop
+import io.rsbox.api.entity.*
+import io.rsbox.api.item.Item
 import java.lang.ref.WeakReference
 
 /**
@@ -39,7 +37,7 @@ val PROTECT_ITEM_ATTR = AttributeKey<Boolean>()
 val DISPLAY_MODE_CHANGE_ATTR = AttributeKey<Int>()
 
 /**
- * The [Pawn] which another pawn is facing.
+ * The [RSPawn] which another pawn is facing.
  */
 val FACING_PAWN_ATTR = AttributeKey<WeakReference<Pawn>>()
 
@@ -54,23 +52,23 @@ val NPC_FACING_US_ATTR = AttributeKey<WeakReference<Npc>>()
 val CURRENT_SHOP_ATTR = AttributeKey<Shop>()
 
 /**
- * The [Pawn] which another pawn wants to initiate combat with, whether they meet
+ * The [RSPawn] which another pawn wants to initiate combat with, whether they meet
  * the criteria to attack or not (including being in attack range).
  */
 val COMBAT_TARGET_FOCUS_ATTR = AttributeKey<WeakReference<Pawn>>()
 
 /**
- * The [Pawn] that killed another pawn.
+ * The [RSPawn] that killed another pawn.
  */
 val KILLER_ATTR = AttributeKey<WeakReference<Pawn>>()
 
 /**
- * The last [Pawn] that the owner of this attribute has hit.
+ * The last [RSPawn] that the owner of this attribute has hit.
  */
 val LAST_HIT_ATTR = AttributeKey<WeakReference<Pawn>>()
 
 /**
- * The last [Pawn] who has hit the owner of this attribute.
+ * The last [RSPawn] who has hit the owner of this attribute.
  */
 val LAST_HIT_BY_ATTR = AttributeKey<WeakReference<Pawn>>()
 
@@ -82,12 +80,14 @@ val POISON_TICKS_LEFT_ATTR = AttributeKey<Int>(persistenceKey = "poison_ticks_le
 /**
  * The amount of antifire potion charges left.
  */
-val ANTIFIRE_POTION_CHARGES_ATTR = AttributeKey<Int>(persistenceKey = "antifire_potion_charges", resetOnDeath = true)
+val ANTIFIRE_POTION_CHARGES_ATTR =
+    AttributeKey<Int>(persistenceKey = "antifire_potion_charges", resetOnDeath = true)
 
 /**
  * If full dragonfire immunity is enabled.
  */
-val DRAGONFIRE_IMMUNITY_ATTR = AttributeKey<Boolean>(persistenceKey = "dragonfire_immunity", resetOnDeath = true)
+val DRAGONFIRE_IMMUNITY_ATTR =
+    AttributeKey<Boolean>(persistenceKey = "dragonfire_immunity", resetOnDeath = true)
 
 /**
  * The command that the player has submitted to the server using the '::' prefix.
@@ -134,7 +134,7 @@ val INTERACTING_OBJ_ATTR = AttributeKey<WeakReference<out GameObject>>()
 val INTERACTING_NPC_ATTR = AttributeKey<WeakReference<Npc>>()
 
 /**
- * The [Player] that was last clicked on.
+ * The [RSPlayer] that was last clicked on.
  */
 val INTERACTING_PLAYER_ATTR = AttributeKey<WeakReference<Player>>()
 

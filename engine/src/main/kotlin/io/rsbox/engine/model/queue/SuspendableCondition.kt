@@ -1,7 +1,7 @@
-package io.rsbox.engine.model.queue.coroutine
+package io.rsbox.engine.model.queue
 
 import com.google.common.base.MoreObjects
-import io.rsbox.engine.model.Tile
+import io.rsbox.api.Tile
 import java.util.concurrent.atomic.AtomicInteger
 
 /**

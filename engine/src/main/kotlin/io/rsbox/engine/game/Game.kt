@@ -1,9 +1,9 @@
 package io.rsbox.engine.game
 
-import io.rsbox.engine.model.attr.INTERACTING_ITEM_SLOT
-import io.rsbox.engine.model.attr.OTHER_ITEM_SLOT_ATTR
+import io.rsbox.api.INTERACTING_ITEM_SLOT
+import io.rsbox.api.OTHER_ITEM_SLOT_ATTR
 import io.rsbox.engine.model.entity.Client
-import io.rsbox.engine.model.entity.Player
+import io.rsbox.engine.model.entity.RSPlayer
 import io.rsbox.engine.model.interf.InterfaceDestination
 
 /**
@@ -11,7 +11,7 @@ import io.rsbox.engine.model.interf.InterfaceDestination
  */
 
 object Game {
-    fun closeModal(player: Player) {
+    fun closeModal(player: RSPlayer) {
         val modal = player.interfaces.getModal()
         if(modal != -1) {
             player.closeInterfaceModal()
@@ -19,11 +19,11 @@ object Game {
         }
     }
 
-    fun openMenuCheck(player: Player): Boolean {
+    fun openMenuCheck(player: RSPlayer): Boolean {
         return player.getInterfaceAt(dest = InterfaceDestination.MAIN_SCREEN) != -1
     }
 
-    fun login(player: Player) {
+    fun login(player: RSPlayer) {
         // Skill-related logic.
         if (player.getSkills().getMaxLevel(Skills.HITPOINTS) < 10) {
             player.getSkills().setBaseLevel(Skills.HITPOINTS, 10)
@@ -72,7 +72,7 @@ object Game {
         val srcSlot = client.attr[INTERACTING_ITEM_SLOT]!!
         val dstSlot = client.attr[OTHER_ITEM_SLOT_ATTR]!!
 
-        val container = (client as Player).inventory
+        val container = (client as RSPlayer).inventory
 
         if(srcSlot in 0 until container.capacity && dstSlot in 0 until container.capacity) {
             container.swap(srcSlot, dstSlot)

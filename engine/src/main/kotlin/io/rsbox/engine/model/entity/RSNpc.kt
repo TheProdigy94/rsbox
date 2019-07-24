@@ -1,10 +1,11 @@
 package io.rsbox.engine.model.entity
 
 import com.google.common.base.MoreObjects
+import io.rsbox.api.entity.Npc
 import io.rsbox.engine.fs.def.NpcDef
 import io.rsbox.engine.fs.def.VarbitDef
 import io.rsbox.engine.model.EntityType
-import io.rsbox.engine.model.Tile
+import io.rsbox.engine.model.RSTile
 import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.model.combat.AttackStyle
 import io.rsbox.engine.model.combat.CombatClass
@@ -16,13 +17,13 @@ import io.rsbox.engine.sync.block.UpdateBlockType
 /**
  * @author Tom <rspsmods@gmail.com>
  */
-open class Npc private constructor(val id: Int, world: RSWorld, val spawnTile: Tile) : Pawn(world) {
+open class RSNpc private constructor(val id: Int, world: RSWorld, val spawnTile: RSTile) : RSPawn(world), Npc {
 
-    constructor(id: Int, tile: Tile, world: RSWorld) : this(id, world, spawnTile = Tile(tile)) {
+    constructor(id: Int, tile: RSTile, world: RSWorld) : this(id, world, spawnTile = RSTile(tile)) {
         this.tile = tile
     }
 
-    constructor(owner: Player, id: Int, tile: Tile, world: RSWorld) : this(id, world, spawnTile = Tile(tile)) {
+    constructor(owner: RSPlayer, id: Int, tile: RSTile, world: RSWorld) : this(id, world, spawnTile = RSTile(tile)) {
         this.tile = tile
         this.owner = owner
     }
@@ -37,12 +38,12 @@ open class Npc private constructor(val id: Int, world: RSWorld, val spawnTile: T
     private var active = false
 
     /**
-     * The owner of an npc will be the only [Player] who can view this npc.
+     * The owner of an npc will be the only [RSPlayer] who can view this npc.
      * If the owner is no longer online, this npc will be removed from the world.
      *
      * @see [io.rsbox.engine.task.WorldRemoveTask]
      */
-    var owner: Player? = null
+    var owner: RSPlayer? = null
 
     /**
      * This flag indicates whether or not this npc will respawn after death.
@@ -94,7 +95,7 @@ open class Npc private constructor(val id: Int, world: RSWorld, val spawnTile: T
     /**
      * Check if the npc will be aggressive towards the parameter player.
      */
-    var aggroCheck: ((Npc, Player) -> Boolean)? = null
+    var aggroCheck: ((RSNpc, RSPlayer) -> Boolean)? = null
 
     /**
      * Gets the [NpcDef] corresponding to our [id].
@@ -157,7 +158,7 @@ open class Npc private constructor(val id: Int, world: RSWorld, val spawnTile: T
      * Npcs can change their appearance for each player depending on their
      * [NpcDef.transforms] and [NpcDef.varp]/[NpcDef.varbit].
      */
-    fun getTransform(player: Player): Int {
+    fun getTransform(player: RSPlayer): Int {
         if (def.varbit != -1) {
             val varbitDef = world.definitions.get(VarbitDef::class.java, def.varbit)
             val state = player.varps.getBit(varbitDef.varp, varbitDef.startBit, varbitDef.endBit)
@@ -173,14 +174,14 @@ open class Npc private constructor(val id: Int, world: RSWorld, val spawnTile: T
     }
 
     /**
-     * @see [Npc.active]
+     * @see [RSNpc.active]
      */
     fun setActive(active: Boolean) {
         this.active = active
     }
 
     /**
-     * @see [Npc.active]
+     * @see [RSNpc.active]
      */
     fun isActive(): Boolean = active
 

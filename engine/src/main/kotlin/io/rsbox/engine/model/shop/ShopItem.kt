@@ -24,8 +24,8 @@ package io.rsbox.engine.model.shop
  * @author Tom <rspsmods@gmail.com>
  */
 data class ShopItem(val item: Int, val amount: Int, val sellPrice: Int? = null, val buyPrice: Int? = null,
-                    val resupplyAmount: Int = Shop.DEFAULT_RESUPPLY_AMOUNT,
-                    val resupplyCycles: Int = Shop.DEFAULT_RESUPPLY_CYCLES) {
+                    val resupplyAmount: Int = RSShop.DEFAULT_RESUPPLY_AMOUNT,
+                    val resupplyCycles: Int = RSShop.DEFAULT_RESUPPLY_CYCLES) {
 
     /**
      * The current amount of the item that is in stock.

@@ -1,6 +1,6 @@
 package io.rsbox.engine.model.region
 
-import io.rsbox.engine.model.Tile
+import io.rsbox.engine.model.RSTile
 import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.model.collision.CollisionMatrix
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet
@@ -52,20 +52,20 @@ class ChunkSet(val world: RSWorld) {
      * Get the [Chunk] that corresponds to the given [chunks].
      *
      * @param tile
-     * The [Tile] to get the [ChunkCoords] from.
+     * The [RSTile] to get the [ChunkCoords] from.
      */
-    fun getOrCreate(tile: Tile): Chunk = get(tile.chunkCoords, createIfNeeded = true)!!
+    fun getOrCreate(tile: RSTile): Chunk = get(tile.chunkCoords, createIfNeeded = true)!!
 
     /**
      * Get the [Chunk] that corresponds to the given [chunks].
      *
      * @param tile
-     * The [Tile] to get the [ChunkCoords] from.
+     * The [RSTile] to get the [ChunkCoords] from.
      *
      * @param createIfNeeded
      * Create the [Chunk] if it does not already exist in our [chunks].
      */
-    fun get(tile: Tile, createIfNeeded: Boolean = false): Chunk? = get(tile.chunkCoords, createIfNeeded)
+    fun get(tile: RSTile, createIfNeeded: Boolean = false): Chunk? = get(tile.chunkCoords, createIfNeeded)
 
     /**
      * Get the [Chunk] that corresponds to the given [chunks].
@@ -84,7 +84,7 @@ class ChunkSet(val world: RSWorld) {
             return null
         }
         val regionId = coords.toTile().regionId
-        val newChunk = Chunk(coords, Tile.TOTAL_HEIGHT_LEVELS)
+        val newChunk = Chunk(coords, RSTile.TOTAL_HEIGHT_LEVELS)
         newChunk.createEntityContainers()
 
         chunks[coords] = newChunk

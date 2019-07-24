@@ -5,13 +5,13 @@ import com.google.common.collect.Multimap
 import io.rsbox.engine.RSServer
 import io.rsbox.engine.event.Event
 import io.rsbox.engine.model.RSWorld
-import io.rsbox.engine.model.attr.COMMAND_ARGS_ATTR
-import io.rsbox.engine.model.attr.COMMAND_ATTR
+import io.rsbox.api.COMMAND_ARGS_ATTR
+import io.rsbox.api.COMMAND_ATTR
 import io.rsbox.engine.model.combat.NpcCombatDef
 import io.rsbox.engine.model.container.key.*
 import io.rsbox.engine.model.entity.*
 import io.rsbox.engine.model.npcdrops.NpcDropTableDef
-import io.rsbox.engine.model.shop.Shop
+import io.rsbox.engine.model.shop.RSShop
 import io.rsbox.engine.model.timer.TimerKey
 import io.rsbox.engine.service.Service
 import io.rsbox.util.ServerProperties
@@ -78,13 +78,13 @@ class PluginRepository(val world: RSWorld) {
     private val logoutPlugins = mutableListOf<Plugin.() -> Unit>()
 
     /**
-     * A list of plugins that will be executed upon an [io.rsbox.engine.model.entity.Npc]
+     * A list of plugins that will be executed upon an [io.rsbox.engine.model.entity.RSNpc]
      * being spawned into the world. Use sparingly.
      */
     private val globalNpcSpawnPlugins = mutableListOf<Plugin.() -> Unit>()
 
     /**
-     * A list of plugins that will be executed upon an [io.rsbox.engine.model.entity.Npc]
+     * A list of plugins that will be executed upon an [io.rsbox.engine.model.entity.RSNpc]
      * with a specific id being spawned into the world. Use sparingly per npc.
      *
      * Note: any npc added to this map <strong>will</strong> still invoke the
@@ -340,7 +340,7 @@ class PluginRepository(val world: RSWorld) {
     internal val multiCombatChunks = IntOpenHashSet()
 
     /**
-     * The int value is calculated via [io.rsbox.engine.model.Tile.regionId].
+     * The int value is calculated via [io.rsbox.engine.model.RSTile.regionId].
      */
     internal val multiCombatRegions = IntOpenHashSet()
 
@@ -348,7 +348,7 @@ class PluginRepository(val world: RSWorld) {
      * Temporarily holds all npc spawns set from plugins for this [PluginRepository].
      * This is then passed onto the [RSWorld] and is cleared.
      */
-    internal val npcSpawns = mutableListOf<Npc>()
+    internal val npcSpawns = mutableListOf<RSNpc>()
 
     /**
      * Temporarily holds all object spawns set from plugins for this [PluginRepository].
@@ -361,7 +361,7 @@ class PluginRepository(val world: RSWorld) {
      * [PluginRepository].
      * This is then passed onto the [RSWorld] and is cleared.
      */
-    internal val itemSpawns = mutableListOf<GroundItem>()
+    internal val itemSpawns = mutableListOf<RSGroundItem>()
 
     /**
      * A map of [NpcCombatDef]s that have been set by [KotlinPlugin]s.
@@ -376,7 +376,7 @@ class PluginRepository(val world: RSWorld) {
     /**
      * Holds all valid shops set from plugins for this [PluginRepository].
      */
-    internal val shops = Object2ObjectOpenHashMap<String, Shop>()
+    internal val shops = Object2ObjectOpenHashMap<String, RSShop>()
 
     /**
      * A list of [Service]s that have been requested for loading by a [KotlinPlugin].
@@ -488,7 +488,7 @@ class PluginRepository(val world: RSWorld) {
     }
 
     /**
-     * Spawn any and all [io.rsbox.engine.model.entity.Entity]s given to us by
+     * Spawn any and all [io.rsbox.engine.model.entity.RSEntity]s given to us by
      * [KotlinPlugin]s.
      */
     private fun spawnEntities() {
@@ -547,7 +547,7 @@ class PluginRepository(val world: RSWorld) {
         combatPlugin = plugin
     }
 
-    fun executeCombat(pawn: Pawn) {
+    fun executeCombat(pawn: RSPawn) {
         if (combatPlugin != null) {
             pawn.executePlugin(combatPlugin!!)
         }
@@ -555,14 +555,14 @@ class PluginRepository(val world: RSWorld) {
 
     fun bindNpcCombat(npc: Int, plugin: Plugin.() -> Unit) {
         if (npcCombatPlugins.containsKey(npc)) {
-            logger.error("Npc is already bound to a combat oldplugin: $npc")
-            throw IllegalStateException("Npc is already bound to a combat oldplugin: $npc")
+            logger.error("RSNpc is already bound to a combat oldplugin: $npc")
+            throw IllegalStateException("RSNpc is already bound to a combat oldplugin: $npc")
         }
         npcCombatPlugins[npc] = plugin
         pluginCount++
     }
 
-    fun executeNpcCombat(n: Npc): Boolean {
+    fun executeNpcCombat(n: RSNpc): Boolean {
         val plugin = npcCombatPlugins[n.id] ?: return false
         n.executePlugin(plugin)
         return true
@@ -572,7 +572,7 @@ class PluginRepository(val world: RSWorld) {
         playerPreDeathPlugins.add(plugin)
     }
 
-    fun executePlayerPreDeath(p: Player) {
+    fun executePlayerPreDeath(p: RSPlayer) {
         playerPreDeathPlugins.forEach { plugin -> p.executePlugin(plugin) }
     }
 
@@ -580,7 +580,7 @@ class PluginRepository(val world: RSWorld) {
         playerOptionPlugins[option] = plugin
     }
 
-    fun executePlayerOption(player: Player, option: String): Boolean {
+    fun executePlayerOption(player: RSPlayer, option: String): Boolean {
         val logic = playerOptionPlugins[option] ?: return false
         player.executePlugin(logic)
         return true
@@ -590,7 +590,7 @@ class PluginRepository(val world: RSWorld) {
         playerDeathPlugins.add(plugin)
     }
 
-    fun executePlayerDeath(p: Player) {
+    fun executePlayerDeath(p: RSPlayer) {
         playerDeathPlugins.forEach { plugin -> p.executePlugin(plugin) }
     }
 
@@ -598,7 +598,7 @@ class PluginRepository(val world: RSWorld) {
         npcPreDeathPlugins[npc] = plugin
     }
 
-    fun executeNpcPreDeath(npc: Npc) {
+    fun executeNpcPreDeath(npc: RSNpc) {
         npcPreDeathPlugins[npc.id]?.let { plugin ->
             npc.executePlugin(plugin)
         }
@@ -608,7 +608,7 @@ class PluginRepository(val world: RSWorld) {
         npcDeathPlugins[npc] = plugin
     }
 
-    fun executeNpcDeath(npc: Npc) {
+    fun executeNpcDeath(npc: RSNpc) {
         npcDeathPlugins[npc.id]?.let { plugin ->
             npc.executePlugin(plugin)
         }
@@ -624,7 +624,7 @@ class PluginRepository(val world: RSWorld) {
         pluginCount++
     }
 
-    fun executeSpellOnNpc(p: Player, parent: Int, child: Int): Boolean {
+    fun executeSpellOnNpc(p: RSPlayer, parent: Int, child: Int): Boolean {
         val hash = (parent shl 16) or child
         val plugin = spellOnNpcPlugins[hash] ?: return false
         p.executePlugin(plugin)
@@ -639,7 +639,7 @@ class PluginRepository(val world: RSWorld) {
         windowStatusPlugin = plugin
     }
 
-    fun executeWindowStatus(p: Player) {
+    fun executeWindowStatus(p: RSPlayer) {
         if (windowStatusPlugin != null) {
             p.executePlugin(windowStatusPlugin!!)
         } else {
@@ -655,7 +655,7 @@ class PluginRepository(val world: RSWorld) {
         closeModalPlugin = plugin
     }
 
-    fun executeModalClose(p: Player) {
+    fun executeModalClose(p: RSPlayer) {
         if (closeModalPlugin != null) {
             p.executePlugin(closeModalPlugin!!)
         } else {
@@ -671,7 +671,7 @@ class PluginRepository(val world: RSWorld) {
         isMenuOpenedPlugin = plugin
     }
 
-    fun isMenuOpened(p: Player): Boolean = if (isMenuOpenedPlugin != null) p.executePlugin(isMenuOpenedPlugin!!) else false
+    fun isMenuOpened(p: RSPlayer): Boolean = if (isMenuOpenedPlugin != null) p.executePlugin(isMenuOpenedPlugin!!) else false
 
     fun <T : Event> bindEvent(event: Class<T>, plugin: Plugin.(Event) -> Unit) {
         val plugins = eventPlugins[event]
@@ -686,7 +686,7 @@ class PluginRepository(val world: RSWorld) {
         pluginCount++
     }
 
-    fun <T : Event> executeEvent(p: Pawn, event: T) {
+    fun <T : Event> executeEvent(p: RSPawn, event: T) {
         eventPlugins[event::class.java]?.forEach { plugin ->
             p.executePlugin {
                 plugin.invoke(this, event)
@@ -699,7 +699,7 @@ class PluginRepository(val world: RSWorld) {
         pluginCount++
     }
 
-    fun executeLogin(p: Player) {
+    fun executeLogin(p: RSPlayer) {
         loginPlugins.forEach { logic -> p.executePlugin(logic) }
     }
 
@@ -708,7 +708,7 @@ class PluginRepository(val world: RSWorld) {
         pluginCount++
     }
 
-    fun executeLogout(p: Player) {
+    fun executeLogout(p: RSPlayer) {
         logoutPlugins.forEach { logic -> p.executePlugin(logic) }
     }
 
@@ -717,7 +717,7 @@ class PluginRepository(val world: RSWorld) {
         componentItemSwapPlugins[hash] = plugin
     }
 
-    fun executeComponentItemSwap(p: Player, interfaceId: Int, component: Int): Boolean {
+    fun executeComponentItemSwap(p: RSPlayer, interfaceId: Int, component: Int): Boolean {
         val hash = (interfaceId shl 16) or component
         val plugin = componentItemSwapPlugins[hash] ?: return false
         p.executePlugin(plugin)
@@ -731,7 +731,7 @@ class PluginRepository(val world: RSWorld) {
         componentToComponentItemSwapPlugins[combinedHash] = plugin
     }
 
-    fun executeComponentToComponentItemSwap(p: Player, srcInterfaceId: Int, srcComponent: Int, dstInterfaceId: Int, dstComponent: Int): Boolean {
+    fun executeComponentToComponentItemSwap(p: RSPlayer, srcInterfaceId: Int, srcComponent: Int, dstInterfaceId: Int, dstComponent: Int): Boolean {
         val srcHash = (srcInterfaceId shl 16) or srcComponent
         val dstHash = (dstInterfaceId shl 16) or dstComponent
         val combinedHash = ((srcHash shl 32) or dstHash).toLong()
@@ -755,7 +755,7 @@ class PluginRepository(val world: RSWorld) {
         pluginCount++
     }
 
-    fun executeNpcSpawn(n: Npc) {
+    fun executeNpcSpawn(n: RSNpc) {
         val customPlugins = npcSpawnPlugins[n.id]
         if (customPlugins != null && customPlugins.isNotEmpty()) {
             customPlugins.forEach { logic -> n.executePlugin(logic) }
@@ -772,7 +772,7 @@ class PluginRepository(val world: RSWorld) {
         pluginCount++
     }
 
-    fun executeTimer(pawn: Pawn, key: TimerKey): Boolean {
+    fun executeTimer(pawn: RSPawn, key: TimerKey): Boolean {
         val plugin = timerPlugins[key]
         if (plugin != null) {
             pawn.executePlugin(plugin)
@@ -799,7 +799,7 @@ class PluginRepository(val world: RSWorld) {
         pluginCount++
     }
 
-    fun executeInterfaceOpen(p: Player, interfaceId: Int): Boolean {
+    fun executeInterfaceOpen(p: RSPlayer, interfaceId: Int): Boolean {
         val plugin = interfaceOpenPlugins[interfaceId]
         if (plugin != null) {
             p.executePlugin(plugin)
@@ -817,7 +817,7 @@ class PluginRepository(val world: RSWorld) {
         pluginCount++
     }
 
-    fun executeInterfaceClose(p: Player, interfaceId: Int): Boolean {
+    fun executeInterfaceClose(p: RSPlayer, interfaceId: Int): Boolean {
         val plugin = interfaceClosePlugins[interfaceId]
         if (plugin != null) {
             p.executePlugin(plugin)
@@ -836,7 +836,7 @@ class PluginRepository(val world: RSWorld) {
         pluginCount++
     }
 
-    fun executeCommand(p: Player, command: String, args: Array<String>? = null): Boolean {
+    fun executeCommand(p: RSPlayer, command: String, args: Array<String>? = null): Boolean {
         val commandPair = commandPlugins[command]
         if (commandPair != null) {
             val powerRequired = commandPair.first
@@ -868,7 +868,7 @@ class PluginRepository(val world: RSWorld) {
         pluginCount++
     }
 
-    fun executeButton(p: Player, parent: Int, child: Int): Boolean {
+    fun executeButton(p: RSPlayer, parent: Int, child: Int): Boolean {
         val hash = (parent shl 16) or child
         val plugin = buttonPlugins[hash]
         if (plugin != null) {
@@ -888,7 +888,7 @@ class PluginRepository(val world: RSWorld) {
         pluginCount++
     }
 
-    fun executeEquipmentOption(p: Player, item: Int, option: Int): Boolean {
+    fun executeEquipmentOption(p: RSPlayer, item: Int, option: Int): Boolean {
         val hash = (item shl 16) or option
         val plugin = equipmentOptionPlugins[hash] ?: return false
         p.executePlugin(plugin)
@@ -900,7 +900,7 @@ class PluginRepository(val world: RSWorld) {
         pluginCount++
     }
 
-    fun executeEquipSlot(p: Player, equipSlot: Int): Boolean {
+    fun executeEquipSlot(p: RSPlayer, equipSlot: Int): Boolean {
         val plugin = equipSlotPlugins[equipSlot]
         if (plugin != null) {
             plugin.forEach { logic -> p.executePlugin(logic) }
@@ -914,7 +914,7 @@ class PluginRepository(val world: RSWorld) {
         pluginCount++
     }
 
-    fun executeUnequipSlot(p: Player, equipSlot: Int): Boolean {
+    fun executeUnequipSlot(p: RSPlayer, equipSlot: Int): Boolean {
         val plugin = unequipSlotPlugins[equipSlot]
         if (plugin != null) {
             plugin.forEach { logic -> p.executePlugin(logic) }
@@ -932,7 +932,7 @@ class PluginRepository(val world: RSWorld) {
         pluginCount++
     }
 
-    fun executeEquipItemRequirement(p: Player, item: Int): Boolean {
+    fun executeEquipItemRequirement(p: RSPlayer, item: Int): Boolean {
         val plugin = equipItemRequirementPlugins[item]
         if (plugin != null) {
             /*
@@ -956,7 +956,7 @@ class PluginRepository(val world: RSWorld) {
         pluginCount++
     }
 
-    fun executeEquipItem(p: Player, item: Int): Boolean {
+    fun executeEquipItem(p: RSPlayer, item: Int): Boolean {
         val plugin = equipItemPlugins[item]
         if (plugin != null) {
             p.executePlugin(plugin)
@@ -974,7 +974,7 @@ class PluginRepository(val world: RSWorld) {
         pluginCount++
     }
 
-    fun executeUnequipItem(p: Player, item: Int): Boolean {
+    fun executeUnequipItem(p: RSPlayer, item: Int): Boolean {
         val plugin = unequipItemPlugins[item]
         if (plugin != null) {
             p.executePlugin(plugin)
@@ -988,7 +988,7 @@ class PluginRepository(val world: RSWorld) {
         skillLevelUps = plugin
     }
 
-    fun executeSkillLevelUp(p: Player) {
+    fun executeSkillLevelUp(p: RSPlayer) {
         skillLevelUps?.let { p.executePlugin(it) }
     }
 
@@ -1002,7 +1002,7 @@ class PluginRepository(val world: RSWorld) {
         pluginCount++
     }
 
-    fun executeRegionEnter(p: Player, regionId: Int) {
+    fun executeRegionEnter(p: RSPlayer, regionId: Int) {
         enterRegionPlugins[regionId]?.forEach { logic -> p.executePlugin(logic) }
     }
 
@@ -1016,7 +1016,7 @@ class PluginRepository(val world: RSWorld) {
         pluginCount++
     }
 
-    fun executeRegionExit(p: Player, regionId: Int) {
+    fun executeRegionExit(p: RSPlayer, regionId: Int) {
         exitRegionPlugins[regionId]?.forEach { logic -> p.executePlugin(logic) }
     }
 
@@ -1030,7 +1030,7 @@ class PluginRepository(val world: RSWorld) {
         pluginCount++
     }
 
-    fun executeChunkEnter(p: Player, chunkHash: Int) {
+    fun executeChunkEnter(p: RSPlayer, chunkHash: Int) {
         enterChunkPlugins[chunkHash]?.forEach { logic -> p.executePlugin(logic) }
     }
 
@@ -1044,22 +1044,22 @@ class PluginRepository(val world: RSWorld) {
         pluginCount++
     }
 
-    fun executeChunkExit(p: Player, chunkHash: Int) {
+    fun executeChunkExit(p: RSPlayer, chunkHash: Int) {
         exitChunkPlugins[chunkHash]?.forEach { logic -> p.executePlugin(logic) }
     }
 
     fun bindItem(id: Int, opt: Int, plugin: Plugin.() -> Unit) {
         val optMap = itemPlugins[id] ?: Int2ObjectOpenHashMap(1)
         if (optMap.containsKey(opt)) {
-            logger.error("Item is already bound to a oldplugin: $id [opt=$opt]")
-            throw IllegalStateException("Item is already bound to a oldplugin: $id [opt=$opt]")
+            logger.error("RSItem is already bound to a oldplugin: $id [opt=$opt]")
+            throw IllegalStateException("RSItem is already bound to a oldplugin: $id [opt=$opt]")
         }
         optMap[opt] = plugin
         itemPlugins[id] = optMap
         pluginCount++
     }
 
-    fun executeItem(p: Player, id: Int, opt: Int): Boolean {
+    fun executeItem(p: RSPlayer, id: Int, opt: Int): Boolean {
         val optMap = itemPlugins[id] ?: return false
         val logic = optMap[opt] ?: return false
         p.executePlugin(logic)
@@ -1077,7 +1077,7 @@ class PluginRepository(val world: RSWorld) {
         pluginCount++
     }
 
-    fun executeGroundItem(p: Player, id: Int, opt: Int): Boolean {
+    fun executeGroundItem(p: RSPlayer, id: Int, opt: Int): Boolean {
         val optMap = groundItemPlugins[id] ?: return false
         val logic = optMap[opt] ?: return false
         p.executePlugin(logic)
@@ -1094,20 +1094,20 @@ class PluginRepository(val world: RSWorld) {
         pluginCount++
     }
 
-    fun canPickupGroundItem(p: Player, item: Int): Boolean {
+    fun canPickupGroundItem(p: RSPlayer, item: Int): Boolean {
         val plugin = groundItemPickupConditions[item] ?: return true
         return p.executePlugin(plugin)
     }
 
     fun bindCanItemDrop(item: Int, plugin: Plugin.() -> Boolean) {
         if (canDropItemPlugins.containsKey(item)) {
-            logger.error("Item already bound to a 'can-drop' oldplugin: $item")
-            throw IllegalStateException("Item already bound to a 'can-drop' oldplugin: $item")
+            logger.error("RSItem already bound to a 'can-drop' oldplugin: $item")
+            throw IllegalStateException("RSItem already bound to a 'can-drop' oldplugin: $item")
         }
         canDropItemPlugins[item] = plugin
     }
 
-    fun canDropItem(p: Player, item: Int): Boolean {
+    fun canDropItem(p: RSPlayer, item: Int): Boolean {
         val plugin = canDropItemPlugins[item]
         if (plugin != null) {
             return p.executePlugin(plugin)
@@ -1118,7 +1118,7 @@ class PluginRepository(val world: RSWorld) {
     fun bindItemOnObject(obj: Int, item: Int, lineOfSightDistance: Int = -1, plugin: Plugin.() -> Unit) {
         val plugins = itemOnObjectPlugins[item] ?: Int2ObjectOpenHashMap(1)
         if (plugins.containsKey(obj)) {
-            val error = "Item is already bound to an object oldplugin: $item [obj=$obj]"
+            val error = "RSItem is already bound to an object oldplugin: $item [obj=$obj]"
             logger.error(error)
             throw IllegalStateException(error)
         }
@@ -1132,7 +1132,7 @@ class PluginRepository(val world: RSWorld) {
         pluginCount++
     }
 
-    fun executeItemOnObject(p: Player, obj: Int, item: Int): Boolean {
+    fun executeItemOnObject(p: RSPlayer, obj: Int, item: Int): Boolean {
         val plugins = itemOnObjectPlugins[item] ?: return false
         val logic = plugins[obj] ?: return false
         p.executePlugin(logic)
@@ -1146,15 +1146,15 @@ class PluginRepository(val world: RSWorld) {
         val hash = (max shl 16) or min
 
         if (itemOnItemPlugins.containsKey(hash)) {
-            logger.error { "Item on Item pair is already bound to a oldplugin: [item1=$item1, item2=$item2]" }
-            throw IllegalStateException("Item on Item pair is already bound to a oldplugin: [item1=$item1, item2=$item2]")
+            logger.error { "RSItem on RSItem pair is already bound to a oldplugin: [item1=$item1, item2=$item2]" }
+            throw IllegalStateException("RSItem on RSItem pair is already bound to a oldplugin: [item1=$item1, item2=$item2]")
         }
 
         itemOnItemPlugins[hash] = plugin
         pluginCount++
     }
 
-    fun executeItemOnItem(p: Player, item1: Int, item2: Int): Boolean {
+    fun executeItemOnItem(p: RSPlayer, item1: Int, item2: Int): Boolean {
         val max = Math.max(item1, item2)
         val min = Math.min(item1, item2)
 
@@ -1167,7 +1167,7 @@ class PluginRepository(val world: RSWorld) {
     fun bindItemOnGroundItem(invItem: Int, groundItem: Int, plugin: Plugin.() -> Unit) {
         val hash = (invItem shl 16) or groundItem
         if (itemOnGroundItemPlugins.containsKey(hash)) {
-            val error = IllegalStateException("Item on Item pair is already bound to a oldplugin: [inv_item=$invItem, ground_item=$groundItem]")
+            val error = IllegalStateException("RSItem on RSItem pair is already bound to a oldplugin: [inv_item=$invItem, ground_item=$groundItem]")
             logger.error(error) {}
             throw error
         }
@@ -1175,7 +1175,7 @@ class PluginRepository(val world: RSWorld) {
         pluginCount++
     }
 
-    fun executeItemOnGroundItem(p: Player, invItem: Int, groundItem: Int): Boolean {
+    fun executeItemOnGroundItem(p: RSPlayer, invItem: Int, groundItem: Int): Boolean {
         val hash = (invItem shl 16) or groundItem
         val plugin = itemOnGroundItemPlugins[hash] ?: return false
         p.executePlugin(plugin)
@@ -1193,7 +1193,7 @@ class PluginRepository(val world: RSWorld) {
         pluginCount++
     }
 
-    fun executeSpellOnItem(p: Player, fromComponentHash: Int, toComponentHash: Int): Boolean {
+    fun executeSpellOnItem(p: RSPlayer, fromComponentHash: Int, toComponentHash: Int): Boolean {
         val hash: Long = (fromComponentHash.toLong() shl 32) or toComponentHash.toLong()
         val plugin = spellOnItemPlugins[hash] ?: return false
         p.executePlugin(plugin)
@@ -1216,7 +1216,7 @@ class PluginRepository(val world: RSWorld) {
         pluginCount++
     }
 
-    fun executeObject(p: Player, id: Int, opt: Int): Boolean {
+    fun executeObject(p: RSPlayer, id: Int, opt: Int): Boolean {
         val optMap = objectPlugins[id] ?: return false
         val logic = optMap[opt] ?: return false
         p.executePlugin(logic)
@@ -1226,8 +1226,8 @@ class PluginRepository(val world: RSWorld) {
     fun bindNpc(npc: Int, opt: Int, lineOfSightDistance: Int = -1, plugin: Plugin.() -> Unit) {
         val optMap = npcPlugins[npc] ?: Int2ObjectOpenHashMap(1)
         if (optMap.containsKey(opt)) {
-            logger.error("Npc is already bound to a oldplugin: $npc [opt=$opt]")
-            throw IllegalStateException("Npc is already bound to a oldplugin: $npc [opt=$opt]")
+            logger.error("RSNpc is already bound to a oldplugin: $npc [opt=$opt]")
+            throw IllegalStateException("RSNpc is already bound to a oldplugin: $npc [opt=$opt]")
         }
 
         if (lineOfSightDistance != -1) {
@@ -1239,7 +1239,7 @@ class PluginRepository(val world: RSWorld) {
         pluginCount++
     }
 
-    fun executeNpc(p: Player, id: Int, opt: Int): Boolean {
+    fun executeNpc(p: RSPlayer, id: Int, opt: Int): Boolean {
         val optMap = npcPlugins[id] ?: return false
         val logic = optMap[opt] ?: return false
         p.executePlugin(logic)
@@ -1249,7 +1249,7 @@ class PluginRepository(val world: RSWorld) {
     fun bindItemOnNpc(npc: Int, item: Int, plugin: Plugin.() -> Unit) {
         val hash = (item shl 16) or npc
         if (itemOnNpcPlugins.containsKey(hash)) {
-            val error = IllegalStateException("Item on npc is already bound to a oldplugin: npc=$npc, item=$item")
+            val error = IllegalStateException("RSItem on npc is already bound to a oldplugin: npc=$npc, item=$item")
             logger.error(error) {}
             throw error
         }
@@ -1257,7 +1257,7 @@ class PluginRepository(val world: RSWorld) {
         pluginCount++
     }
 
-    fun executeItemOnNpc(p: Player, npc: Int, item: Int): Boolean {
+    fun executeItemOnNpc(p: RSPlayer, npc: Int, item: Int): Boolean {
         val hash = (item shl 16) or npc
         val plugin = itemOnNpcPlugins[hash] ?: return false
         p.executePlugin(plugin)
@@ -1268,7 +1268,7 @@ class PluginRepository(val world: RSWorld) {
         globalGroundItemPickUp.add(plugin)
     }
 
-    fun executeGlobalGroundItemPickUp(p: Player) {
+    fun executeGlobalGroundItemPickUp(p: RSPlayer) {
         globalGroundItemPickUp.forEach { plugin ->
             p.executePlugin(plugin)
         }
@@ -1284,7 +1284,7 @@ class PluginRepository(val world: RSWorld) {
         pluginCount++
     }
 
-    fun executeOnStartFishing(p: Player, npc_spot: Int): Boolean {
+    fun executeOnStartFishing(p: RSPlayer, npc_spot: Int): Boolean {
         val plugin = onStartFishingPlugins[npc_spot] ?: return false
         p.executePlugin(plugin)
         return true
@@ -1300,7 +1300,7 @@ class PluginRepository(val world: RSWorld) {
         pluginCount++
     }
 
-    fun executeOnCatchFish(p: Player, npc_spot: Int): Boolean {
+    fun executeOnCatchFish(p: RSPlayer, npc_spot: Int): Boolean {
         val plugin = onCatchFishPlugins[npc_spot] ?: return false
         p.executePlugin(plugin)
         return true

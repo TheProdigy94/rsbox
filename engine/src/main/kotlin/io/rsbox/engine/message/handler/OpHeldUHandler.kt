@@ -1,9 +1,10 @@
 package io.rsbox.engine.message.handler
 
+import io.rsbox.api.*
+import io.rsbox.api.item.Item
 import io.rsbox.engine.message.MessageHandler
 import io.rsbox.engine.message.impl.OpHeldUMessage
 import io.rsbox.engine.model.RSWorld
-import io.rsbox.engine.model.attr.*
 import io.rsbox.engine.model.entity.Client
 import java.lang.ref.WeakReference
 
@@ -36,14 +37,14 @@ class OpHeldUHandler : MessageHandler<OpHeldUMessage> {
             return
         }
 
-        log(client, "Item on item: from_component=[%d,%d], to_component=[%d,%d], from_item=%d, from_slot=%d, to_item=%d, to_slot=%d",
+        log(client, "RSItem on item: from_component=[%d,%d], to_component=[%d,%d], from_item=%d, from_slot=%d, to_item=%d, to_slot=%d",
                 fromInterfaceId, fromComponent, toInterfaceId, toComponent, fromItem.id, fromSlot, toItem.id, toSlot)
 
-        client.attr[INTERACTING_ITEM] = WeakReference(fromItem)
+        client.attr[INTERACTING_ITEM] = WeakReference(fromItem as Item)
         client.attr[INTERACTING_ITEM_ID] = fromItem.id
         client.attr[INTERACTING_ITEM_SLOT] = fromSlot
 
-        client.attr[OTHER_ITEM_ATTR] = WeakReference(toItem)
+        client.attr[OTHER_ITEM_ATTR] = WeakReference(toItem as Item)
         client.attr[OTHER_ITEM_ID_ATTR] = toItem.id
         client.attr[OTHER_ITEM_SLOT_ATTR] = toSlot
 

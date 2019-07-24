@@ -3,17 +3,17 @@ package io.rsbox.engine.sync.task
 import io.rsbox.engine.message.impl.RebuildNormalMessage
 import io.rsbox.engine.message.impl.RebuildRegionMessage
 import io.rsbox.engine.model.Coordinate
-import io.rsbox.engine.model.Tile
-import io.rsbox.engine.model.entity.Player
+import io.rsbox.engine.model.RSTile
+import io.rsbox.engine.model.entity.RSPlayer
 import io.rsbox.engine.model.region.Chunk
 import io.rsbox.engine.sync.SynchronizationTask
 
 /**
  * @author Tom <rspsmods@gmail.com>
  */
-object PlayerPreSynchronizationTask : SynchronizationTask<Player> {
+object PlayerPreSynchronizationTask : SynchronizationTask<RSPlayer> {
 
-    override fun run(pawn: Player) {
+    override fun run(pawn: RSPlayer) {
         pawn.handleFutureRoute()
         pawn.movementQueue.cycle()
 
@@ -36,11 +36,11 @@ object PlayerPreSynchronizationTask : SynchronizationTask<Player> {
         }
     }
 
-    private fun shouldRebuildRegion(old: Coordinate, new: Tile): Boolean {
+    private fun shouldRebuildRegion(old: Coordinate, new: RSTile): Boolean {
         val dx = new.x - old.x
         val dz = new.z - old.z
 
-        return dx <= Player.NORMAL_VIEW_DISTANCE || dx >= Chunk.MAX_VIEWPORT - Player.NORMAL_VIEW_DISTANCE - 1
-                || dz <= Player.NORMAL_VIEW_DISTANCE || dz >= Chunk.MAX_VIEWPORT - Player.NORMAL_VIEW_DISTANCE - 1
+        return dx <= RSPlayer.NORMAL_VIEW_DISTANCE || dx >= Chunk.MAX_VIEWPORT - RSPlayer.NORMAL_VIEW_DISTANCE - 1
+                || dz <= RSPlayer.NORMAL_VIEW_DISTANCE || dz >= Chunk.MAX_VIEWPORT - RSPlayer.NORMAL_VIEW_DISTANCE - 1
     }
 }

@@ -2,7 +2,8 @@ package io.rsbox.engine.model.shop
 
 import io.rsbox.engine.model.PlayerUID
 import io.rsbox.engine.model.RSWorld
-import io.rsbox.engine.model.attr.CURRENT_SHOP_ATTR
+import io.rsbox.api.CURRENT_SHOP_ATTR
+import io.rsbox.api.Shop
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet
 
 /**
@@ -27,11 +28,11 @@ import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet
  *
  * @author Tom <rspsmods@gmail.com>
  */
-data class Shop(val name: String, val stockType: StockType, val purchasePolicy: PurchasePolicy,
-                val currency: ShopCurrency, val items: Array<ShopItem?>) {
+data class RSShop(val name: String, val stockType: StockType, val purchasePolicy: PurchasePolicy,
+                  val currency: ShopCurrency, val items: Array<ShopItem?>) : Shop {
 
     /**
-     * The [io.rsbox.engine.model.entity.Player.uid]s for players who currently have
+     * The [io.rsbox.engine.model.entity.RSPlayer.uid]s for players who currently have
      * this shop opened on their screen.
      */
     val viewers = ObjectOpenHashSet<PlayerUID>()
@@ -95,7 +96,7 @@ data class Shop(val name: String, val stockType: StockType, val purchasePolicy: 
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as Shop
+        other as RSShop
 
         if (name != other.name) return false
         if (stockType != other.stockType) return false

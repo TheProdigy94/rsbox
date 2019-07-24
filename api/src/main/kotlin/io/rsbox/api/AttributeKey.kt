@@ -1,4 +1,4 @@
-package io.rsbox.engine.model.attr
+package io.rsbox.api
 
 import com.google.common.base.MoreObjects
 

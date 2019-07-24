@@ -1,8 +1,8 @@
 package io.rsbox.engine.action
 
 import io.rsbox.engine.fs.def.ItemDef
-import io.rsbox.engine.model.entity.Player
-import io.rsbox.engine.model.item.Item
+import io.rsbox.engine.model.entity.RSPlayer
+import io.rsbox.engine.model.item.RSItem
 
 /**
  * This class is responsible for handling armor equip and unequip related
@@ -55,12 +55,12 @@ object EquipAction {
         SUCCESS,
 
         /**
-         * Item interaction could not be handled.
+         * RSItem interaction could not be handled.
          */
         INVALID_ITEM
     }
 
-    fun equip(p: Player, item: Item, inventorySlot: Int = -1): Result {
+    fun equip(p: RSPlayer, item: RSItem, inventorySlot: Int = -1): Result {
         val def = p.world.definitions.get(ItemDef::class.java, item.id)
         val plugins = p.world.plugins
 
@@ -116,9 +116,9 @@ object EquipAction {
                 if (transaction.completed == 0) {
                     return Result.INVALID_ITEM
                 }
-                p.equipment[equipSlot] = Item(replace.id, transaction.completed + replace.amount)
+                p.equipment[equipSlot] = RSItem(replace.id, transaction.completed + replace.amount)
             } else {
-                p.equipment[equipSlot] = Item(replace.id, add + replace.amount)
+                p.equipment[equipSlot] = RSItem(replace.id, add + replace.amount)
             }
             plugins.executeEquipSlot(p, equipSlot)
             plugins.executeEquipItem(p, replace.id)
@@ -160,7 +160,7 @@ object EquipAction {
                 return Result.NO_FREE_SPACE
             }
 
-            val newEquippedItem = Item(item)
+            val newEquippedItem = RSItem(item)
 
             if (inventorySlot == -1 || p.inventory.remove(item.id, item.amount, beginSlot = inventorySlot).hasSucceeded()) {
                 var initialSlot = inventorySlot
@@ -215,7 +215,7 @@ object EquipAction {
         return Result.SUCCESS
     }
 
-    fun unequip(p: Player, equipmentSlot: Int): Result {
+    fun unequip(p: RSPlayer, equipmentSlot: Int): Result {
         val item = p.equipment[equipmentSlot] ?: return Result.INVALID_ITEM
 
         val addition = p.inventory.add(item.id, item.amount, assureFullInsertion = false)
@@ -229,7 +229,7 @@ object EquipAction {
             addition.items.firstOrNull()?.item?.copyAttr(item)
             p.equipment[equipmentSlot] = null
         } else {
-            val leftover = Item(item, addition.getLeftOver())
+            val leftover = RSItem(item, addition.getLeftOver())
             p.equipment[equipmentSlot] = leftover
         }
 
@@ -237,7 +237,7 @@ object EquipAction {
         return Result.SUCCESS
     }
 
-    fun onItemUnequip(p: Player, item: Int, slot: Int) {
+    fun onItemUnequip(p: RSPlayer, item: Int, slot: Int) {
         p.world.plugins.executeUnequipItem(p, item)
         p.world.plugins.executeUnequipSlot(p, slot)
     }

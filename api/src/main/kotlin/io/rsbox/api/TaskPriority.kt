@@ -1,4 +1,4 @@
-package io.rsbox.engine.model.queue
+package io.rsbox.api
 
 /**
  * Represents a priority type for a [QueueTask].

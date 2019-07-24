@@ -1,13 +1,13 @@
 package io.rsbox.engine.model
 
-import io.rsbox.engine.model.entity.Pawn
+import io.rsbox.engine.model.entity.RSPawn
 
 /**
- * A custom list of [Pawn]s backed by an [Array].
+ * A custom list of [RSPawn]s backed by an [Array].
  *
  * @author Tom <rspsmods@gmail.com>
  */
-class PawnList<T : Pawn>(private val pawns: Array<T?>) {
+class PawnList<T : RSPawn>(private val pawns: Array<T?>) {
 
     /**
      * Get the backing array for our pawn list.
@@ -17,7 +17,7 @@ class PawnList<T : Pawn>(private val pawns: Array<T?>) {
     val capacity = pawns.size
 
     /**
-     * The total count of non-null [Pawn]s in the [pawns] array.
+     * The total count of non-null [RSPawn]s in the [pawns] array.
      */
     private var count = 0
 
@@ -97,7 +97,7 @@ class PawnList<T : Pawn>(private val pawns: Array<T?>) {
     /**
      * Add [pawn] to our list.
      *
-     * Note: this will set the [Pawn.index] for [pawn].
+     * Note: this will set the [RSPawn.index] for [pawn].
      */
     fun add(pawn: T): Boolean {
         for (i in 1 until pawns.size) {
@@ -114,7 +114,7 @@ class PawnList<T : Pawn>(private val pawns: Array<T?>) {
     /**
      * Remove [pawn] from our list.
      *
-     * Note: this will set the [Pawn.index] for [pawn].
+     * Note: this will set the [RSPawn.index] for [pawn].
      *
      * @return
      * True if the pawn was registered on our list, false otherwise.

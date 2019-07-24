@@ -4,8 +4,9 @@ import io.rsbox.engine.action.PawnPathAction
 import io.rsbox.engine.message.MessageHandler
 import io.rsbox.engine.message.impl.OpPlayer1Message
 import io.rsbox.engine.model.RSWorld
-import io.rsbox.engine.model.attr.INTERACTING_OPT_ATTR
-import io.rsbox.engine.model.attr.INTERACTING_PLAYER_ATTR
+import io.rsbox.api.INTERACTING_OPT_ATTR
+import io.rsbox.api.INTERACTING_PLAYER_ATTR
+import io.rsbox.api.entity.Player
 import io.rsbox.engine.model.entity.Client
 import java.lang.ref.WeakReference
 
@@ -31,13 +32,13 @@ class OpPlayer1Handler : MessageHandler<OpPlayer1Message> {
             return
         }
 
-        log(client, "Player option: name=%s, opt=%d", other.username, option)
+        log(client, "RSPlayer option: name=%s, opt=%d", other.username, option)
 
         client.closeInterfaceModal()
         client.interruptQueues()
         client.resetInteractions()
 
-        client.attr[INTERACTING_PLAYER_ATTR] = WeakReference(other)
+        client.attr[INTERACTING_PLAYER_ATTR] = WeakReference(other as Player)
         client.attr[INTERACTING_OPT_ATTR] = option
         client.executePlugin(PawnPathAction.walkPlugin)
     }

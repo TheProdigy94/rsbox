@@ -1,8 +1,8 @@
 package io.rsbox.engine.task
 
-import io.rsbox.engine.model.Tile
+import io.rsbox.engine.model.RSTile
 import io.rsbox.engine.model.RSWorld
-import io.rsbox.engine.model.entity.Pawn
+import io.rsbox.engine.model.entity.RSPawn
 import io.rsbox.engine.service.GameService
 
 /**
@@ -26,7 +26,7 @@ class ChunkCreationTask : GameTask {
         }
     }
 
-    private fun <T : Pawn> T.changeChunks(world: RSWorld, createChunkIfNeeded: Boolean) {
+    private fun <T : RSPawn> T.changeChunks(world: RSWorld, createChunkIfNeeded: Boolean) {
         val lastTile = lastChunkTile
         val sameTile = lastTile?.sameAs(tile) ?: false
 
@@ -39,7 +39,7 @@ class ChunkCreationTask : GameTask {
         }
 
         world.chunks.get(tile, createIfNeeded = createChunkIfNeeded)?.addEntity(world, this, tile)
-        lastChunkTile = Tile(tile)
+        lastChunkTile = RSTile(tile)
     }
 
     companion object {

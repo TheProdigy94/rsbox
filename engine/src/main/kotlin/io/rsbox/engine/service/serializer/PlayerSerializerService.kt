@@ -1,9 +1,9 @@
 package io.rsbox.engine.service.serializer
 
 import io.rsbox.engine.RSServer
-import io.rsbox.engine.model.Tile
+import io.rsbox.engine.model.RSTile
 import io.rsbox.engine.model.RSWorld
-import io.rsbox.engine.model.attr.NEW_ACCOUNT_ATTR
+import io.rsbox.api.NEW_ACCOUNT_ATTR
 import io.rsbox.engine.model.entity.Client
 import io.rsbox.engine.service.Service
 import io.rsbox.net.codec.login.LoginRequest
@@ -17,10 +17,10 @@ import org.mindrot.jbcrypt.BCrypt
  */
 abstract class PlayerSerializerService : Service {
 
-    private lateinit var startTile: Tile
+    private lateinit var startTile: RSTile
 
     final override fun init(server: RSServer, world: RSWorld, serviceProperties: ServerProperties) {
-        startTile = Tile(world.gameContext.home)
+        startTile = RSTile(world.gameContext.home)
         initSerializer(server, world, serviceProperties)
     }
 

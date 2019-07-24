@@ -1,15 +1,16 @@
 package io.rsbox.engine.model
 
+
 /**
  * Represents the valid genders in the game.
  *
  * @author Tom <rspsmods@gmail.com>
  */
-enum class Gender(val id: Int) {
+enum class RSGender(val id: Int) {
     MALE(id = 0),
     FEMALE(id = 1);
 
     companion object {
-        val values = enumValues<Gender>()
+        val values = enumValues<RSGender>()
     }
 }

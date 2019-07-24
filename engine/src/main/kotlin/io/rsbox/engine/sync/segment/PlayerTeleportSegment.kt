@@ -1,13 +1,13 @@
 package io.rsbox.engine.sync.segment
 
-import io.rsbox.engine.model.entity.Player
+import io.rsbox.engine.model.entity.RSPlayer
 import io.rsbox.engine.sync.SynchronizationSegment
 import io.rsbox.net.packet.GamePacketBuilder
 
 /**
  * @author Tom <rspsmods@gmail.com>
  */
-class PlayerTeleportSegment(private val other: Player, private val encodeUpdateBlocks: Boolean) : SynchronizationSegment {
+class PlayerTeleportSegment(private val other: RSPlayer, private val encodeUpdateBlocks: Boolean) : SynchronizationSegment {
 
     override fun encode(buf: GamePacketBuilder) {
         /*
@@ -35,7 +35,7 @@ class PlayerTeleportSegment(private val other: Player, private val encodeUpdateB
         /*
          * If the move is within a short radius, we want to save some bandwidth.
          */
-        if (Math.abs(diffX) <= Player.NORMAL_VIEW_DISTANCE && Math.abs(diffZ) <= Player.NORMAL_VIEW_DISTANCE) {
+        if (Math.abs(diffX) <= RSPlayer.NORMAL_VIEW_DISTANCE && Math.abs(diffZ) <= RSPlayer.NORMAL_VIEW_DISTANCE) {
             /*
              * Signal to the client that the difference in tiles are within
              * viewing distance.

@@ -1,7 +1,5 @@
 package io.rsbox.engine.model.npcdrops
 
-import io.rsbox.engine.model.item.Item
-
 class NpcDropTableBuilder {
     private var common_table_chance: Double = 0.0
     private var uncommon_table_chance: Double = 0.0

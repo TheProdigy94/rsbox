@@ -5,7 +5,7 @@ import io.rsbox.engine.service.GameService
 import io.rsbox.engine.task.GameTask
 
 /**
- * A [GameTask] responsible for executing [io.rsbox.engine.model.entity.Player]
+ * A [GameTask] responsible for executing [io.rsbox.engine.model.entity.RSPlayer]
  * cycle logic, sequentially.
  *
  * @author Tom <rspsmods@gmail.com>

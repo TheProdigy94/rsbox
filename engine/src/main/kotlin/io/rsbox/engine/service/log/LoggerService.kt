@@ -2,10 +2,10 @@ package io.rsbox.engine.service.log
 
 import io.rsbox.engine.event.Event
 import io.rsbox.engine.model.entity.Client
-import io.rsbox.engine.model.entity.Npc
-import io.rsbox.engine.model.entity.Pawn
-import io.rsbox.engine.model.entity.Player
-import io.rsbox.engine.model.item.Item
+import io.rsbox.engine.model.entity.RSNpc
+import io.rsbox.engine.model.entity.RSPawn
+import io.rsbox.engine.model.entity.RSPlayer
+import io.rsbox.engine.model.item.RSItem
 import io.rsbox.engine.service.Service
 
 /**
@@ -21,21 +21,21 @@ interface LoggerService : Service {
 
     fun logPacket(client: Client, message: String)
 
-    fun logLogin(player: Player)
+    fun logLogin(player: RSPlayer)
 
-    fun logPublicChat(player: Player, message: String)
+    fun logPublicChat(player: RSPlayer, message: String)
 
-    fun logClanChat(player: Player, clan: String, message: String)
+    fun logClanChat(player: RSPlayer, clan: String, message: String)
 
-    fun logCommand(player: Player, command: String, vararg args: String)
+    fun logCommand(player: RSPlayer, command: String, vararg args: String)
 
-    fun logItemDrop(player: Player, item: Item, slot: Int)
+    fun logItemDrop(player: RSPlayer, item: RSItem, slot: Int)
 
-    fun logItemPickUp(player: Player, item: Item)
+    fun logItemPickUp(player: RSPlayer, item: RSItem)
 
-    fun logNpcKill(player: Player, npc: Npc)
+    fun logNpcKill(player: RSPlayer, npc: RSNpc)
 
-    fun logPlayerKill(killer: Player, killed: Player)
+    fun logPlayerKill(killer: RSPlayer, killed: RSPlayer)
 
-    fun logEvent(pawn: Pawn, event: Event)
+    fun logEvent(pawn: RSPawn, event: Event)
 }

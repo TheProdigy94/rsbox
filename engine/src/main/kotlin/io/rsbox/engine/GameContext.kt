@@ -1,6 +1,6 @@
 package io.rsbox.engine
 
-import io.rsbox.engine.model.Tile
+import io.rsbox.engine.model.RSTile
 
 /**
  * Holds vital information that the game needs in order to run (properly).
@@ -19,7 +19,7 @@ import io.rsbox.engine.model.Tile
  * @param playerLimit the max amount of players that can be online in the
  * world at once.
  *
- * @param home the [Tile] that will be used as the home area and tile where
+ * @param home the [RSTile] that will be used as the home area and tile where
  * new players will start off.
  *
  * @param skillCount the max amount of skills for players.
@@ -28,10 +28,10 @@ import io.rsbox.engine.model.Tile
  *
  * @param runEnergy if players' run energy will be deducted whilst running.
  *
- * @param gItemPublicDelay the amount of cycles for a [io.rsbox.engine.model.entity.GroundItem]
+ * @param gItemPublicDelay the amount of cycles for a [io.rsbox.engine.model.entity.RSGroundItem]
  * to become public if it's owned by a player.
  *
- * @param gItemDespawnDelay the amount of cycles for a [io.rsbox.engine.model.entity.GroundItem]
+ * @param gItemDespawnDelay the amount of cycles for a [io.rsbox.engine.model.entity.RSGroundItem]
  * to despawn.
  *
  * @param preloadMaps if true, all map data will be be loaded on start-up instead
@@ -40,7 +40,7 @@ import io.rsbox.engine.model.Tile
  * @author Tom <rspsmods@gmail.com>
  */
 data class GameContext(var initialLaunch: Boolean, val name: String, val revision: Int,
-                       val cycleTime: Int, val playerLimit: Int, val home: Tile,
+                       val cycleTime: Int, val playerLimit: Int, val home: RSTile,
                        val skillCount: Int, val npcStatCount: Int, val runEnergy: Boolean,
                        val gItemPublicDelay: Int, val gItemDespawnDelay: Int,
                        val preloadMaps: Boolean)

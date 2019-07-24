@@ -1,6 +1,6 @@
 package io.rsbox.engine.sync.segment
 
-import io.rsbox.engine.model.entity.Npc
+import io.rsbox.engine.model.entity.RSNpc
 import io.rsbox.engine.sync.SynchronizationSegment
 import io.rsbox.engine.sync.block.UpdateBlockType
 import io.rsbox.net.packet.DataType
@@ -9,7 +9,7 @@ import io.rsbox.net.packet.GamePacketBuilder
 /**
  * @author Tom <rspsmods@gmail.com>
  */
-class NpcUpdateBlockSegment(private val npc: Npc, private val newAddition: Boolean) : SynchronizationSegment {
+class NpcUpdateBlockSegment(private val npc: RSNpc, private val newAddition: Boolean) : SynchronizationSegment {
 
     override fun encode(buf: GamePacketBuilder) {
         var mask = npc.blockBuffer.blockValue()

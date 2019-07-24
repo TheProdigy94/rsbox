@@ -4,18 +4,21 @@ import io.rsbox.engine.fs.def.ObjectDef
 import io.rsbox.engine.message.impl.SetMapFlagMessage
 import io.rsbox.engine.model.Direction
 import io.rsbox.engine.model.MovementQueue
-import io.rsbox.engine.model.attr.INTERACTING_ITEM
-import io.rsbox.engine.model.attr.INTERACTING_OBJ_ATTR
-import io.rsbox.engine.model.attr.INTERACTING_OPT_ATTR
+import io.rsbox.api.INTERACTING_ITEM
+import io.rsbox.api.INTERACTING_OBJ_ATTR
+import io.rsbox.api.INTERACTING_OPT_ATTR
 import io.rsbox.engine.model.collision.ObjectType
-import io.rsbox.engine.model.entity.Entity
-import io.rsbox.engine.model.entity.GameObject
-import io.rsbox.engine.model.entity.Pawn
-import io.rsbox.engine.model.entity.Player
+import io.rsbox.engine.model.entity.RSEntity
+import io.rsbox.engine.model.entity.RSGameObject
+import io.rsbox.engine.model.entity.RSPawn
+import io.rsbox.engine.model.entity.RSPlayer
 import io.rsbox.engine.model.path.PathRequest
 import io.rsbox.engine.model.path.Route
+import io.rsbox.engine.model.queue.QueueTaskeTask
+import io.rsbox.api.TaskPriority
+import io.rsbox.engine.model.RSTile
+import io.rsbox.engine.model.item.RSItem
 import io.rsbox.engine.model.queue.QueueTask
-import io.rsbox.engine.model.queue.TaskPriority
 import io.rsbox.engine.model.timer.FROZEN_TIMER
 import io.rsbox.engine.model.timer.STUN_TIMER
 import io.rsbox.engine.oldplugin.Plugin
@@ -26,13 +29,13 @@ import java.util.EnumSet
 
 /**
  * This class is responsible for calculating distances and valid interaction
- * tiles for [GameObject] path-finding.
+ * tiles for [RSGameObject] path-finding.
  *
  * @author Tom <rspsmods@gmail.com>
  */
 object ObjectPathAction {
 
-    fun walk(player: Player, obj: GameObject, lineOfSightRange: Int?, logic: Plugin.() -> Unit) {
+    fun walk(player: RSPlayer, obj: RSGameObject, lineOfSightRange: Int?, logic: Plugin.() -> Unit) {
         player.queue(TaskPriority.STANDARD) {
             terminateAction = {
                 player.stopMovement()
@@ -46,11 +49,11 @@ object ObjectPathAction {
                 }
                 player.executePlugin(logic)
             } else {
-                player.faceTile(obj.tile)
+                player.faceTile(obj.tile as RSTile)
                 when {
-                    player.timers.has(FROZEN_TIMER) -> player.writeMessage(Entity.MAGIC_STOPS_YOU_FROM_MOVING)
-                    player.timers.has(STUN_TIMER) -> player.writeMessage(Entity.YOURE_STUNNED)
-                    else -> player.writeMessage(Entity.YOU_CANT_REACH_THAT)
+                    player.timers.has(FROZEN_TIMER) -> player.writeMessage(RSEntity.MAGIC_STOPS_YOU_FROM_MOVING)
+                    player.timers.has(STUN_TIMER) -> player.writeMessage(RSEntity.YOURE_STUNNED)
+                    else -> player.writeMessage(RSEntity.YOU_CANT_REACH_THAT)
                 }
                 player.write(SetMapFlagMessage(255, 255))
             }
@@ -58,15 +61,15 @@ object ObjectPathAction {
     }
 
     val itemOnObjectPlugin: Plugin.() -> Unit = {
-        val player = ctx as Player
+        val player = ctx as RSPlayer
 
-        val item = player.attr[INTERACTING_ITEM]!!.get()!!
-        val obj = player.attr[INTERACTING_OBJ_ATTR]!!.get()!!
+        val item = player.attr[INTERACTING_ITEM]!!.get()!! as RSItem
+        val obj = player.attr[INTERACTING_OBJ_ATTR]!!.get()!! as RSGameObject
         val lineOfSightRange = player.world.plugins.getObjInteractionDistance(obj.id)
 
         walk(player, obj, lineOfSightRange) {
             if (!player.world.plugins.executeItemOnObject(player, obj.getTransform(player), item.id)) {
-                player.writeMessage(Entity.NOTHING_INTERESTING_HAPPENS)
+                player.writeMessage(RSEntity.NOTHING_INTERESTING_HAPPENS)
                 if (player.world.devContext.debugObjects) {
                     player.writeMessage("Unhandled item on object: [item=$item, id=${obj.id}, type=${obj.type}, rot=${obj.rot}, x=${obj.tile.x}, z=${obj.tile.z}]")
                 }
@@ -75,15 +78,15 @@ object ObjectPathAction {
     }
 
     val objectInteractPlugin: Plugin.() -> Unit = {
-        val player = ctx as Player
+        val player = ctx as RSPlayer
 
-        val obj = player.attr[INTERACTING_OBJ_ATTR]!!.get()!!
+        val obj = player.attr[INTERACTING_OBJ_ATTR]!!.get()!! as RSGameObject
         val opt = player.attr[INTERACTING_OPT_ATTR]
         val lineOfSightRange = player.world.plugins.getObjInteractionDistance(obj.id)
 
         walk(player, obj, lineOfSightRange) {
             if (!player.world.plugins.executeObject(player, obj.getTransform(player), opt!!)) {
-                player.writeMessage(Entity.NOTHING_INTERESTING_HAPPENS)
+                player.writeMessage(RSEntity.NOTHING_INTERESTING_HAPPENS)
                 if (player.world.devContext.debugObjects) {
                     player.writeMessage("Unhandled object action: [opt=$opt, id=${obj.id}, type=${obj.type}, rot=${obj.rot}, x=${obj.tile.x}, z=${obj.tile.z}]")
                 }
@@ -91,8 +94,8 @@ object ObjectPathAction {
         }
     }
 
-    private suspend fun QueueTask.walkTo(obj: GameObject, lineOfSightRange: Int?): Route {
-        val pawn = ctx as Pawn
+    private suspend fun QueueTask.walkTo(obj: RSGameObject, lineOfSightRange: Int?): Route {
+        val pawn = ctx as RSPawn
 
         val def = obj.getDef(pawn.world.definitions)
         val tile = obj.tile
@@ -238,7 +241,7 @@ object ObjectPathAction {
         return route
     }
 
-    private fun faceObj(pawn: Pawn, obj: GameObject) {
+    private fun faceObj(pawn: RSPawn, obj: RSGameObject) {
         val def = pawn.world.definitions.get(ObjectDef::class.java, obj.id)
         val rot = obj.rot
         val type = obj.type

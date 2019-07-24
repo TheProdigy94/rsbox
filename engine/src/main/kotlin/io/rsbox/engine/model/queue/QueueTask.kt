@@ -1,9 +1,10 @@
 package io.rsbox.engine.model.queue
 
-import io.rsbox.engine.model.Tile
-import io.rsbox.engine.model.entity.Pawn
-import io.rsbox.engine.model.entity.Player
-import io.rsbox.engine.model.queue.coroutine.*
+import io.rsbox.api.TaskPriority
+import io.rsbox.api.Tile
+import io.rsbox.engine.model.RSTile
+import io.rsbox.engine.model.entity.RSPawn
+import io.rsbox.engine.model.entity.RSPlayer
 import mu.KLogging
 import kotlin.coroutines.*
 
@@ -94,23 +95,33 @@ data class QueueTask(val ctx: Any, val priority: TaskPriority) : Continuation<Un
      * Wait for [predicate] to return true.
      */
     suspend fun wait(predicate: () -> Boolean): Unit = suspendCoroutine {
-        nextStep = SuspendableStep(PredicateCondition { predicate() }, it)
+        nextStep = SuspendableStep(
+            PredicateCondition { predicate() },
+            it
+        )
     }
 
     /**
      * Wait for our [ctx] to reach [tile]. Note that [ctx] MUST be an instance
-     * of [Pawn] and that the height of the [tile] and [Pawn.tile] must be equal,
+     * of [RSPawn] and that the height of the [tile] and [RSPawn.tile] must be equal,
      * as well as the x and z coordinates.
      */
     suspend fun waitTile(tile: Tile): Unit = suspendCoroutine {
-        nextStep = SuspendableStep(TileCondition((ctx as Pawn).tile, tile), it)
+        nextStep = SuspendableStep(
+            TileCondition(
+                (ctx as RSPawn).tile,
+                tile
+            ), it
+        )
     }
 
     /**
-     * Wait for our [ctx] as [Player] to close the [interfaceId].
+     * Wait for our [ctx] as [RSPlayer] to close the [interfaceId].
      */
     suspend fun waitInterfaceClose(interfaceId: Int): Unit = suspendCoroutine {
-        nextStep = SuspendableStep(PredicateCondition { !(ctx as Player).interfaces.isVisible(interfaceId) }, it)
+        nextStep = SuspendableStep(PredicateCondition {
+            !(ctx as RSPlayer).interfaces.isVisible(interfaceId)
+        }, it)
     }
 
     /**
@@ -118,7 +129,10 @@ data class QueueTask(val ctx: Any, val priority: TaskPriority) : Continuation<Un
      * continuing.
      */
     suspend fun waitReturnValue(): Unit = suspendCoroutine {
-        nextStep = SuspendableStep(PredicateCondition { requestReturnValue != null }, it)
+        nextStep = SuspendableStep(
+            PredicateCondition { requestReturnValue != null },
+            it
+        )
     }
 
     override fun equals(other: Any?): Boolean {

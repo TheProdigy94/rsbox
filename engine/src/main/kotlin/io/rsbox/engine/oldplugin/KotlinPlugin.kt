@@ -7,16 +7,16 @@ import io.rsbox.engine.fs.def.ItemDef
 import io.rsbox.engine.fs.def.NpcDef
 import io.rsbox.engine.fs.def.ObjectDef
 import io.rsbox.engine.model.Direction
-import io.rsbox.engine.model.Tile
+import io.rsbox.engine.model.RSTile
 import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.model.combat.NpcCombatDef
 import io.rsbox.engine.model.container.key.ContainerKey
 import io.rsbox.engine.model.entity.DynamicObject
-import io.rsbox.engine.model.entity.GroundItem
-import io.rsbox.engine.model.entity.Npc
+import io.rsbox.engine.model.entity.RSGroundItem
+import io.rsbox.engine.model.entity.RSNpc
 import io.rsbox.engine.model.npcdrops.NpcDropTableDef
 import io.rsbox.engine.model.shop.PurchasePolicy
-import io.rsbox.engine.model.shop.Shop
+import io.rsbox.engine.model.shop.RSShop
 import io.rsbox.engine.model.shop.ShopCurrency
 import io.rsbox.engine.model.shop.StockType
 import io.rsbox.engine.model.timer.TimerKey
@@ -103,23 +103,23 @@ abstract class KotlinPlugin(private val r: PluginRepository, val world: RSWorld,
     }
 
     /**
-     * Set the [NpcCombatDef] for npcs with [Npc.id] of [npc].
+     * Set the [NpcCombatDef] for npcs with [RSNpc.id] of [npc].
      */
     fun set_combat_def(npc: Int, def: NpcCombatDef) {
-        check(!r.npcCombatDefs.containsKey(npc)) { "Npc combat definition has been previously set: $npc" }
+        check(!r.npcCombatDefs.containsKey(npc)) { "RSNpc combat definition has been previously set: $npc" }
         r.npcCombatDefs[npc] = def
     }
 
     /**
-     * Set the [NpcDropTableDef] for the npcs with [Npc.id] of [Npc]
+     * Set the [NpcDropTableDef] for the npcs with [RSNpc.id] of [RSNpc]
      */
     fun set_drop_table(npcId: Int, def: NpcDropTableDef) {
-        check(!r.npcDropTableDefs.containsKey(npcId)) { "Npc drop table definition has been previous set: $npcId" }
+        check(!r.npcDropTableDefs.containsKey(npcId)) { "RSNpc drop table definition has been previous set: $npcId" }
         r.npcDropTableDefs[npcId] = def
     }
 
     /**
-     * Set the [NpcCombatDef] for npcs with [Npc.id] of [npc] and [others].
+     * Set the [NpcCombatDef] for npcs with [RSNpc.id] of [npc] and [others].
      */
     fun set_combat_def(npc: Int, vararg others: Int, def: NpcCombatDef) {
         set_combat_def(npc, def)
@@ -127,12 +127,12 @@ abstract class KotlinPlugin(private val r: PluginRepository, val world: RSWorld,
     }
 
     /**
-     * Create a [Shop] in our world.
+     * Create a [RSShop] in our world.
      */
     fun create_shop(name: String, currency: ShopCurrency, stockType: StockType = StockType.NORMAL,
-                    stockSize: Int = Shop.DEFAULT_STOCK_SIZE, purchasePolicy: PurchasePolicy = PurchasePolicy.BUY_TRADEABLES,
-                    init: Shop.() -> Unit) {
-        val shop = Shop(name, stockType, purchasePolicy, currency, arrayOfNulls(stockSize))
+                    stockSize: Int = RSShop.DEFAULT_STOCK_SIZE, purchasePolicy: PurchasePolicy = PurchasePolicy.BUY_TRADEABLES,
+                    init: RSShop.() -> Unit) {
+        val shop = RSShop(name, stockType, purchasePolicy, currency, arrayOfNulls(stockSize))
         r.shops[name] = shop
         init(shop)
     }
@@ -146,10 +146,10 @@ abstract class KotlinPlugin(private val r: PluginRepository, val world: RSWorld,
     }
 
     /**
-     * Spawn an [Npc] on the given coordinates.
+     * Spawn an [RSNpc] on the given coordinates.
      */
-    fun spawn_npc(npc: Int, x: Int, z: Int, height: Int = 0, walkRadius: Int = 0, direction: Direction = Direction.SOUTH): Npc {
-        val n = Npc(npc, Tile(x, z, height), world)
+    fun spawn_npc(npc: Int, x: Int, z: Int, height: Int = 0, walkRadius: Int = 0, direction: Direction = Direction.SOUTH): RSNpc {
+        val n = RSNpc(npc, RSTile(x, z, height), world)
         n.respawns = true
         n.walkRadius = walkRadius
         n.lastFacingDirection = direction
@@ -161,22 +161,22 @@ abstract class KotlinPlugin(private val r: PluginRepository, val world: RSWorld,
      * Spawn a [DynamicObject] on the given coordinates.
      */
     fun spawn_obj(obj: Int, x: Int, z: Int, height: Int = 0, type: Int = 10, rot: Int = 0) {
-        val o = DynamicObject(obj, type, rot, Tile(x, z, height))
+        val o = DynamicObject(obj, type, rot, RSTile(x, z, height))
         r.objSpawns.add(o)
     }
 
     /**
-     * Spawn a [GroundItem] on the given coordinates.
+     * Spawn a [RSGroundItem] on the given coordinates.
      */
-    fun spawn_item(item: Int, amount: Int, x: Int, z: Int, height: Int = 0, respawnCycles: Int = GroundItem.DEFAULT_RESPAWN_CYCLES) {
-        val ground = GroundItem(item, amount, Tile(x, z, height))
+    fun spawn_item(item: Int, amount: Int, x: Int, z: Int, height: Int = 0, respawnCycles: Int = RSGroundItem.DEFAULT_RESPAWN_CYCLES) {
+        val ground = RSGroundItem(item, amount, RSTile(x, z, height))
         ground.respawnCycles = respawnCycles
         r.itemSpawns.add(ground)
     }
 
     /**
      * Invoke [logic] when the [option] option is clicked on an inventory
-     * [io.rsbox.engine.model.item.Item].
+     * [io.rsbox.engine.model.item.RSItem].
      *
      * This method should be used over the option-int variant whenever possible.
      */
@@ -192,7 +192,7 @@ abstract class KotlinPlugin(private val r: PluginRepository, val world: RSWorld,
 
     /**
      * Invoke [logic] when the [option] option is clicked on an equipment
-     * [io.rsbox.engine.model.item.Item].
+     * [io.rsbox.engine.model.item.RSItem].
      */
     fun on_equipment_option(item: Int, option: String, logic: (Plugin).() -> Unit) {
         val opt = option.toLowerCase()
@@ -206,7 +206,7 @@ abstract class KotlinPlugin(private val r: PluginRepository, val world: RSWorld,
 
     /**
      * Invoke [logic] when the [option] option is clicked on a
-     * [io.rsbox.engine.model.entity.GameObject].
+     * [io.rsbox.engine.model.entity.RSGameObject].
      *
      * This method should be used over the option-int variant whenever possible.
      */
@@ -221,7 +221,7 @@ abstract class KotlinPlugin(private val r: PluginRepository, val world: RSWorld,
     }
 
     /**
-     * Invoke [logic] when the [option] option is clicked on an [Npc].
+     * Invoke [logic] when the [option] option is clicked on an [RSNpc].
      *
      * This method should be used over the option-int variant whenever possible.
      *
@@ -241,7 +241,7 @@ abstract class KotlinPlugin(private val r: PluginRepository, val world: RSWorld,
     }
 
     /**
-     * Invoke [logic] when [option] option is clicked on a [GroundItem].
+     * Invoke [logic] when [option] option is clicked on a [RSGroundItem].
      *
      * This method should be used over the option-int variant whenever possible.
      */
@@ -256,7 +256,7 @@ abstract class KotlinPlugin(private val r: PluginRepository, val world: RSWorld,
     }
 
     /**
-     * Invoke [logic] when an [item] is used on a [io.rsbox.engine.model.entity.GameObject]
+     * Invoke [logic] when an [item] is used on a [io.rsbox.engine.model.entity.RSGameObject]
      *
      * @param obj the game object id
      * @param item the item id
@@ -300,7 +300,7 @@ abstract class KotlinPlugin(private val r: PluginRepository, val world: RSWorld,
     fun set_menu_open_check(logic: Plugin.() -> Boolean) = r.setMenuOpenedCheck(logic)
 
     /**
-     * Set the logic to execute by default when [io.rsbox.engine.model.entity.Pawn.attack]
+     * Set the logic to execute by default when [io.rsbox.engine.model.entity.RSPawn.attack]
      * is handled.
      */
     fun set_combat_logic(logic: (Plugin).() -> Unit) = r.bindCombat(logic)
@@ -358,12 +358,12 @@ abstract class KotlinPlugin(private val r: PluginRepository, val world: RSWorld,
     fun on_player_death(plugin: Plugin.() -> Unit) = r.bindPlayerDeath(plugin)
 
     /**
-     * Invoked when npc with [Npc.id] of [npc] invokes their death task.
+     * Invoked when npc with [RSNpc.id] of [npc] invokes their death task.
      */
     fun on_npc_pre_death(npc: Int, plugin: Plugin.() -> Unit) = r.bindNpcPreDeath(npc, plugin)
 
     /**
-     * Invoked when npc with [Npc.id] of [npc] finishes their death task and
+     * Invoked when npc with [RSNpc.id] of [npc] finishes their death task and
      * is de-registered from the world.
      */
     fun on_npc_death(npc: Int, plugin: Plugin.() -> Unit) = r.bindNpcDeath(npc, plugin)
@@ -409,12 +409,12 @@ abstract class KotlinPlugin(private val r: PluginRepository, val world: RSWorld,
     fun on_global_npc_spawn(logic: (Plugin).() -> Unit) = r.bindGlobalNpcSpawn(logic)
 
     /**
-     * Invoke [logic] when a ground item is picked up by a [io.rsbox.engine.model.entity.Player].
+     * Invoke [logic] when a ground item is picked up by a [io.rsbox.engine.model.entity.RSPlayer].
      */
     fun on_global_item_pickup(logic: Plugin.() -> Unit) = r.bindGlobalGroundItemPickUp(logic)
 
     /**
-     * Invoke [logic] when an npc with [Npc.id] matching [npc] is spawned into
+     * Invoke [logic] when an npc with [RSNpc.id] matching [npc] is spawned into
      * the game with [RSWorld.spawn].
      */
     fun on_npc_spawn(npc: Int, logic: (Plugin).() -> Unit) = r.bindNpcSpawn(npc, logic)
@@ -478,7 +478,7 @@ abstract class KotlinPlugin(private val r: PluginRepository, val world: RSWorld,
 
     /**
      * Invoke [logic] when the the option in index [option] is clicked on a
-     * [io.rsbox.engine.model.entity.GameObject].
+     * [io.rsbox.engine.model.entity.RSGameObject].
      *
      * String option method should be used over this method whenever possible.
      *
@@ -490,14 +490,14 @@ abstract class KotlinPlugin(private val r: PluginRepository, val world: RSWorld,
     fun on_obj_option(obj: Int, option: Int, lineOfSightDistance: Int = -1, logic: (Plugin).() -> Unit) = r.bindObject(obj, option, lineOfSightDistance, logic)
 
     /**
-     * Invoke [logic] when the the option in index [option] is clicked on an [Npc].
+     * Invoke [logic] when the the option in index [option] is clicked on an [RSNpc].
      *
      * String option method should be used over this method whenever possible.
      */
     fun on_npc_option(npc: Int, option: Int, lineOfSightDistance: Int = -1, logic: (Plugin).() -> Unit) = r.bindNpc(npc, option, lineOfSightDistance, logic)
 
     /**
-     * Invoke [logic] when the the option in index [option] is clicked on a [GroundItem].
+     * Invoke [logic] when the the option in index [option] is clicked on a [RSGroundItem].
      *
      * String option method should be used over this method whenever possible.
      */

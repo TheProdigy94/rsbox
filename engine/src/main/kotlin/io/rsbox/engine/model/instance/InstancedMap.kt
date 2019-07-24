@@ -2,7 +2,7 @@ package io.rsbox.engine.model.instance
 
 import io.rsbox.engine.model.Area
 import io.rsbox.engine.model.PlayerUID
-import io.rsbox.engine.model.Tile
+import io.rsbox.engine.model.RSTile
 import io.rsbox.engine.model.region.Chunk
 import java.util.*
 
@@ -16,7 +16,7 @@ import java.util.*
  * The copied chunks that make up this instanced map.
  *
  * @param exitTile
- * The [Tile] that players will be taken to under certain circumstances, such as
+ * The [RSTile] that players will be taken to under certain circumstances, such as
  * logging out of the game while in the instanced map area.
  *
  * @param owner
@@ -28,7 +28,7 @@ import java.util.*
  *
  * @author Tom <rspsmods@gmail.com>
  */
-class InstancedMap internal constructor(val area: Area, val chunks: InstancedChunkSet, val exitTile: Tile,
+class InstancedMap internal constructor(val area: Area, val chunks: InstancedChunkSet, val exitTile: RSTile,
                                         val owner: PlayerUID?, val attr: EnumSet<InstancedMapAttribute>) {
 
     /**
@@ -42,8 +42,8 @@ class InstancedMap internal constructor(val area: Area, val chunks: InstancedChu
      * zzzzzzzzzzzzz-xxxxxxxxxxxxx-hhhhhhhhhhhhh
      * `
      */
-    fun getCoordinates(relative: Tile): IntArray {
-        val heights = Tile.TOTAL_HEIGHT_LEVELS
+    fun getCoordinates(relative: RSTile): IntArray {
+        val heights = RSTile.TOTAL_HEIGHT_LEVELS
         val bounds = Chunk.CHUNKS_PER_REGION
 
         val coordinates = IntArray(heights * bounds * bounds)
@@ -55,7 +55,7 @@ class InstancedMap internal constructor(val area: Area, val chunks: InstancedChu
         for (height in 0 until heights) {
             for (x in 0 until bounds) {
                 for (z in 0 until bounds) {
-                    val absolute = Tile(startX + (x shl 3), startZ + (z shl 3))
+                    val absolute = RSTile(startX + (x shl 3), startZ + (z shl 3))
                     val chunkX = (absolute.x - area.bottomLeftX) shr 3
                     val chunkZ = (absolute.z - area.bottomLeftZ) shr 3
 

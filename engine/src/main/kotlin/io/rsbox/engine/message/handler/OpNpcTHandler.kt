@@ -3,11 +3,12 @@ package io.rsbox.engine.message.handler
 import io.rsbox.engine.message.MessageHandler
 import io.rsbox.engine.message.impl.OpNpcTMessage
 import io.rsbox.engine.model.RSWorld
-import io.rsbox.engine.model.attr.INTERACTING_COMPONENT_CHILD
-import io.rsbox.engine.model.attr.INTERACTING_COMPONENT_PARENT
-import io.rsbox.engine.model.attr.INTERACTING_NPC_ATTR
+import io.rsbox.api.INTERACTING_COMPONENT_CHILD
+import io.rsbox.api.INTERACTING_COMPONENT_PARENT
+import io.rsbox.api.INTERACTING_NPC_ATTR
+import io.rsbox.api.entity.Npc
 import io.rsbox.engine.model.entity.Client
-import io.rsbox.engine.model.entity.Entity
+import io.rsbox.engine.model.entity.RSEntity
 import io.rsbox.engine.model.priv.Privilege
 import java.lang.ref.WeakReference
 
@@ -38,12 +39,12 @@ class OpNpcTHandler : MessageHandler<OpNpcTMessage> {
         client.interruptQueues()
         client.resetInteractions()
 
-        client.attr[INTERACTING_NPC_ATTR] = WeakReference(npc)
+        client.attr[INTERACTING_NPC_ATTR] = WeakReference(npc as Npc)
         client.attr[INTERACTING_COMPONENT_PARENT] = parent
         client.attr[INTERACTING_COMPONENT_CHILD] = child
 
         if (!world.plugins.executeSpellOnNpc(client, parent, child)) {
-            client.writeMessage(Entity.NOTHING_INTERESTING_HAPPENS)
+            client.writeMessage(RSEntity.NOTHING_INTERESTING_HAPPENS)
             if (world.devContext.debugMagicSpells) {
                 client.writeMessage("Unhandled magic spell: [$parent, $child]")
             }

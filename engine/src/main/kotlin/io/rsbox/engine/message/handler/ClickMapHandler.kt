@@ -5,9 +5,9 @@ import io.rsbox.engine.message.impl.MoveGameClickMessage
 import io.rsbox.engine.message.impl.SetMapFlagMessage
 import io.rsbox.engine.model.MovementQueue
 import io.rsbox.engine.model.RSWorld
-import io.rsbox.engine.model.attr.NO_CLIP_ATTR
+import io.rsbox.api.NO_CLIP_ATTR
 import io.rsbox.engine.model.entity.Client
-import io.rsbox.engine.model.entity.Entity
+import io.rsbox.engine.model.entity.RSEntity
 import io.rsbox.engine.model.priv.Privilege
 import io.rsbox.engine.model.timer.STUN_TIMER
 
@@ -23,7 +23,7 @@ class ClickMapHandler : MessageHandler<MoveGameClickMessage> {
 
         if (client.timers.has(STUN_TIMER)) {
             client.write(SetMapFlagMessage(255, 255))
-            client.writeMessage(Entity.YOURE_STUNNED)
+            client.writeMessage(RSEntity.YOURE_STUNNED)
             return
         }
 

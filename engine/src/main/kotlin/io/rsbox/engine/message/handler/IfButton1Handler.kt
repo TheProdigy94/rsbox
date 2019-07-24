@@ -3,9 +3,9 @@ package io.rsbox.engine.message.handler
 import io.rsbox.engine.message.MessageHandler
 import io.rsbox.engine.message.impl.IfButtonMessage
 import io.rsbox.engine.model.RSWorld
-import io.rsbox.engine.model.attr.INTERACTING_ITEM_ID
-import io.rsbox.engine.model.attr.INTERACTING_OPT_ATTR
-import io.rsbox.engine.model.attr.INTERACTING_SLOT_ATTR
+import io.rsbox.api.INTERACTING_ITEM_ID
+import io.rsbox.api.INTERACTING_OPT_ATTR
+import io.rsbox.api.INTERACTING_SLOT_ATTR
 import io.rsbox.engine.model.entity.Client
 
 /**

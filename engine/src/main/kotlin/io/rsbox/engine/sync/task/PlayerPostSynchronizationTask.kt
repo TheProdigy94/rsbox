@@ -1,7 +1,7 @@
 package io.rsbox.engine.sync.task
 
-import io.rsbox.engine.model.Tile
-import io.rsbox.engine.model.entity.Player
+import io.rsbox.engine.model.RSTile
+import io.rsbox.engine.model.entity.RSPlayer
 import io.rsbox.engine.service.GameService
 import io.rsbox.engine.sync.SynchronizationTask
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet
@@ -9,15 +9,15 @@ import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet
 /**
  * @author Tom <rspsmods@gmail.com>
  */
-object PlayerPostSynchronizationTask : SynchronizationTask<Player> {
+object PlayerPostSynchronizationTask : SynchronizationTask<RSPlayer> {
 
-    override fun run(pawn: Player) {
+    override fun run(pawn: RSPlayer) {
         val oldTile = pawn.lastTile
         val moved = oldTile == null || !oldTile.sameAs(pawn.tile)
         val changedHeight = oldTile?.height != pawn.tile.height
 
         if (moved) {
-            pawn.lastTile = Tile(pawn.tile)
+            pawn.lastTile = RSTile(pawn.tile)
         }
         pawn.moved = false
         pawn.steps = null

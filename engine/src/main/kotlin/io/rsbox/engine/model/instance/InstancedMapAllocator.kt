@@ -2,10 +2,10 @@ package io.rsbox.engine.model.instance
 
 import io.rsbox.engine.model.Area
 import io.rsbox.engine.model.EntityType
-import io.rsbox.engine.model.Tile
+import io.rsbox.engine.model.RSTile
 import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.model.entity.DynamicObject
-import io.rsbox.engine.model.entity.Player
+import io.rsbox.engine.model.entity.RSPlayer
 import io.rsbox.engine.model.entity.StaticObject
 import io.rsbox.engine.model.region.Chunk
 
@@ -89,7 +89,7 @@ class InstancedMapAllocator {
 
     internal val activeMapCount: Int get() = maps.size
 
-    internal fun logout(player: Player) {
+    internal fun logout(player: RSPlayer) {
         val world = player.world
 
         getMap(player.tile)?.let { map ->
@@ -104,7 +104,7 @@ class InstancedMapAllocator {
         }
     }
 
-    internal fun death(player: Player) {
+    internal fun death(player: RSPlayer) {
         val world = player.world
 
         getMap(player.tile)?.let { map ->
@@ -140,11 +140,11 @@ class InstancedMapAllocator {
      * @return
      * An [InstancedMap] who's area contains [tile], or null if no map is found in said tile.
      */
-    fun getMap(tile: Tile): InstancedMap? = maps.find { it.area.contains(tile) }
+    fun getMap(tile: RSTile): InstancedMap? = maps.find { it.area.contains(tile) }
 
     private fun applyCollision(world: RSWorld, map: InstancedMap, bypassObjectChunkBounds: Boolean) {
         val bounds = Chunk.CHUNKS_PER_REGION * map.chunks.regionSize
-        val heights = Tile.TOTAL_HEIGHT_LEVELS
+        val heights = RSTile.TOTAL_HEIGHT_LEVELS
 
         val chunks = map.chunks.values
 
@@ -162,7 +162,7 @@ class InstancedMapAllocator {
                     val newChunk = world.chunks.getOrCreate(baseTile)
 
                     if (chunk != null) {
-                        val copyTile = Tile.fromRotatedHash(chunk.packed)
+                        val copyTile = RSTile.fromRotatedHash(chunk.packed)
                         val copyChunk = world.chunks.get(copyTile.chunkCoords, createIfNeeded = true)!!
 
                         copyChunk.getEntities<StaticObject>(EntityType.STATIC_OBJECT).forEach { obj ->

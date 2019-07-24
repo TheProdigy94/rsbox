@@ -1,4 +1,4 @@
-package io.rsbox.engine.model.queue.coroutine
+package io.rsbox.engine.model.queue
 
 import kotlin.coroutines.Continuation
 

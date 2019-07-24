@@ -13,7 +13,7 @@ object KotlinPluginConfiguration : ScriptCompilationConfiguration({
             "io.rsbox.engine.model.container.*",
             "io.rsbox.engine.model.container.key.*",
             "io.rsbox.engine.model.queue.*",
-            "io.rsbox.engine.model.attr.AttributeKey",
+            "io.rsbox.api.AttributeKey",
             "io.rsbox.engine.model.timer.TimerKey",
             "io.rsbox.engine.model.shop.ShopItem",
             "io.rsbox.engine.model.shop.PurchasePolicy",

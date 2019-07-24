@@ -1,20 +1,20 @@
 package io.rsbox.engine.sync.task
 
-import io.rsbox.engine.model.Tile
-import io.rsbox.engine.model.entity.Npc
+import io.rsbox.engine.model.RSTile
+import io.rsbox.engine.model.entity.RSNpc
 import io.rsbox.engine.sync.SynchronizationTask
 
 /**
  * @author Tom <rspsmods@gmail.com>
  */
-object NpcPostSynchronizationTask : SynchronizationTask<Npc> {
+object NpcPostSynchronizationTask : SynchronizationTask<RSNpc> {
 
-    override fun run(pawn: Npc) {
+    override fun run(pawn: RSNpc) {
         val oldTile = pawn.lastTile
         val moved = oldTile == null || !oldTile.sameAs(pawn.tile)
 
         if (moved) {
-            pawn.lastTile = Tile(pawn.tile)
+            pawn.lastTile = RSTile(pawn.tile)
         }
         pawn.moved = false
         pawn.steps = null

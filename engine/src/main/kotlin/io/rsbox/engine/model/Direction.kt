@@ -88,7 +88,7 @@ enum class Direction(val orientationValue: Int, val playerWalkValue: Int, val np
 
         fun getForAngle(angle: Int): Direction = ANGLED_ORDER[angle / 45]
 
-        fun between(current: Tile, next: Tile): Direction {
+        fun between(current: RSTile, next: RSTile): Direction {
             val deltaX = next.x - current.x
             val deltaZ = next.z - current.z
 

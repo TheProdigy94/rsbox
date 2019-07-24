@@ -1,6 +1,6 @@
 package io.rsbox.engine.model.path
 
-import io.rsbox.engine.model.Tile
+import io.rsbox.engine.model.RSTile
 import java.util.*
 
 /**
@@ -20,4 +20,4 @@ import java.util.*
  *
  * @author Tom <rspsmods@gmail.com>
  */
-data class Route(val path: Queue<Tile>, val success: Boolean, val tail: Tile)
+data class Route(val path: Queue<RSTile>, val success: Boolean, val tail: RSTile)

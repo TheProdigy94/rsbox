@@ -6246,7 +6246,7 @@
 - id: 5826
   examine: "This shop deals in antique swords."
 - id: 5831
-  examine: "Shop counter."
+  examine: "RSShop counter."
 - id: 5842
   examine: "It overlooks the path below. Let's hope it won't fall on your head."
 - id: 5843
@@ -35013,13 +35013,13 @@
 - id: 33020
   examine: "It's a Weapon rack"
 - id: 33033
-  examine: "It's a Tile"
+  examine: "It's a RSTile"
 - id: 33034
-  examine: "It's a Tile"
+  examine: "It's a RSTile"
 - id: 33035
-  examine: "It's a Tile"
+  examine: "It's a RSTile"
 - id: 33036
-  examine: "It's a Tile"
+  examine: "It's a RSTile"
 - id: 33037
   examine: "It's a Portal"
 - id: 33081

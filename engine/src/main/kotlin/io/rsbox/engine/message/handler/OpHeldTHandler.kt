@@ -3,9 +3,10 @@ package io.rsbox.engine.message.handler
 import io.rsbox.engine.message.MessageHandler
 import io.rsbox.engine.message.impl.OpHeldTMessage
 import io.rsbox.engine.model.RSWorld
-import io.rsbox.engine.model.attr.INTERACTING_ITEM
-import io.rsbox.engine.model.attr.INTERACTING_ITEM_ID
-import io.rsbox.engine.model.attr.INTERACTING_ITEM_SLOT
+import io.rsbox.api.INTERACTING_ITEM
+import io.rsbox.api.INTERACTING_ITEM_ID
+import io.rsbox.api.INTERACTING_ITEM_SLOT
+import io.rsbox.api.item.Item
 import io.rsbox.engine.model.entity.Client
 import java.lang.ref.WeakReference
 
@@ -40,7 +41,7 @@ class OpHeldTHandler : MessageHandler<OpHeldTMessage> {
         log(client, "Magic spell on item: from_component=[%d,%d], to_component=[%d,%d], unknown=%d, item=%d, item_slot=%d",
                 fromInterfaceId, fromComponent, toInterfaceId, toComponent, unknown, itemId, itemSlot)
 
-        client.attr[INTERACTING_ITEM] = WeakReference(item)
+        client.attr[INTERACTING_ITEM] = WeakReference(item as Item)
         client.attr[INTERACTING_ITEM_ID] = itemId
         client.attr[INTERACTING_ITEM_SLOT] = itemSlot
 

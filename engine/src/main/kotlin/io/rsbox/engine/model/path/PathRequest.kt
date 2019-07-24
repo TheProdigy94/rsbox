@@ -1,8 +1,8 @@
 package io.rsbox.engine.model.path
 
 import io.rsbox.engine.model.Direction
-import io.rsbox.engine.model.Tile
-import io.rsbox.engine.model.entity.Pawn
+import io.rsbox.engine.model.RSTile
+import io.rsbox.engine.model.entity.RSPawn
 import io.rsbox.engine.model.path.PathRequest.ClipFlag
 import java.util.EnumSet
 
@@ -45,7 +45,7 @@ import java.util.EnumSet
  *
  * @author Tom <rspsmods@gmail.com>
  */
-class PathRequest private constructor(val start: Tile, val sourceWidth: Int, val sourceLength: Int, val end: Tile,
+class PathRequest private constructor(val start: RSTile, val sourceWidth: Int, val sourceLength: Int, val end: RSTile,
                                       val targetWidth: Int, val targetLength: Int, val touchRadius: Int, val projectilePath: Boolean,
                                       val clipFlags: EnumSet<ClipFlag>, val blockedDirections: EnumSet<Direction>) {
 
@@ -86,9 +86,9 @@ class PathRequest private constructor(val start: Tile, val sourceWidth: Int, val
 
     class Builder {
 
-        private var start: Tile? = null
+        private var start: RSTile? = null
 
-        private var end: Tile? = null
+        private var end: RSTile? = null
 
         private var sourceWidth = -1
 
@@ -123,7 +123,7 @@ class PathRequest private constructor(val start: Tile, val sourceWidth: Int, val
          * @see PathRequest.start
          * @see PathRequest.end
          */
-        fun setPoints(start: Tile, end: Tile): Builder {
+        fun setPoints(start: RSTile, end: RSTile): Builder {
             check(this.start == null && this.end == null) { "Points have already been set." }
             this.start = start
             this.end = end
@@ -231,8 +231,8 @@ class PathRequest private constructor(val start: Tile, val sourceWidth: Int, val
         /**
          * Creates a default walk request.
          */
-        fun createWalkRequest(pawn: Pawn, x: Int, z: Int, projectile: Boolean, detectCollision: Boolean): PathRequest = Builder()
-                .setPoints(start = Tile(pawn.tile), end = Tile(x, z, pawn.tile.height))
+        fun createWalkRequest(pawn: RSPawn, x: Int, z: Int, projectile: Boolean, detectCollision: Boolean): PathRequest = Builder()
+                .setPoints(start = RSTile(pawn.tile), end = RSTile(x, z, pawn.tile.height))
                 .setSourceSize(width = pawn.getSize(), length = pawn.getSize())
                 .setTargetSize(width = 0, length = 0)
                 .setProjectilePath(projectile)

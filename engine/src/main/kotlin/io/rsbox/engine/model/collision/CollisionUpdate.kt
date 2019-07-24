@@ -3,13 +3,13 @@ package io.rsbox.engine.model.collision
 import io.rsbox.engine.fs.DefinitionSet
 import io.rsbox.engine.fs.def.ObjectDef
 import io.rsbox.engine.model.Direction
-import io.rsbox.engine.model.Tile
-import io.rsbox.engine.model.entity.GameObject
+import io.rsbox.engine.model.RSTile
+import io.rsbox.engine.model.entity.RSGameObject
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
 import it.unimi.dsi.fastutil.objects.ObjectArrayList
 import it.unimi.dsi.fastutil.objects.ObjectList
 
-class CollisionUpdate private constructor(val type: Type, val flags: Object2ObjectOpenHashMap<Tile, ObjectList<DirectionFlag>>) {
+class CollisionUpdate private constructor(val type: Type, val flags: Object2ObjectOpenHashMap<RSTile, ObjectList<DirectionFlag>>) {
 
     enum class Type {
         ADD,
@@ -18,7 +18,7 @@ class CollisionUpdate private constructor(val type: Type, val flags: Object2Obje
 
     class Builder {
 
-        private val flags = Object2ObjectOpenHashMap<Tile, ObjectList<DirectionFlag>>()
+        private val flags = Object2ObjectOpenHashMap<RSTile, ObjectList<DirectionFlag>>()
 
         private var type: Type? = null
 
@@ -32,19 +32,19 @@ class CollisionUpdate private constructor(val type: Type, val flags: Object2Obje
             this.type = type
         }
 
-        fun putTile(tile: Tile, impenetrable: Boolean, vararg directions: Direction) {
+        fun putTile(tile: RSTile, impenetrable: Boolean, vararg directions: Direction) {
             check(directions.isNotEmpty()) { "Directions must not be empty." }
             val flags = flags[tile] ?: ObjectArrayList<DirectionFlag>()
             directions.forEach { dir -> flags.add(DirectionFlag(dir, impenetrable)) }
             this.flags[tile] = flags
         }
 
-        private fun putWall(tile: Tile, impenetrable: Boolean, orientation: Direction) {
+        private fun putWall(tile: RSTile, impenetrable: Boolean, orientation: Direction) {
             putTile(tile, impenetrable, orientation)
             putTile(tile.step(orientation), impenetrable, orientation.getOpposite())
         }
 
-        private fun putLargeCornerWall(tile: Tile, impenetrable: Boolean, orientation: Direction) {
+        private fun putLargeCornerWall(tile: RSTile, impenetrable: Boolean, orientation: Direction) {
             val directions = orientation.getDiagonalComponents()
             putTile(tile, impenetrable, *directions)
 
@@ -53,7 +53,7 @@ class CollisionUpdate private constructor(val type: Type, val flags: Object2Obje
             }
         }
 
-        fun putObject(definitions: DefinitionSet, obj: GameObject) {
+        fun putObject(definitions: DefinitionSet, obj: RSGameObject) {
             val def = definitions.get(ObjectDef::class.java, obj.id)
             val type = obj.type
             val tile = obj.tile
@@ -77,12 +77,12 @@ class CollisionUpdate private constructor(val type: Type, val flags: Object2Obje
 
             if (type == ObjectType.FLOOR_DECORATION.value) {
                 if (def.interactive && def.solid) {
-                    putTile(Tile(x, z, height), impenetrable, *Direction.NESW)
+                    putTile(RSTile(x, z, height), impenetrable, *Direction.NESW)
                 }
             } else if (type >= ObjectType.DIAGONAL_WALL.value && type < ObjectType.FLOOR_DECORATION.value) {
                 for (dx in 0 until width) {
                     for (dz in 0 until length) {
-                        putTile(Tile(x + dx, z + dz, height), impenetrable, *Direction.NESW)
+                        putTile(RSTile(x + dx, z + dz, height), impenetrable, *Direction.NESW)
                     }
                 }
             } else if (type == ObjectType.LENGTHWISE_WALL.value) {

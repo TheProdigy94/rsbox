@@ -1,16 +1,16 @@
 package io.rsbox.engine.message.impl
 
 import io.rsbox.engine.message.Message
-import io.rsbox.engine.model.item.Item
+import io.rsbox.engine.model.item.RSItem
 
 /**
  * @author Tom <rspsmods@gmail.com>
  */
-class UpdateInvFullMessage(val items: Array<Item?>, val componentHash: Int, val containerKey: Int) : Message {
+class UpdateInvFullMessage(val items: Array<RSItem?>, val componentHash: Int, val containerKey: Int) : Message {
 
-    constructor(interfaceId: Int, component: Int, containerKey: Int, items: Array<Item?>) : this(items, (interfaceId shl 16) or component, containerKey)
+    constructor(interfaceId: Int, component: Int, containerKey: Int, items: Array<RSItem?>) : this(items, (interfaceId shl 16) or component, containerKey)
 
-    constructor(interfaceId: Int, component: Int, items: Array<Item?>) : this(items, (interfaceId shl 16) or component, 0)
+    constructor(interfaceId: Int, component: Int, items: Array<RSItem?>) : this(items, (interfaceId shl 16) or component, 0)
 
-    constructor(containerKey: Int, items: Array<Item?>) : this(items, -1, containerKey)
+    constructor(containerKey: Int, items: Array<RSItem?>) : this(items, -1, containerKey)
 }

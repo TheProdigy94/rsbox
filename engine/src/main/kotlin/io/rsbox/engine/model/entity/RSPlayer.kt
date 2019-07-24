@@ -2,6 +2,11 @@ package io.rsbox.engine.model.entity
 
 import com.google.common.base.MoreObjects
 import com.google.common.primitives.Ints
+import io.rsbox.api.*
+import io.rsbox.api.event.EventManager
+import io.rsbox.api.event.login.PlayerLoginEvent
+import io.rsbox.api.Appearance
+import io.rsbox.api.entity.Player
 import io.rsbox.engine.fs.def.ItemDef
 import io.rsbox.engine.fs.def.VarbitDef
 import io.rsbox.engine.fs.def.VarpDef
@@ -12,15 +17,15 @@ import io.rsbox.engine.game.Skills
 import io.rsbox.engine.message.Message
 import io.rsbox.engine.message.impl.*
 import io.rsbox.engine.model.*
-import io.rsbox.engine.model.attr.*
 import io.rsbox.engine.model.container.ContainerStackType
 import io.rsbox.engine.model.container.ItemContainer
 import io.rsbox.engine.model.container.key.*
 import io.rsbox.engine.model.interf.*
 import io.rsbox.engine.model.interf.listener.PlayerInterfaceListener
-import io.rsbox.engine.model.item.Item
+import io.rsbox.engine.model.item.RSItem
 import io.rsbox.engine.model.priv.Privilege
-import io.rsbox.engine.model.queue.QueueTask
+import io.rsbox.engine.model.queue.QueueTaskeTask
+import io.rsbox.engine.model.shop.RSShop
 import io.rsbox.engine.model.skill.SkillSet
 import io.rsbox.engine.model.timer.ACTIVE_COMBAT_TIMER
 import io.rsbox.engine.model.timer.FORCE_DISCONNECTION_TIMER
@@ -31,23 +36,22 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList
 import java.util.Arrays
 
 /**
- * A [Pawn] that represents a player.
+ * A [RSPawn] that represents a player.
  *
  * @author Tom <rspsmods@gmail.com>
  */
-open class Player(world: RSWorld) : Pawn(world) {
-
+open class RSPlayer(world: RSWorld) : RSPawn(world), Player {
     /**
      * A persistent and unique id. This is <strong>not</strong> the index
-     * of our [Player] when registered to the [RSWorld], it is a value determined
-     * when the [Player] first registers their account.
+     * of our [RSPlayer] when registered to the [RSWorld], it is a value determined
+     * when the [RSPlayer] first registers their account.
      */
     lateinit var uid: PlayerUID
 
     /**
      * The display name that will show on the player while in-game.
      */
-    var username = ""
+    override var username = ""
 
     /**
      * @see Privilege
@@ -69,7 +73,7 @@ open class Player(world: RSWorld) : Pawn(world) {
     var initiated = false
 
     /**
-     * The index that was assigned to a [Player] when they are first registered to the
+     * The index that was assigned to a [RSPlayer] when they are first registered to the
      * [RSWorld]. This is needed to remove local players from the synchronization task
      * as once that logic is reached, the local player would have an index of [-1].
      */
@@ -96,17 +100,6 @@ open class Player(world: RSWorld) : Pawn(world) {
 
     val bank = ItemContainer(world.definitions, BANK_KEY)
 
-    val ge_returns = arrayOf(
-            ItemContainer(world.definitions, GE_RETURN_0),
-            ItemContainer(world.definitions, GE_RETURN_1),
-            ItemContainer(world.definitions, GE_RETURN_2),
-            ItemContainer(world.definitions, GE_RETURN_3),
-            ItemContainer(world.definitions, GE_RETURN_4),
-            ItemContainer(world.definitions, GE_RETURN_5),
-            ItemContainer(world.definitions, GE_RETURN_6),
-            ItemContainer(world.definitions, GE_RETURN_7)
-    )
-
     /**
      * A map that contains all the [ItemContainer]s a player can have.
      */
@@ -114,14 +107,6 @@ open class Player(world: RSWorld) : Pawn(world) {
         put(INVENTORY_KEY, inventory)
         put(EQUIPMENT_KEY, equipment)
         put(BANK_KEY, bank)
-        put(GE_RETURN_0, ge_returns[0])
-        put(GE_RETURN_1, ge_returns[1])
-        put(GE_RETURN_2, ge_returns[2])
-        put(GE_RETURN_3, ge_returns[3])
-        put(GE_RETURN_4, ge_returns[4])
-        put(GE_RETURN_5, ge_returns[5])
-        put(GE_RETURN_6, ge_returns[6])
-        put(GE_RETURN_7, ge_returns[7])
     }
 
     val interfaces by lazy { InterfaceSet(PlayerInterfaceListener(this, world.plugins)) }
@@ -153,7 +138,7 @@ open class Player(world: RSWorld) : Pawn(world) {
      * The players in our viewport, including ourselves. This list should not
      * be used outside of our synchronization task.
      */
-    internal val gpiLocalPlayers = arrayOfNulls<Player>(2048)
+    internal val gpiLocalPlayers = arrayOfNulls<RSPlayer>(2048)
 
     /**
      * The indices of any possible local player in the world.
@@ -183,29 +168,19 @@ open class Player(world: RSWorld) : Pawn(world) {
     /**
      * GPI tile hash multipliers.
      *
-     * The player synchronization task will send [Tile.x] and [Tile.z] as 13-bit
+     * The player synchronization task will send [RSTile.x] and [RSTile.z] as 13-bit
      * values, which is 2^13 (8192). To send a player position higher than said
      * value in either direction, we must also send a multiplier.
      */
     internal val gpiTileHashMultipliers = IntArray(2048)
 
     /**
-     * API Access token
-     */
-    lateinit var accessToken: String
-
-    /**
-     * API Refresh token
-     */
-    lateinit var refreshToken: String
-
-    /**
      * The npcs in our viewport. This list should not be used outside of our
      * synchronization task.
      */
-    internal val localNpcs = ObjectArrayList<Npc>()
+    internal val localNpcs = ObjectArrayList<RSNpc>()
 
-    var appearance = Appearance.DEFAULT
+    var appearance = RSAppearance.DEFAULT
 
     var weight = 0.0
 
@@ -270,7 +245,7 @@ open class Player(world: RSWorld) : Pawn(world) {
         movementQueue.clear()
         lock = LockState.DELAY_ACTIONS
 
-        lastTile = Tile(tile)
+        lastTile = RSTile(tile as RSTile)
         moveTo(movement.finalDestination)
 
         forceMove(movement)
@@ -284,7 +259,7 @@ open class Player(world: RSWorld) : Pawn(world) {
      * [io.rsbox.engine.sync.task.PlayerSynchronizationTask].
      *
      * Note that this method may be handled in parallel, so be careful with race
-     * conditions if any logic may modify other [Pawn]s.
+     * conditions if any logic may modify other [RSPawn]s.
      */
     override fun cycle() {
         var calculateWeight = false
@@ -354,7 +329,7 @@ open class Player(world: RSWorld) : Pawn(world) {
 
         if (shopDirty) {
             attr[CURRENT_SHOP_ATTR]?.let { shop ->
-                write(UpdateInvFullMessage(containerKey = 13, items = shop.items.map { if (it != null) Item(it.item, it.currentAmount) else null }.toTypedArray()))
+                write(UpdateInvFullMessage(containerKey = 13, items = (shop as RSShop).items.map { if (it != null) RSItem(it.item, it.currentAmount) else null }.toTypedArray()))
             }
             shopDirty = false
         }
@@ -398,7 +373,7 @@ open class Player(world: RSWorld) : Pawn(world) {
      * [io.rsbox.engine.sync.task.PlayerSynchronizationTask].
      *
      * Note that this method may be handled in parallel, so be careful with race
-     * conditions if any logic may modify other [Pawn]s.
+     * conditions if any logic may modify other [RSPawn]s.
      */
     fun postCycle() {
         /*
@@ -431,7 +406,7 @@ open class Player(world: RSWorld) : Pawn(world) {
             val tiles = IntArray(gpiTileHashMultipliers.size)
             System.arraycopy(gpiTileHashMultipliers, 0, tiles, 0, tiles.size)
 
-            write(RebuildLoginMessage(index, tile, tiles, world.xteaKeyService))
+            write(RebuildLoginMessage(index, tile as RSTile, tiles, world.xteaKeyService))
             world.getService(LoggerService::class.java, searchSubclasses = true)?.logLogin(this)
         }
 
@@ -441,6 +416,7 @@ open class Player(world: RSWorld) : Pawn(world) {
 
         initiated = true
         Game.login(this)
+        EventManager.fireEvent(PlayerLoginEvent::class.java, this as Player, this.world as World)
     }
 
     /**
@@ -713,7 +689,7 @@ open class Player(world: RSWorld) : Pawn(world) {
         setVarbit(357, panel)
     }
 
-    fun getEquipment(slot: EquipmentType): Item? = equipment[slot.id]
+    fun getEquipment(slot: EquipmentType): RSItem? = equipment[slot.id]
 
     /**
      * @see largeViewport
@@ -747,14 +723,14 @@ open class Player(world: RSWorld) : Pawn(world) {
 
     /**
      * Default method to handle any incoming [Message]s that won't be
-     * handled unless the [Player] is controlled by a [Client] user.
+     * handled unless the [RSPlayer] is controlled by a [Client] user.
      */
     open fun handleMessages() {
     }
 
     /**
      * Default method to write [Message]s to the attached channel that won't
-     * be handled unless the [Player] is controlled by a [Client] user.
+     * be handled unless the [RSPlayer] is controlled by a [Client] user.
      */
     open fun write(vararg messages: Message) {
     }
@@ -764,14 +740,14 @@ open class Player(world: RSWorld) : Pawn(world) {
 
     /**
      * Default method to flush the attached channel. Won't be handled unless
-     * the [Player] is controlled by a [Client] user.
+     * the [RSPlayer] is controlled by a [Client] user.
      */
     open fun channelFlush() {
     }
 
     /**
      * Default method to close the attached channel. Won't be handled unless
-     * the [Player] is controlled by a [Client] user.
+     * the [RSPlayer] is controlled by a [Client] user.
      */
     open fun channelClose() {
     }
@@ -830,6 +806,10 @@ open class Player(world: RSWorld) : Pawn(world) {
 
     fun sendRunEnergy(energy: Int) {
         write(UpdateRunEnergyMessage(energy))
+    }
+
+    override fun getAppearance(): Appearance {
+        return appearance
     }
 
     //////////////////////////////////////////////////////////////

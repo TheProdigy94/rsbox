@@ -1,10 +1,10 @@
 package io.rsbox.engine
 
 import com.google.common.base.Stopwatch
-import io.rsbox.engine.model.Tile
+import io.rsbox.engine.model.RSTile
 import io.rsbox.engine.model.RSWorld
-import io.rsbox.engine.model.entity.GroundItem
-import io.rsbox.engine.model.entity.Npc
+import io.rsbox.engine.model.entity.RSGroundItem
+import io.rsbox.engine.model.entity.RSNpc
 import io.rsbox.engine.model.skill.SkillSet
 import io.rsbox.engine.protocol.ClientChannelInitializer
 import io.rsbox.engine.service.GameService
@@ -140,12 +140,12 @@ class RSServer : Server {
                 revision = gameProperties.get<Int>("revision")!!,
                 cycleTime = gameProperties.getOrDefault("cycle-time", 600),
                 playerLimit = gameProperties.getOrDefault("max-players", 2048),
-                home = Tile(gameProperties.get<Int>("home-x")!!, gameProperties.get<Int>("home-z")!!, gameProperties.getOrDefault("home-height", 0)),
+                home = RSTile(gameProperties.get<Int>("home-x")!!, gameProperties.get<Int>("home-z")!!, gameProperties.getOrDefault("home-height", 0)),
                 skillCount = gameProperties.getOrDefault("skill-count", SkillSet.DEFAULT_SKILL_COUNT),
-                npcStatCount = gameProperties.getOrDefault("npc-stat-count", Npc.Stats.DEFAULT_NPC_STAT_COUNT),
+                npcStatCount = gameProperties.getOrDefault("npc-stat-count", RSNpc.Stats.DEFAULT_NPC_STAT_COUNT),
                 runEnergy = gameProperties.getOrDefault("run-energy", true),
-                gItemPublicDelay = gameProperties.getOrDefault("gitem-public-spawn-delay", GroundItem.DEFAULT_PUBLIC_SPAWN_CYCLES),
-                gItemDespawnDelay = gameProperties.getOrDefault("gitem-despawn-delay", GroundItem.DEFAULT_DESPAWN_CYCLES),
+                gItemPublicDelay = gameProperties.getOrDefault("gitem-public-spawn-delay", RSGroundItem.DEFAULT_PUBLIC_SPAWN_CYCLES),
+                gItemDespawnDelay = gameProperties.getOrDefault("gitem-despawn-delay", RSGroundItem.DEFAULT_DESPAWN_CYCLES),
                 preloadMaps = gameProperties.getOrDefault("preload-maps", false))
 
         val devContext = DevContext(

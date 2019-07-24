@@ -6,8 +6,8 @@ import io.rsbox.engine.sync.task.*
 import io.rsbox.engine.task.GameTask
 
 /**
- * A [GameTask] that is responsible for sending [io.rsbox.engine.model.entity.Pawn]
- * data to [io.rsbox.engine.model.entity.Pawn]s.
+ * A [GameTask] that is responsible for sending [io.rsbox.engine.model.entity.RSPawn]
+ * data to [io.rsbox.engine.model.entity.RSPawn]s.
  *
  * @author Tom <rspsmods@gmail.com>
  */
@@ -31,7 +31,7 @@ class SequentialSynchronizationTask : GameTask {
 
         worldPlayers.forEach { p ->
             /*
-             * Non-human [io.rsbox.engine.model.entity.Player]s do not need this
+             * Non-human [io.rsbox.engine.model.entity.RSPlayer]s do not need this
              * to send any synchronization data to their game-client as they do
              * not have one.
              */
@@ -42,7 +42,7 @@ class SequentialSynchronizationTask : GameTask {
 
         worldPlayers.forEach { p ->
             /*
-             * Non-human [io.rsbox.engine.model.entity.Player]s do not need this
+             * Non-human [io.rsbox.engine.model.entity.RSPlayer]s do not need this
              * to send any synchronization data to their game-client as they do
              * not have one.
              */

@@ -10,10 +10,10 @@ import io.rsbox.net.codec.login.LoginRequest
 import io.netty.channel.Channel
 
 /**
- * A [Player] that is controlled by a human. A [Client] is responsible for
+ * A [RSPlayer] that is controlled by a human. A [Client] is responsible for
  * handling any network related job.
  *
- * Anything other than network logic should be added to [Player] instead.
+ * Anything other than network logic should be added to [RSPlayer] instead.
  *
  * @param channel
  * The [Channel] used to write and read [Message]s to and from the client.
@@ -23,7 +23,7 @@ import io.netty.channel.Channel
  *
  * @author Tom <rspsmods@gmail.com>
  */
-class Client(val channel: Channel, world: RSWorld) : Player(world) {
+class Client(val channel: Channel, world: RSWorld) : RSPlayer(world) {
 
     /**
      * The [System] that will handle [Message]s, write [Message]s and flush the
@@ -31,7 +31,7 @@ class Client(val channel: Channel, world: RSWorld) : Player(world) {
      */
     lateinit var gameSystem: GameSystem
     /**
-     * The username that was used to register the [Player]. This username should
+     * The username that was used to register the [RSPlayer]. This username should
      * never be changed through the player's end.
      */
     lateinit var loginUsername: String

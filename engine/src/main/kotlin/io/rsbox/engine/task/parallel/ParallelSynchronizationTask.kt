@@ -1,7 +1,7 @@
 package io.rsbox.engine.task.parallel
 
 import io.rsbox.engine.model.RSWorld
-import io.rsbox.engine.model.entity.Pawn
+import io.rsbox.engine.model.entity.RSPawn
 import io.rsbox.engine.service.GameService
 import io.rsbox.engine.sync.SynchronizationTask
 import io.rsbox.engine.sync.task.*
@@ -11,15 +11,15 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Phaser
 
 /**
- * A [GameTask] that is responsible for sending [io.rsbox.engine.model.entity.Pawn]
- * data to [io.rsbox.engine.model.entity.Pawn]s.
+ * A [GameTask] that is responsible for sending [io.rsbox.engine.model.entity.RSPawn]
+ * data to [io.rsbox.engine.model.entity.RSPawn]s.
  *
  * @author Tom <rspsmods@gmail.com>
  */
 class ParallelSynchronizationTask(private val executor: ExecutorService) : GameTask {
 
     /**
-     * The [Phaser] responsible for waiting on every [io.rsbox.engine.model.entity.Player]
+     * The [Phaser] responsible for waiting on every [io.rsbox.engine.model.entity.RSPlayer]
      * to finish a stage in the synchronization process before beginning the next stage.
      */
     private val phaser = Phaser(1)
@@ -48,7 +48,7 @@ class ParallelSynchronizationTask(private val executor: ExecutorService) : GameT
         phaser.bulkRegister(playerCount)
         worldPlayers.forEach { p ->
             /*
-             * Non-human [io.rsbox.engine.model.entity.Player]s do not need this
+             * Non-human [io.rsbox.engine.model.entity.RSPlayer]s do not need this
              * to send any synchronization data to their game-client as they do
              * not have one.
              */
@@ -63,7 +63,7 @@ class ParallelSynchronizationTask(private val executor: ExecutorService) : GameT
         phaser.bulkRegister(playerCount)
         worldPlayers.forEach { p ->
             /*
-             * Non-human [io.rsbox.engine.model.entity.Player]s do not need this
+             * Non-human [io.rsbox.engine.model.entity.RSPlayer]s do not need this
              * to send any synchronization data to their game-client as they do
              * not have one.
              */
@@ -88,7 +88,7 @@ class ParallelSynchronizationTask(private val executor: ExecutorService) : GameT
         phaser.arriveAndAwaitAdvance()
     }
 
-    private fun <T : Pawn> submit(phaser: Phaser, executor: ExecutorService, pawn: T, task: SynchronizationTask<T>) {
+    private fun <T : RSPawn> submit(phaser: Phaser, executor: ExecutorService, pawn: T, task: SynchronizationTask<T>) {
         executor.execute {
             try {
                 task.run(pawn)

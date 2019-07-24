@@ -1,13 +1,13 @@
 package io.rsbox.engine.model.queue.impl
 
 import io.rsbox.engine.game.Game
-import io.rsbox.engine.model.entity.Player
+import io.rsbox.engine.model.entity.RSPlayer
 import io.rsbox.engine.model.queue.QueueTaskSet
-import io.rsbox.engine.model.queue.TaskPriority
+import io.rsbox.api.TaskPriority
 import kotlin.coroutines.resume
 
 /**
- * A [QueueTaskSet] implementation for [io.rsbox.engine.model.entity.Pawn]s.
+ * A [QueueTaskSet] implementation for [io.rsbox.engine.model.entity.RSPawn]s.
  * Each [io.rsbox.engine.model.queue.QueueTask] is handled one at a time.
  *
  * @author Tom <rspsmods@gmail.com>
@@ -18,7 +18,7 @@ class PawnQueueTaskSet : QueueTaskSet() {
         while (true) {
             val task = queue.peekFirst() ?: break
 
-            if (task.priority == TaskPriority.STANDARD && task.ctx is Player && task.ctx.hasMenuOpen()) {
+            if (task.priority == TaskPriority.STANDARD && task.ctx is RSPlayer && task.ctx.hasMenuOpen()) {
                 break
             }
 
@@ -45,5 +45,5 @@ class PawnQueueTaskSet : QueueTaskSet() {
         }
     }
 
-    private fun Player.hasMenuOpen(): Boolean = Game.openMenuCheck(this)
+    private fun RSPlayer.hasMenuOpen(): Boolean = Game.openMenuCheck(this)
 }

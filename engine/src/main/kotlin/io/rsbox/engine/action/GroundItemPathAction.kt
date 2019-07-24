@@ -1,24 +1,22 @@
 package io.rsbox.engine.action
 
+import io.rsbox.api.*
 import io.rsbox.engine.fs.def.ItemDef
 import io.rsbox.engine.message.impl.SetMapFlagMessage
 import io.rsbox.engine.model.MovementQueue
-import io.rsbox.engine.model.attr.GROUNDITEM_PICKUP_TRANSACTION
-import io.rsbox.engine.model.attr.INTERACTING_GROUNDITEM_ATTR
-import io.rsbox.engine.model.attr.INTERACTING_ITEM
-import io.rsbox.engine.model.attr.INTERACTING_OPT_ATTR
-import io.rsbox.engine.model.entity.Entity
-import io.rsbox.engine.model.entity.GroundItem
-import io.rsbox.engine.model.entity.Player
-import io.rsbox.engine.model.item.Item
+import io.rsbox.engine.model.entity.RSEntity
+import io.rsbox.engine.model.entity.RSGroundItem
+import io.rsbox.engine.model.entity.RSPlayer
+import io.rsbox.engine.model.item.RSItem
+import io.rsbox.api.TaskPriority
+import io.rsbox.engine.model.RSTile
 import io.rsbox.engine.model.queue.QueueTask
-import io.rsbox.engine.model.queue.TaskPriority
 import io.rsbox.engine.oldplugin.Plugin
 import io.rsbox.engine.service.log.LoggerService
 import java.lang.ref.WeakReference
 
 /**
- * This class is responsible for moving towards a [GroundItem].
+ * This class is responsible for moving towards a [RSGroundItem].
  *
  * @author Tom <rspsmods@gmail.com>
  */
@@ -31,14 +29,14 @@ object GroundItemPathAction {
     internal const val ITEM_ON_GROUND_ITEM_OPTION = -1
 
     val walkPlugin: Plugin.() -> Unit = {
-        val p = ctx as Player
-        val item = p.attr[INTERACTING_GROUNDITEM_ATTR]!!.get()!!
+        val p = ctx as RSPlayer
+        val item = p.attr[INTERACTING_GROUNDITEM_ATTR]!!.get()!! as RSGroundItem
         val opt = p.attr[INTERACTING_OPT_ATTR]!!
 
         if (p.tile.sameAs(item.tile)) {
             handleAction(p, item, opt)
         } else {
-            p.walkTo(item.tile, MovementQueue.StepType.NORMAL)
+            p.walkTo(item.tile as RSTile, MovementQueue.StepType.NORMAL)
             p.queue(TaskPriority.STANDARD) {
                 terminateAction = {
                     p.stopMovement()
@@ -49,11 +47,11 @@ object GroundItemPathAction {
         }
     }
 
-    private suspend fun QueueTask.awaitArrival(item: GroundItem, opt: Int) {
-        val p = ctx as Player
+    private suspend fun QueueTask.awaitArrival(item: RSGroundItem, opt: Int) {
+        val p = ctx as RSPlayer
         val destination = p.movementQueue.peekLast()
         if (destination == null) {
-            p.writeMessage(Entity.YOU_CANT_REACH_THAT)
+            p.writeMessage(RSEntity.YOU_CANT_REACH_THAT)
             return
         }
         while (true) {
@@ -65,13 +63,13 @@ object GroundItemPathAction {
             if (p.tile.sameAs(item.tile)) {
                 handleAction(p, item, opt)
             } else {
-                p.writeMessage(Entity.YOU_CANT_REACH_THAT)
+                p.writeMessage(RSEntity.YOU_CANT_REACH_THAT)
             }
             break
         }
     }
 
-    private fun handleAction(p: Player, groundItem: GroundItem, opt: Int) {
+    private fun handleAction(p: RSPlayer, groundItem: RSGroundItem, opt: Int) {
         if (!p.world.isSpawned(groundItem)) {
             return
         }
@@ -93,11 +91,11 @@ object GroundItemPathAction {
 
             p.world.remove(groundItem)
 
-            p.attr[GROUNDITEM_PICKUP_TRANSACTION] = WeakReference(add)
+            p.attr[GROUNDITEM_PICKUP_TRANSACTION] = WeakReference(add as ItemTransaction)
             p.world.plugins.executeGlobalGroundItemPickUp(p)
-            p.world.getService(LoggerService::class.java, searchSubclasses = true)?.logItemPickUp(p, Item(groundItem.item, add.completed))
+            p.world.getService(LoggerService::class.java, searchSubclasses = true)?.logItemPickUp(p, RSItem(groundItem.item, add.completed))
         } else if (opt == ITEM_ON_GROUND_ITEM_OPTION) {
-            val item = p.attr[INTERACTING_ITEM]?.get() ?: return
+            val item: RSItem = p.attr[INTERACTING_ITEM]?.get() as RSItem? ?: return
             val handled = p.world.plugins.executeItemOnGroundItem(p, item.id, groundItem.item)
 
             if (!handled && p.world.devContext.debugItemActions) {

@@ -1,15 +1,16 @@
 package io.rsbox.engine.action
 
+import io.rsbox.api.KILLER_ATTR
+import io.rsbox.engine.model.LockState
+import io.rsbox.engine.model.RSTile
+import io.rsbox.engine.model.entity.RSNpc
+import io.rsbox.engine.model.entity.RSPlayer
+import io.rsbox.api.TaskPriority
+import io.rsbox.api.entity.Pawn
 import io.rsbox.engine.fs.def.AnimDef
 import io.rsbox.engine.message.impl.SynthSoundMessage
-import io.rsbox.engine.model.LockState
-import io.rsbox.engine.model.Tile
-import io.rsbox.engine.model.attr.KILLER_ATTR
-import io.rsbox.engine.model.entity.Npc
-import io.rsbox.engine.model.entity.Player
 import io.rsbox.engine.model.npcdrops.NpcDropHandler
 import io.rsbox.engine.model.queue.QueueTask
-import io.rsbox.engine.model.queue.TaskPriority
 import io.rsbox.engine.oldplugin.Plugin
 import io.rsbox.engine.service.log.LoggerService
 import java.lang.ref.WeakReference
@@ -22,7 +23,7 @@ import java.lang.ref.WeakReference
 object NpcDeathAction {
 
     val deathPlugin: Plugin.() -> Unit = {
-        val npc = ctx as Npc
+        val npc = ctx as RSNpc
 
         npc.interruptQueues()
         npc.stopMovement()
@@ -33,24 +34,24 @@ object NpcDeathAction {
         }
     }
 
-    private suspend fun QueueTask.death(npc: Npc) {
+    private suspend fun QueueTask.death(npc: RSNpc) {
         val world = npc.world
         val deathAnimation = npc.combatDef.deathAnimation
         val deathSound = npc.combatDef.deathSound
         val respawnDelay = npc.combatDef.respawnDelay
 
-        val deathTile: Tile = npc.tile
+        val deathTile: RSTile = npc.tile as RSTile
 
         npc.damageMap.getMostDamage()?.let { killer ->
-            if (killer is Player) {
+            if (killer is RSPlayer) {
                 world.getService(LoggerService::class.java, searchSubclasses = true)?.logNpcKill(killer, npc)
             }
-            npc.attr[KILLER_ATTR] = WeakReference(killer)
+            npc.attr[KILLER_ATTR] = WeakReference(killer as Pawn)
         }
 
         val killer = npc.attr[KILLER_ATTR]?.get()
 
-        if(killer is Player) {
+        if(killer is RSPlayer) {
             killer.write(SynthSoundMessage(deathSound, 1, 0))
         }
 
@@ -69,7 +70,7 @@ object NpcDeathAction {
         world.plugins.executeNpcDeath(npc)
 
         // Handle Drops
-        if(killer is Player) {
+        if(killer is RSPlayer) {
             NpcDropHandler.processDrop(npc, killer, deathTile)
         }
 
@@ -84,7 +85,7 @@ object NpcDeathAction {
         }
     }
 
-    private fun Npc.reset() {
+    private fun RSNpc.reset() {
         lock = LockState.NONE
         tile = spawnTile
         setTransmogId(-1)

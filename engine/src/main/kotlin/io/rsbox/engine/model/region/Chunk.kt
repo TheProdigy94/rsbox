@@ -4,7 +4,7 @@ import io.rsbox.engine.message.impl.UpdateZonePartialEnclosedMessage
 import io.rsbox.engine.message.impl.UpdateZonePartialFollowsMessage
 import io.rsbox.engine.model.Direction
 import io.rsbox.engine.model.EntityType
-import io.rsbox.engine.model.Tile
+import io.rsbox.engine.model.RSTile
 import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.model.collision.CollisionMatrix
 import io.rsbox.engine.model.collision.CollisionUpdate
@@ -29,16 +29,16 @@ class Chunk(val coords: ChunkCoords, val heights: Int) {
     /**
      * The array of matrices of 8x8 tiles. Each index representing a height.
      */
-    private val matrices: Array<CollisionMatrix> = CollisionMatrix.createMatrices(Tile.TOTAL_HEIGHT_LEVELS, CHUNK_SIZE, CHUNK_SIZE)
+    private val matrices: Array<CollisionMatrix> = CollisionMatrix.createMatrices(RSTile.TOTAL_HEIGHT_LEVELS, CHUNK_SIZE, CHUNK_SIZE)
 
-    internal val blockedTiles = ObjectOpenHashSet<Tile>()
+    internal val blockedTiles = ObjectOpenHashSet<RSTile>()
 
     /**
-     * The [Entity]s that are currently registered to the [Tile] key. This is
-     * not used for [io.rsbox.engine.model.entity.Pawn], but rather [Entity]s
-     * that do not regularly change [Tile]s.
+     * The [RSEntity]s that are currently registered to the [RSTile] key. This is
+     * not used for [io.rsbox.engine.model.entity.RSPawn], but rather [RSEntity]s
+     * that do not regularly change [RSTile]s.
      */
-    private lateinit var entities: MutableMap<Tile, MutableList<Entity>>
+    private lateinit var entities: MutableMap<RSTile, MutableList<RSEntity>>
 
     /**
      * A list of [EntityUpdate]s that will be sent to players who have just entered
@@ -47,7 +47,7 @@ class Chunk(val coords: ChunkCoords, val heights: Int) {
     private lateinit var updates: MutableList<EntityUpdate<*>>
 
     /**
-     * Create the collections used for [Entity]s and [EntityUpdate]s.
+     * Create the collections used for [RSEntity]s and [EntityUpdate]s.
      * @see entities
      * @see updates
      */
@@ -71,18 +71,18 @@ class Chunk(val coords: ChunkCoords, val heights: Int) {
     /**
      * Check if [tile] belongs to this chunk.
      */
-    fun contains(tile: Tile): Boolean = coords == tile.chunkCoords
+    fun contains(tile: RSTile): Boolean = coords == tile.chunkCoords
 
-    fun isBlocked(tile: Tile, direction: Direction, projectile: Boolean): Boolean = matrices[tile.height].isBlocked(tile.x % CHUNK_SIZE, tile.z % CHUNK_SIZE, direction, projectile)
+    fun isBlocked(tile: RSTile, direction: Direction, projectile: Boolean): Boolean = matrices[tile.height].isBlocked(tile.x % CHUNK_SIZE, tile.z % CHUNK_SIZE, direction, projectile)
 
-    fun isClipped(tile: Tile): Boolean = matrices[tile.height].isClipped(tile.x % CHUNK_SIZE, tile.z % CHUNK_SIZE)
+    fun isClipped(tile: RSTile): Boolean = matrices[tile.height].isClipped(tile.x % CHUNK_SIZE, tile.z % CHUNK_SIZE)
 
-    fun addEntity(world: RSWorld, entity: Entity, tile: Tile) {
+    fun addEntity(world: RSWorld, entity: RSEntity, tile: RSTile) {
         /*
          * Objects will affect the collision map.
          */
         if (entity.entityType.isObject) {
-            world.collision.applyCollision(world.definitions, entity as GameObject, CollisionUpdate.Type.ADD)
+            world.collision.applyCollision(world.definitions, entity as RSGameObject, CollisionUpdate.Type.ADD)
         }
 
         /*
@@ -122,7 +122,7 @@ class Chunk(val coords: ChunkCoords, val heights: Int) {
         }
     }
 
-    fun removeEntity(world: RSWorld, entity: Entity, tile: Tile) {
+    fun removeEntity(world: RSWorld, entity: RSEntity, tile: RSTile) {
         /*
          * Transient entities do not get added to our [Chunk]'s tiles, so no use
          * in trying to remove it.
@@ -134,7 +134,7 @@ class Chunk(val coords: ChunkCoords, val heights: Int) {
          * collision map.
          */
         if (entity.entityType.isObject) {
-            world.collision.applyCollision(world.definitions, entity as GameObject, CollisionUpdate.Type.REMOVE)
+            world.collision.applyCollision(world.definitions, entity as RSGameObject, CollisionUpdate.Type.REMOVE)
         }
 
         entities[tile]?.remove(entity)
@@ -167,9 +167,9 @@ class Chunk(val coords: ChunkCoords, val heights: Int) {
     }
 
     /**
-     * Update the item amount of an existing [GroundItem] in [entities].
+     * Update the item amount of an existing [RSGroundItem] in [entities].
      */
-    fun updateGroundItem(world: RSWorld, item: GroundItem, oldAmount: Int, newAmount: Int) {
+    fun updateGroundItem(world: RSWorld, item: RSGroundItem, oldAmount: Int, newAmount: Int) {
         val update = ObjCountUpdate(EntityUpdateType.UPDATE_GROUND_ITEM, item, oldAmount, newAmount)
         sendUpdate(world, update)
 
@@ -205,7 +205,7 @@ class Chunk(val coords: ChunkCoords, val heights: Int) {
      * @param gameService
      * Game service is required to get the XTEA service.
      */
-    fun sendUpdates(p: Player, gameService: GameService) {
+    fun sendUpdates(p: RSPlayer, gameService: GameService) {
         val messages = ObjectArrayList<EntityGroupMessage>()
 
         updates.forEach { update ->
@@ -224,25 +224,25 @@ class Chunk(val coords: ChunkCoords, val heights: Int) {
     /**
      * Checks to see if player [p] is able to view [entity].
      */
-    private fun canBeViewed(p: Player, entity: Entity): Boolean {
+    private fun canBeViewed(p: RSPlayer, entity: RSEntity): Boolean {
         if (p.tile.height != entity.tile.height) {
             return false
         }
         if (entity.entityType.isGroundItem) {
-            val item = entity as GroundItem
+            val item = entity as RSGroundItem
             return item.isPublic() || item.isOwnedBy(p)
         }
         return true
     }
 
-    private fun <T : Entity> createUpdateFor(entity: T, spawn: Boolean): EntityUpdate<*>? = when (entity.entityType) {
+    private fun <T : RSEntity> createUpdateFor(entity: T, spawn: Boolean): EntityUpdate<*>? = when (entity.entityType) {
         EntityType.DYNAMIC_OBJECT, EntityType.STATIC_OBJECT ->
-            if (spawn) LocAddChangeUpdate(EntityUpdateType.SPAWN_OBJECT, entity as GameObject)
-            else LocDelUpdate(EntityUpdateType.REMOVE_OBJECT, entity as GameObject)
+            if (spawn) LocAddChangeUpdate(EntityUpdateType.SPAWN_OBJECT, entity as RSGameObject)
+            else LocDelUpdate(EntityUpdateType.REMOVE_OBJECT, entity as RSGameObject)
 
         EntityType.GROUND_ITEM ->
-            if (spawn) ObjAddUpdate(EntityUpdateType.SPAWN_GROUND_ITEM, entity as GroundItem)
-            else ObjDelUpdate(EntityUpdateType.REMOVE_GROUND_ITEM, entity as GroundItem)
+            if (spawn) ObjAddUpdate(EntityUpdateType.SPAWN_GROUND_ITEM, entity as RSGroundItem)
+            else ObjDelUpdate(EntityUpdateType.REMOVE_GROUND_ITEM, entity as RSGroundItem)
 
         EntityType.PROJECTILE ->
             if (spawn) MapProjAnimUpdate(EntityUpdateType.SPAWN_PROJECTILE, entity as Projectile)
@@ -259,7 +259,7 @@ class Chunk(val coords: ChunkCoords, val heights: Int) {
     fun <T> getEntities(vararg types: EntityType): List<T> = entities.values.flatten().filter { it.entityType in types } as List<T>
 
     @Suppress("UNCHECKED_CAST")
-    fun <T> getEntities(tile: Tile, vararg types: EntityType): List<T> = entities[tile]?.filter { it.entityType in types } as? List<T> ?: emptyList()
+    fun <T> getEntities(tile: RSTile, vararg types: EntityType): List<T> = entities[tile]?.filter { it.entityType in types } as? List<T> ?: emptyList()
 
     companion object {
         /**
@@ -283,7 +283,7 @@ class Chunk(val coords: ChunkCoords, val heights: Int) {
         const val REGION_SIZE = CHUNK_SIZE * CHUNK_SIZE
 
         /**
-         * The size of the viewport a [io.rsbox.engine.model.entity.Player] can
+         * The size of the viewport a [io.rsbox.engine.model.entity.RSPlayer] can
          * 'see' at a time, in tiles.
          */
         const val MAX_VIEWPORT = CHUNK_SIZE * CHUNKS_PER_REGION

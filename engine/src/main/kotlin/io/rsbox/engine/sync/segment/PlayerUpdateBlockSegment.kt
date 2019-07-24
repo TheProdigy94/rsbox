@@ -2,8 +2,8 @@ package io.rsbox.engine.sync.segment
 
 import io.rsbox.engine.fs.def.NpcDef
 import io.rsbox.engine.model.ChatMessage
-import io.rsbox.engine.model.Tile
-import io.rsbox.engine.model.entity.Player
+import io.rsbox.engine.model.RSTile
+import io.rsbox.engine.model.entity.RSPlayer
 import io.rsbox.engine.sync.SynchronizationSegment
 import io.rsbox.engine.sync.block.UpdateBlockType
 import io.rsbox.net.packet.DataType
@@ -12,7 +12,7 @@ import io.rsbox.net.packet.GamePacketBuilder
 /**
  * @author Tom <rspsmods@gmail.com>
  */
-class PlayerUpdateBlockSegment(val other: Player, private val newPlayer: Boolean) : SynchronizationSegment {
+class PlayerUpdateBlockSegment(val other: RSPlayer, private val newPlayer: Boolean) : SynchronizationSegment {
 
     override fun encode(buf: GamePacketBuilder) {
         var mask = other.blockBuffer.blockValue()
@@ -21,7 +21,7 @@ class PlayerUpdateBlockSegment(val other: Player, private val newPlayer: Boolean
         var forceFacePawn = false
         var forceFaceTile = false
 
-        var forceFace: Tile? = null
+        var forceFace: RSTile? = null
         if (newPlayer) {
             mask = mask or blocks.updateBlocks[UpdateBlockType.APPEARANCE]!!.bit
 
@@ -62,7 +62,7 @@ class PlayerUpdateBlockSegment(val other: Player, private val newPlayer: Boolean
         }
     }
 
-    private fun write(buf: GamePacketBuilder, blockType: UpdateBlockType, forceFace: Tile?) {
+    private fun write(buf: GamePacketBuilder, blockType: UpdateBlockType, forceFace: RSTile?) {
         val blocks = other.world.playerUpdateBlocks
 
         when (blockType) {

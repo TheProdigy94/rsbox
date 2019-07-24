@@ -1,10 +1,10 @@
 package io.rsbox.engine.model.shop
 
 import io.rsbox.engine.model.RSWorld
-import io.rsbox.engine.model.entity.Player
+import io.rsbox.engine.model.entity.RSPlayer
 
 /**
- * Represents the currency exchange when performing transactions in a [Shop].
+ * Represents the currency exchange when performing transactions in a [RSShop].
  *
  * @author Tom <rspsmods@gmail.com>
  */
@@ -13,13 +13,13 @@ interface ShopCurrency {
     /**
      * Called when a player selects the "value" option a [ShopItem].
      */
-    fun onSellValueMessage(p: Player, shopItem: ShopItem)
+    fun onSellValueMessage(p: RSPlayer, shopItem: ShopItem)
 
     /**
      * Called when a player selects the "value" option on one of their own
      * inventory items.
      */
-    fun onBuyValueMessage(p: Player, shop: Shop, item: Int)
+    fun onBuyValueMessage(p: RSPlayer, shop: RSShop, item: Int)
 
     /**
      * Get the price at which the shop will sell [item] for.
@@ -34,10 +34,10 @@ interface ShopCurrency {
     /**
      * Called when a player attempts to buy a [ShopItem].
      */
-    fun sellToPlayer(p: Player, shop: Shop, slot: Int, amt: Int)
+    fun sellToPlayer(p: RSPlayer, shop: RSShop, slot: Int, amt: Int)
 
     /**
      * Called when a player attempts to sell an inventory item to the shop.
      */
-    fun buyFromPlayer(p: Player, shop: Shop, slot: Int, amt: Int)
+    fun buyFromPlayer(p: RSPlayer, shop: RSShop, slot: Int, amt: Int)
 }

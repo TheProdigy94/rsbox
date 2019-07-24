@@ -2,8 +2,8 @@ package io.rsbox.engine.model.collision
 
 import io.rsbox.engine.fs.DefinitionSet
 import io.rsbox.engine.model.Direction
-import io.rsbox.engine.model.Tile
-import io.rsbox.engine.model.entity.GameObject
+import io.rsbox.engine.model.RSTile
+import io.rsbox.engine.model.entity.RSGameObject
 import io.rsbox.engine.model.region.Chunk
 import io.rsbox.engine.model.region.ChunkSet
 
@@ -12,11 +12,11 @@ import io.rsbox.engine.model.region.ChunkSet
  */
 class CollisionManager(val chunks: ChunkSet, val createChunksIfNeeded: Boolean = true) {
 
-    fun isClipped(tile: Tile): Boolean = chunks.get(tile, createChunksIfNeeded)!!.isClipped(tile)
+    fun isClipped(tile: RSTile): Boolean = chunks.get(tile, createChunksIfNeeded)!!.isClipped(tile)
 
-    fun isBlocked(tile: Tile, direction: Direction, projectile: Boolean): Boolean = chunks.get(tile, createChunksIfNeeded)!!.isBlocked(tile, direction, projectile)
+    fun isBlocked(tile: RSTile, direction: Direction, projectile: Boolean): Boolean = chunks.get(tile, createChunksIfNeeded)!!.isBlocked(tile, direction, projectile)
 
-    fun canTraverse(tile: Tile, direction: Direction, projectile: Boolean): Boolean {
+    fun canTraverse(tile: RSTile, direction: Direction, projectile: Boolean): Boolean {
         val chunk = chunks.get(tile, createChunksIfNeeded)!!
 
         if (chunk.isBlocked(tile, direction, projectile)) {
@@ -45,7 +45,7 @@ class CollisionManager(val chunks: ChunkSet, val createChunksIfNeeded: Boolean =
      * Projectiles have a higher tolerance for certain objects when the object's
      * metadata explicitly allows them to.
      */
-    fun raycast(start: Tile, target: Tile, projectile: Boolean): Boolean {
+    fun raycast(start: RSTile, target: RSTile, projectile: Boolean): Boolean {
         check(start.height == target.height) { "Tiles must be on the same height level." }
 
         var x0 = start.x
@@ -63,7 +63,7 @@ class CollisionManager(val chunks: ChunkSet, val createChunksIfNeeded: Boolean =
         var err = dx - dy
         var err2: Int
 
-        var prev = Tile(x0, y0, height)
+        var prev = RSTile(x0, y0, height)
 
         while (x0 != x1 || y0 != y1) {
             err2 = err shl 1
@@ -78,7 +78,7 @@ class CollisionManager(val chunks: ChunkSet, val createChunksIfNeeded: Boolean =
                 y0 += sy
             }
 
-            val next = Tile(x0, y0, height)
+            val next = RSTile(x0, y0, height)
             val dir = Direction.between(prev, next)
             if (!canTraverse(prev, dir, projectile) || !canTraverse(next, dir.getOpposite(), projectile)) {
                 return false
@@ -93,7 +93,7 @@ class CollisionManager(val chunks: ChunkSet, val createChunksIfNeeded: Boolean =
      * Gets the shortest path using Bresenham's Line Algorithm from [start] to [target],
      * in tiles.
      */
-    fun raycastTiles(start: Tile, target: Tile): Int {
+    fun raycastTiles(start: RSTile, target: RSTile): Int {
         check(start.height == target.height) { "Tiles must be on the same height level." }
 
         var x0 = start.x
@@ -138,7 +138,7 @@ class CollisionManager(val chunks: ChunkSet, val createChunksIfNeeded: Boolean =
         }
     }
 
-    fun applyCollision(definitions: DefinitionSet, obj: GameObject, updateType: CollisionUpdate.Type) {
+    fun applyCollision(definitions: DefinitionSet, obj: RSGameObject, updateType: CollisionUpdate.Type) {
         val builder = CollisionUpdate.Builder()
         builder.setType(updateType)
         builder.putObject(definitions, obj)

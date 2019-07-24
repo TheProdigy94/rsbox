@@ -3,23 +3,23 @@ package io.rsbox.engine.model.container
 import io.rsbox.engine.fs.DefinitionSet
 import io.rsbox.engine.fs.def.ItemDef
 import io.rsbox.engine.model.container.key.ContainerKey
-import io.rsbox.engine.model.item.Item
+import io.rsbox.engine.model.item.RSItem
 import io.rsbox.engine.model.item.SlotItem
 import mu.KLogging
 
 /**
- * An [ItemContainer] represents a collection of ordered [Item]s.
+ * An [ItemContainer] represents a collection of ordered [RSItem]s.
  *
  * @author Tom <rspsmods@gmail.com>
  */
-class ItemContainer(val definitions: DefinitionSet, val key: ContainerKey) : Iterable<Item?> {
+class ItemContainer(val definitions: DefinitionSet, val key: ContainerKey) : Iterable<RSItem?> {
 
     constructor(definitions: DefinitionSet, capacity: Int, stackType: ContainerStackType)
             : this(definitions, ContainerKey("", capacity, stackType))
 
     constructor(other: ItemContainer) : this(other.definitions, other.capacity, other.stackType) {
         for (i in 0 until capacity) {
-            val item = if (other[i] != null) Item(other[i]!!) else null
+            val item = if (other[i] != null) RSItem(other[i]!!) else null
             set(i, item)
         }
     }
@@ -31,7 +31,7 @@ class ItemContainer(val definitions: DefinitionSet, val key: ContainerKey) : Ite
 
     private val stackType = key.stackType
 
-    private val items = Array<Item?>(capacity) { null }
+    private val items = Array<RSItem?>(capacity) { null }
 
     /**
      * A flag which indicates that the [items] has been modified since the last
@@ -39,33 +39,33 @@ class ItemContainer(val definitions: DefinitionSet, val key: ContainerKey) : Ite
      */
     var dirty = true
 
-    override fun iterator(): Iterator<Item?> = items.iterator()
+    override fun iterator(): Iterator<RSItem?> = items.iterator()
 
     /**
-     * Gets the collection of nullable [Item]s in this container.
+     * Gets the collection of nullable [RSItem]s in this container.
      */
-    val rawItems: Array<Item?> = items
+    val rawItems: Array<RSItem?> = items
 
     /**
-     * Checks if the container has an [Item] which has the same [Item.id] as
+     * Checks if the container has an [RSItem] which has the same [RSItem.id] as
      * [item].
      */
     fun contains(item: Int): Boolean = items.any { it?.id == item }
 
     /**
-     * Checks if the container has an [Item] which has the same [Item.id] as
+     * Checks if the container has an [RSItem] which has the same [RSItem.id] as
      * [item] or any of the values (if any) in [others].
      */
     fun containsAny(item: Int, vararg others: Int): Boolean = items.any { it != null && (it.id == item || it.id in others) }
 
     /**
-     * Checks if the container has an [Item] which has the same [Item.id] as
+     * Checks if the container has an [RSItem] which has the same [RSItem.id] as
      * [itemId] in the specific [slot].
      */
     fun hasAt(slot: Int, itemId: Int): Boolean = items[slot]?.id == itemId
 
     /**
-     * Gets the most-left/first index(slot) that is not occupied by an [Item].
+     * Gets the most-left/first index(slot) that is not occupied by an [RSItem].
      * Defaults to -1 if none is found.
      */
     val nextFreeSlot: Int get() = items.indexOfFirst { it == null }
@@ -103,7 +103,7 @@ class ItemContainer(val definitions: DefinitionSet, val key: ContainerKey) : Ite
     val hasSpace: Boolean get() = nextFreeSlot != -1
 
     /**
-     * Calculate the total amount of items in this container who's [Item.id]
+     * Calculate the total amount of items in this container who's [RSItem.id]
      * matches [itemId].
      */
     fun getItemCount(itemId: Int): Int {
@@ -132,7 +132,7 @@ class ItemContainer(val definitions: DefinitionSet, val key: ContainerKey) : Ite
      * Get the index of [itemId] in relation to [items].
      *
      * @param skipAttrItems
-     * This flag indicates if [io.rsbox.engine.model.item.Item]s which have
+     * This flag indicates if [io.rsbox.engine.model.item.RSItem]s which have
      * [io.rsbox.engine.model.item.ItemAttribute]s should not be taken into
      * account (should be skipped) when iterating through the [items] to
      * find one with the same [itemId] to return its index in the container.
@@ -150,11 +150,11 @@ class ItemContainer(val definitions: DefinitionSet, val key: ContainerKey) : Ite
     }
 
     /**
-     * Creates a map that holds the [Item]s in this container, with the slot of
+     * Creates a map that holds the [RSItem]s in this container, with the slot of
      * the item being the key and the item being the value.
      */
-    fun toMap(): Map<Int, Item> {
-        val map = hashMapOf<Int, Item>()
+    fun toMap(): Map<Int, RSItem> {
+        val map = hashMapOf<Int, RSItem>()
         items.forEachIndexed { index, item ->
             if (item != null) {
                 map[index] = item
@@ -202,15 +202,15 @@ class ItemContainer(val definitions: DefinitionSet, val key: ContainerKey) : Ite
      * the slot for this transaction.
      *
      * @return
-     * An [ItemTransaction] that contains relevant information on how successful
+     * An [RSItemTransaction] that contains relevant information on how successful
      * the operation was. The transaction implements [Iterable]. Its iterable
      * elements are made up of any items that were successfully added to the
      * container. This can be used to perform an operation, such as attaching
      * attributes, to the item(s) that were added.
      *
-     * @see ItemTransaction
+     * @see RSItemTransaction
      */
-    fun add(item: Int, amount: Int = 1, assureFullInsertion: Boolean = true, forceNoStack: Boolean = false, beginSlot: Int = -1): ItemTransaction {
+    fun add(item: Int, amount: Int = 1, assureFullInsertion: Boolean = true, forceNoStack: Boolean = false, beginSlot: Int = -1): RSItemTransaction {
         val def = definitions.get(ItemDef::class.java, item)
 
         /*
@@ -225,7 +225,7 @@ class ItemContainer(val definitions: DefinitionSet, val key: ContainerKey) : Ite
         val previousAmount = if (stack) getItemCount(item) else 0
 
         if (previousAmount == Int.MAX_VALUE) {
-            return ItemTransaction(amount, 0, emptyList())
+            return RSItemTransaction(amount, 0, emptyList())
         }
 
         /*
@@ -239,7 +239,7 @@ class ItemContainer(val definitions: DefinitionSet, val key: ContainerKey) : Ite
          * the transaction will fail.
          */
         if (freeSlotCount == 0 && (!stack || stack && previousAmount == 0)) {
-            return ItemTransaction(amount, 0, emptyList())
+            return RSItemTransaction(amount, 0, emptyList())
         }
 
         if (assureFullInsertion) {
@@ -248,7 +248,7 @@ class ItemContainer(val definitions: DefinitionSet, val key: ContainerKey) : Ite
              * [amount] more of the item, the transaction will fail.
              */
             if (stack && previousAmount > Int.MAX_VALUE - amount) {
-                return ItemTransaction(amount, 0, emptyList())
+                return RSItemTransaction(amount, 0, emptyList())
             }
 
             /*
@@ -256,7 +256,7 @@ class ItemContainer(val definitions: DefinitionSet, val key: ContainerKey) : Ite
              * the transaction will fail.
              */
             if (!stack && amount > freeSlotCount) {
-                return ItemTransaction(amount, 0, emptyList())
+                return RSItemTransaction(amount, 0, emptyList())
             }
         } else {
             /*
@@ -265,9 +265,9 @@ class ItemContainer(val definitions: DefinitionSet, val key: ContainerKey) : Ite
              * not even a single [item] item can be added.
              */
             if (stack && previousAmount == Int.MAX_VALUE) {
-                return ItemTransaction(amount, 0, emptyList())
+                return RSItemTransaction(amount, 0, emptyList())
             } else if (!stack && freeSlotCount == 0) {
-                return ItemTransaction(amount, 0, emptyList())
+                return RSItemTransaction(amount, 0, emptyList())
             }
         }
 
@@ -284,7 +284,7 @@ class ItemContainer(val definitions: DefinitionSet, val key: ContainerKey) : Ite
                 if (items[i] != null) {
                     continue
                 }
-                val add = Item(item)
+                val add = RSItem(item)
                 set(i, add)
                 added.add(SlotItem(i, add))
                 if (++completed >= amount) {
@@ -311,31 +311,31 @@ class ItemContainer(val definitions: DefinitionSet, val key: ContainerKey) : Ite
                      * our container.
                      */
                     logger.error(RuntimeException("Unable to find a free slot for a stackable item. [capacity=$capacity, item=$item, quantity=$amount]")) {}
-                    return ItemTransaction(amount, completed, emptyList())
+                    return RSItemTransaction(amount, completed, emptyList())
                 }
             }
 
             val stackAmount = get(stackIndex)?.amount ?: 0
             val total = Math.min(Int.MAX_VALUE.toLong(), (stackAmount).toLong() + amount.toLong()).toInt()
 
-            val add = Item(item, total)
+            val add = RSItem(item, total)
             set(stackIndex, add)
             added.add(SlotItem(stackIndex, add))
             completed = total - stackAmount
         }
-        return ItemTransaction(amount, completed, added)
+        return RSItemTransaction(amount, completed, added)
     }
 
     /**
-     * Adds an [Item] to our container.
+     * Adds an [RSItem] to our container.
      *
-     * Keep in mind, that just because you're using an [Item] object, does not
-     * mean that the same [Item] instance will be added to the container. The
+     * Keep in mind, that just because you're using an [RSItem] object, does not
+     * mean that the same [RSItem] instance will be added to the container. The
      * [item] is simply used as a reference for the item id and amount that should
      * be added. Nothing else in it, including its attributes, are taken into
      * account.
      */
-    fun add(item: Item, assureFullInsertion: Boolean = true, forceNoStack: Boolean = false, beginSlot: Int = -1): ItemTransaction {
+    fun add(item: RSItem, assureFullInsertion: Boolean = true, forceNoStack: Boolean = false, beginSlot: Int = -1): RSItemTransaction {
         return add(item = item.id, amount = item.amount, assureFullInsertion = assureFullInsertion,
                 forceNoStack = forceNoStack, beginSlot = beginSlot)
     }
@@ -351,22 +351,22 @@ class ItemContainer(val definitions: DefinitionSet, val key: ContainerKey) : Ite
      * method will be able to remove all the [amount] of items. This is true
      * when the container doesn't have as many [item]s as [amount].
      *
-     * To get the amount of items that were removed, see [ItemTransaction.completed].
-     * To get the amount of items that couldn't be removed, see [ItemTransaction.getLeftOver].
+     * To get the amount of items that were removed, see [RSItemTransaction.completed].
+     * To get the amount of items that couldn't be removed, see [RSItemTransaction.getLeftOver].
      *
      * @param assureFullRemoval
      * If true, we make sure the container has [amount] or more items who's
-     * [Item.id] matches [item], before attempting to remove any.
-     * If false, it will remove any item with [Item.id] of [item] which it can find
+     * [RSItem.id] matches [item], before attempting to remove any.
+     * If false, it will remove any item with [RSItem.id] of [item] which it can find
      * until [amount] have been removed or until the container has no more.
      *
      * @param beginSlot
      * The search for [item] in the [items] array will begin from this index and
      * will sequentially increment until either 1) [amount] of [item]s have been
-     * removed or 2) we have iterated through every single [Item] in [items].
+     * removed or 2) we have iterated through every single [RSItem] in [items].
      *
      * @return
-     * An [ItemTransaction] that contains relevant information on how successful
+     * An [RSItemTransaction] that contains relevant information on how successful
      * the operation was. The transaction implements [Iterable]. Its iterable
      * elements are made up of any items that were successfully and fully removed
      * from the container. The requirement for an item to be added as an iterable
@@ -374,15 +374,15 @@ class ItemContainer(val definitions: DefinitionSet, val key: ContainerKey) : Ite
      * container. For example if you remove 10 coins, but 2 coins have been left
      * on the same stack, the item will NOT be added to the iterable elements.
      *
-     * @see ItemTransaction
+     * @see RSItemTransaction
      */
-    fun remove(item: Int, amount: Int = 1, assureFullRemoval: Boolean = false, beginSlot: Int = -1): ItemTransaction {
+    fun remove(item: Int, amount: Int = 1, assureFullRemoval: Boolean = false, beginSlot: Int = -1): RSItemTransaction {
         val hasAmount = getItemCount(item)
 
         if (assureFullRemoval && hasAmount < amount) {
-            return ItemTransaction(amount, 0, emptyList())
+            return RSItemTransaction(amount, 0, emptyList())
         } else if (!assureFullRemoval && hasAmount < 1) {
-            return ItemTransaction(amount, 0, emptyList())
+            return RSItemTransaction(amount, 0, emptyList())
         }
 
         var totalRemoved = 0
@@ -399,7 +399,7 @@ class ItemContainer(val definitions: DefinitionSet, val key: ContainerKey) : Ite
 
                 curItem.amount -= removeCount
                 if (curItem.amount == 0) {
-                    val removedItem = Item(items[i]!!)
+                    val removedItem = RSItem(items[i]!!)
                     items[i] = null
                     removed.add(SlotItem(i, removedItem))
                 }
@@ -432,7 +432,7 @@ class ItemContainer(val definitions: DefinitionSet, val key: ContainerKey) : Ite
 
                     curItem.amount -= removeCount
                     if (curItem.amount == 0) {
-                        val removedItem = Item(items[i]!!)
+                        val removedItem = RSItem(items[i]!!)
                         items[i] = null
                         removed.add(SlotItem(i, removedItem))
                     }
@@ -447,7 +447,7 @@ class ItemContainer(val definitions: DefinitionSet, val key: ContainerKey) : Ite
         if (totalRemoved > 0) {
             dirty = true
         }
-        return ItemTransaction(amount, totalRemoved, removed)
+        return RSItemTransaction(amount, totalRemoved, removed)
     }
 
     /**
@@ -456,7 +456,7 @@ class ItemContainer(val definitions: DefinitionSet, val key: ContainerKey) : Ite
      * remove(id: Int, amount: Int, assureFullRemoval: Boolean = false, beginSlot: Int = -1)
      * ```
      */
-    fun remove(item: Item, assureFullRemoval: Boolean = false, beginSlot: Int = -1): ItemTransaction = remove(item.id, item.amount, assureFullRemoval, beginSlot)
+    fun remove(item: RSItem, assureFullRemoval: Boolean = false, beginSlot: Int = -1): RSItemTransaction = remove(item.id, item.amount, assureFullRemoval, beginSlot)
 
     /**
      * Swap slots of items in slot [from] and [to].
@@ -471,7 +471,7 @@ class ItemContainer(val definitions: DefinitionSet, val key: ContainerKey) : Ite
      * Shifts the items in the [ItemContainer] to the appropriate position
      */
     fun shift() {
-        val newItems = Array<Item?>(capacity) { null }
+        val newItems = Array<RSItem?>(capacity) { null }
 
         var index = 0
         for (i in 0 until capacity) {
@@ -486,9 +486,9 @@ class ItemContainer(val definitions: DefinitionSet, val key: ContainerKey) : Ite
         }
     }
 
-    operator fun get(index: Int): Item? = items[index]
+    operator fun get(index: Int): RSItem? = items[index]
 
-    operator fun set(index: Int, item: Item?) {
+    operator fun set(index: Int, item: RSItem?) {
         items[index] = item
         dirty = true
     }

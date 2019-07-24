@@ -2,7 +2,7 @@ package io.rsbox.engine.fs
 
 import io.rsbox.engine.fs.def.*
 import io.rsbox.engine.model.Direction
-import io.rsbox.engine.model.Tile
+import io.rsbox.engine.model.RSTile
 import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.model.collision.CollisionManager
 import io.rsbox.engine.model.collision.CollisionUpdate
@@ -174,13 +174,13 @@ class DefinitionSet {
         val cacheRegion = net.runelite.cache.region.Region(id)
         cacheRegion.loadTerrain(mapDefinition)
 
-        val blocked = hashSetOf<Tile>()
-        val bridges = hashSetOf<Tile>()
+        val blocked = hashSetOf<RSTile>()
+        val bridges = hashSetOf<RSTile>()
         for (height in 0 until 4) {
             for (lx in 0 until 64) {
                 for (lz in 0 until 64) {
                     val tileSetting = cacheRegion.getTileSetting(height, lx, lz)
-                    val tile = Tile(cacheRegion.baseX + lx, cacheRegion.baseY + lz, height)
+                    val tile = RSTile(cacheRegion.baseX + lx, cacheRegion.baseY + lz, height)
 
                     if ((tileSetting.toInt() and CollisionManager.BLOCKED_TILE) == CollisionManager.BLOCKED_TILE) {
                         blocked.add(tile)
@@ -228,12 +228,12 @@ class DefinitionSet {
             cacheRegion.loadLocations(locDef)
 
             cacheRegion.locations.forEach { loc ->
-                val tile = Tile(loc.position.x, loc.position.y, loc.position.z)
+                val tile = RSTile(loc.position.x, loc.position.y, loc.position.z)
                 if (bridges.contains(tile.transform(1))) {
                     return@forEach
                 }
                 val obj = StaticObject(loc.id, loc.type, loc.orientation, if (bridges.contains(tile)) tile.transform(-1) else tile)
-                world.chunks.getOrCreate(tile).addEntity(world, obj, obj.tile)
+                world.chunks.getOrCreate(tile).addEntity(world, obj, obj.tile as RSTile)
             }
             return true
         } catch (e: IOException) {

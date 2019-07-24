@@ -1,42 +1,43 @@
 package io.rsbox.engine.model.item
 
 import com.google.common.base.MoreObjects
+import io.rsbox.api.item.Item
 import io.rsbox.engine.fs.DefinitionSet
 import io.rsbox.engine.fs.def.ItemDef
 
 /**
  * @author Tom <rspsmods@gmail.com>
  */
-class Item(val id: Int, var amount: Int = 1) {
+class RSItem(val id: Int, var amount: Int = 1) : Item {
 
-    constructor(other: Item) : this(other.id, other.amount) {
+    constructor(other: RSItem) : this(other.id, other.amount) {
         copyAttr(other)
     }
 
-    constructor(other: Item, amount: Int) : this(other.id, amount) {
+    constructor(other: RSItem, amount: Int) : this(other.id, amount) {
         copyAttr(other)
     }
 
     val attr = mutableMapOf<ItemAttribute, Int>()
 
     /**
-     * Returns a <strong>new</strong> [Item] with the noted link as the item id.
-     * If this item does not have a noted link item id, it will return a new [Item]
-     * with the same [Item.id].
+     * Returns a <strong>new</strong> [RSItem] with the noted link as the item id.
+     * If this item does not have a noted link item id, it will return a new [RSItem]
+     * with the same [RSItem.id].
      */
-    fun toNoted(definitions: DefinitionSet): Item {
+    fun toNoted(definitions: DefinitionSet): RSItem {
         val def = getDef(definitions)
-        return if (def.noteTemplateId == 0 && def.noteLinkId > 0) Item(def.noteLinkId, amount).copyAttr(this) else Item(this).copyAttr(this)
+        return if (def.noteTemplateId == 0 && def.noteLinkId > 0) RSItem(def.noteLinkId, amount).copyAttr(this) else RSItem(this).copyAttr(this)
     }
 
     /**
-     * Returns a <strong>new</strong> [Item] with the unnoted link as the item id.
-     * If this item does not have a unnoted link item id, it will return a new [Item]
-     * with the same [Item.id].
+     * Returns a <strong>new</strong> [RSItem] with the unnoted link as the item id.
+     * If this item does not have a unnoted link item id, it will return a new [RSItem]
+     * with the same [RSItem.id].
      */
-    fun toUnnoted(definitions: DefinitionSet): Item {
+    fun toUnnoted(definitions: DefinitionSet): RSItem {
         val def = getDef(definitions)
-        return if (def.noteTemplateId > 0) Item(def.noteLinkId, amount).copyAttr(this) else Item(this).copyAttr(this)
+        return if (def.noteTemplateId > 0) RSItem(def.noteLinkId, amount).copyAttr(this) else RSItem(this).copyAttr(this)
     }
 
     /**
@@ -54,15 +55,15 @@ class Item(val id: Int, var amount: Int = 1) {
 
     fun getAttr(attrib: ItemAttribute): Int? = attr[attrib]
 
-    fun putAttr(attrib: ItemAttribute, value: Int): Item {
+    fun putAttr(attrib: ItemAttribute, value: Int): RSItem {
         attr[attrib] = value
         return this
     }
 
     /**
-     * Copies the [Item.attr] map from [other] to this.
+     * Copies the [RSItem.attr] map from [other] to this.
      */
-    fun copyAttr(other: Item): Item {
+    fun copyAttr(other: RSItem): RSItem {
         if (other.hasAnyAttr()) {
             attr.putAll(other.attr)
         }

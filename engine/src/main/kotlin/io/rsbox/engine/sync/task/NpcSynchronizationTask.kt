@@ -1,8 +1,8 @@
 package io.rsbox.engine.sync.task
 
-import io.rsbox.engine.model.Tile
-import io.rsbox.engine.model.entity.Npc
-import io.rsbox.engine.model.entity.Player
+import io.rsbox.engine.model.RSTile
+import io.rsbox.engine.model.entity.RSNpc
+import io.rsbox.engine.model.entity.RSPlayer
 import io.rsbox.engine.sync.SynchronizationSegment
 import io.rsbox.engine.sync.SynchronizationTask
 import io.rsbox.engine.sync.segment.*
@@ -12,9 +12,9 @@ import io.rsbox.net.packet.PacketType
 /**
  * @author Tom <rspsmods@gmail.com>
  */
-class NpcSynchronizationTask(private val worldNpcs: Array<Npc?>) : SynchronizationTask<Player> {
+class NpcSynchronizationTask(private val worldNpcs: Array<RSNpc?>) : SynchronizationTask<RSPlayer> {
 
-    override fun run(pawn: Player) {
+    override fun run(pawn: RSPlayer) {
         val largeScene = pawn.hasLargeViewport()
 
         val opcode = if (!largeScene) pawn.world.npcUpdateBlocks.updateOpcode
@@ -40,7 +40,7 @@ class NpcSynchronizationTask(private val worldNpcs: Array<Npc?>) : Synchronizati
         pawn.write(buf.toGamePacket())
     }
 
-    private fun getSegments(player: Player): List<SynchronizationSegment> {
+    private fun getSegments(player: RSPlayer): List<SynchronizationSegment> {
         val segments = mutableListOf<SynchronizationSegment>()
 
         val localNpcs = player.localNpcs
@@ -101,11 +101,11 @@ class NpcSynchronizationTask(private val worldNpcs: Array<Npc?>) : Synchronizati
         return segments
     }
 
-    private fun shouldRemove(player: Player, npc: Npc): Boolean = !npc.isSpawned() || npc.invisible || !isWithinView(player, npc.tile)
+    private fun shouldRemove(player: RSPlayer, npc: RSNpc): Boolean = !npc.isSpawned() || npc.invisible || !isWithinView(player, npc.tile)
 
-    private fun shouldAdd(player: Player, npc: Npc): Boolean = npc.isSpawned() && !npc.invisible && isWithinView(player, npc.tile) && (npc.owner == null || npc.owner == player)
+    private fun shouldAdd(player: RSPlayer, npc: RSNpc): Boolean = npc.isSpawned() && !npc.invisible && isWithinView(player, npc.tile) && (npc.owner == null || npc.owner == player)
 
-    private fun isWithinView(player: Player, tile: Tile): Boolean = tile.isWithinRadius(player.tile, if (player.hasLargeViewport()) Player.LARGE_VIEW_DISTANCE else Player.NORMAL_VIEW_DISTANCE)
+    private fun isWithinView(player: RSPlayer, tile: RSTile): Boolean = tile.isWithinRadius(player.tile, if (player.hasLargeViewport()) RSPlayer.LARGE_VIEW_DISTANCE else RSPlayer.NORMAL_VIEW_DISTANCE)
 
     companion object {
         private const val MAX_LOCAL_NPCS = 255

@@ -1,4 +1,4 @@
-package io.rsbox.engine.model.attr
+package io.rsbox.api
 
 /**
  * A system responsible for storing and exposing [AttributeKey]s and their

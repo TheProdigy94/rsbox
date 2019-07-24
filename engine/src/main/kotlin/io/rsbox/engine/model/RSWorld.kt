@@ -11,19 +11,19 @@ import io.rsbox.engine.fs.def.NpcDef
 import io.rsbox.engine.fs.def.ObjectDef
 import io.rsbox.engine.message.impl.LogoutFullMessage
 import io.rsbox.engine.message.impl.UpdateRebootTimerMessage
-import io.rsbox.engine.model.attr.AttributeMap
+import io.rsbox.api.AttributeMap
 import io.rsbox.engine.model.collision.CollisionManager
 import io.rsbox.engine.model.combat.NpcCombatDef
 import io.rsbox.engine.model.entity.*
 import io.rsbox.engine.model.instance.InstancedMapAllocator
 import io.rsbox.engine.model.npcdrops.NpcDropTableDef
 import io.rsbox.engine.model.priv.PrivilegeSet
-import io.rsbox.engine.model.queue.QueueTask
+import io.rsbox.engine.model.queue.QueueTaskeTask
 import io.rsbox.engine.model.queue.QueueTaskSet
-import io.rsbox.engine.model.queue.TaskPriority
+import io.rsbox.api.TaskPriority
 import io.rsbox.engine.model.queue.impl.WorldQueueTaskSet
 import io.rsbox.engine.model.region.ChunkSet
-import io.rsbox.engine.model.shop.Shop
+import io.rsbox.engine.model.shop.RSShop
 import io.rsbox.engine.model.timer.TimerMap
 import io.rsbox.engine.oldplugin.Plugin
 import io.rsbox.engine.oldplugin.PluginRepository
@@ -85,9 +85,9 @@ class RSWorld(val gameContext: GameContext, val devContext: DevContext) : World 
 
     internal var queues: QueueTaskSet = WorldQueueTaskSet()
 
-    val players = PawnList(arrayOfNulls<Player>(gameContext.playerLimit))
+    val players = PawnList(arrayOfNulls<RSPlayer>(gameContext.playerLimit))
 
-    val npcs = PawnList(arrayOfNulls<Npc>(Short.MAX_VALUE.toInt()))
+    val npcs = PawnList(arrayOfNulls<RSNpc>(Short.MAX_VALUE.toInt()))
 
     val chunks = ChunkSet(this)
 
@@ -141,7 +141,7 @@ class RSWorld(val gameContext: GameContext, val devContext: DevContext) : World 
      * work.
      *
      * Explanation:
-     * The path-finder thread tries to calculate the path when the [Pawn.walkTo]
+     * The path-finder thread tries to calculate the path when the [RSPawn.walkTo]
      * method is called, this happens on the following tasks:
      *
      * Plugin handler: a piece of content needs the player to walk somewhere
@@ -154,7 +154,7 @@ class RSWorld(val gameContext: GameContext, val devContext: DevContext) : World 
      * synchronization task.
      *
      * Due to this design, it is likely that the [io.rsbox.engine.model.path.FutureRoute]
-     * will not finish calculating the path if the time in between the [Pawn.walkTo]
+     * will not finish calculating the path if the time in between the [RSPawn.walkTo]
      * being called and player pre-synchronization task being executed is fast enough
      *
      * From anecdotal experience, once the average cycle time reaches about 1-2ms+,
@@ -189,18 +189,18 @@ class RSWorld(val gameContext: GameContext, val devContext: DevContext) : World 
     val attr = AttributeMap()
 
     /**
-     * A local collection of [GroundItem]s that are currently spawned. We do
+     * A local collection of [RSGroundItem]s that are currently spawned. We do
      * not use [ChunkSet]s to iterate through this as it takes quite a bit of
      * time to do so every cycle.
      */
-    private val groundItems = ObjectArrayList<GroundItem>()
+    private val groundItems = ObjectArrayList<RSGroundItem>()
 
     /**
      * Any ground item that should be spawned in the future. For example, when
      * a 'permanent' ground item is despawned, it will be added here to be spawned
      * after a set amount of cycles.
      */
-    private val groundItemQueue = ObjectArrayList<GroundItem>()
+    private val groundItemQueue = ObjectArrayList<RSGroundItem>()
 
     /**
      * The amount of time before a server reboot takes place, in game cycles.
@@ -256,7 +256,7 @@ class RSWorld(val gameContext: GameContext, val devContext: DevContext) : World 
         /*
          * Any ground item that should be removed this cycle will be added here.
          */
-        val groundItemRemoval = ObjectOpenHashSet<GroundItem>(0)
+        val groundItemRemoval = ObjectOpenHashSet<RSGroundItem>(0)
 
         /*
          * Iterate through our registered [groundItems] and increment their current
@@ -350,7 +350,7 @@ class RSWorld(val gameContext: GameContext, val devContext: DevContext) : World 
         }
     }
 
-    fun register(p: Player): Boolean {
+    fun register(p: RSPlayer): Boolean {
         val registered = players.add(p)
         if (registered) {
             p.lastIndex = p.index
@@ -359,12 +359,12 @@ class RSWorld(val gameContext: GameContext, val devContext: DevContext) : World 
         return false
     }
 
-    fun unregister(p: Player) {
+    fun unregister(p: RSPlayer) {
         players.remove(p)
         chunks.get(p.tile)?.removeEntity(this, p, p.tile)
     }
 
-    fun spawn(npc: Npc): Boolean {
+    fun spawn(npc: RSNpc): Boolean {
         val added = npcs.add(npc)
         if (added) {
             setNpcDefaults(npc)
@@ -373,37 +373,37 @@ class RSWorld(val gameContext: GameContext, val devContext: DevContext) : World 
         return added
     }
 
-    fun remove(npc: Npc) {
+    fun remove(npc: RSNpc) {
         npcs.remove(npc)
         chunks.get(npc.tile)?.removeEntity(this, npc, npc.tile)
     }
 
-    fun spawn(obj: GameObject) {
+    fun spawn(obj: RSGameObject) {
         val tile = obj.tile
         val chunk = chunks.getOrCreate(tile)
 
-        val oldObj = chunk.getEntities<GameObject>(tile, EntityType.STATIC_OBJECT, EntityType.DYNAMIC_OBJECT).firstOrNull { it.type == obj.type }
+        val oldObj = chunk.getEntities<RSGameObject>(tile, EntityType.STATIC_OBJECT, EntityType.DYNAMIC_OBJECT).firstOrNull { it.type == obj.type }
         if (oldObj != null) {
             chunk.removeEntity(this, oldObj, tile)
         }
         chunk.addEntity(this, obj, tile)
     }
 
-    fun remove(obj: GameObject) {
+    fun remove(obj: RSGameObject) {
         val tile = obj.tile
         val chunk = chunks.getOrCreate(tile)
 
         chunk.removeEntity(this, obj, tile)
     }
 
-    fun spawn(item: GroundItem) {
+    fun spawn(item: RSGroundItem) {
         val tile = item.tile
         val chunk = chunks.getOrCreate(tile)
 
         val def = definitions.get(ItemDef::class.java, item.item)
 
         if (def.stackable) {
-            val oldItem = chunk.getEntities<GroundItem>(tile, EntityType.GROUND_ITEM).firstOrNull { it.item == item.item && it.ownerUID == item.ownerUID }
+            val oldItem = chunk.getEntities<RSGroundItem>(tile, EntityType.GROUND_ITEM).firstOrNull { it.item == item.item && it.ownerUID == item.ownerUID }
             if (oldItem != null) {
                 val oldAmount = oldItem.amount
                 val newAmount = Math.min(Int.MAX_VALUE.toLong(), item.amount.toLong() + oldItem.amount.toLong()).toInt()
@@ -417,7 +417,7 @@ class RSWorld(val gameContext: GameContext, val devContext: DevContext) : World 
         chunk.addEntity(this, item, tile)
     }
 
-    fun remove(item: GroundItem) {
+    fun remove(item: RSGroundItem) {
         val tile = item.tile
         val chunk = chunks.getOrCreate(tile)
 
@@ -463,27 +463,27 @@ class RSWorld(val gameContext: GameContext, val devContext: DevContext) : World 
         }
     }
 
-    fun isSpawned(obj: GameObject): Boolean = chunks.getOrCreate(obj.tile).getEntities<GameObject>(obj.tile, EntityType.STATIC_OBJECT, EntityType.DYNAMIC_OBJECT).contains(obj)
+    fun isSpawned(obj: RSGameObject): Boolean = chunks.getOrCreate(obj.tile).getEntities<RSGameObject>(obj.tile, EntityType.STATIC_OBJECT, EntityType.DYNAMIC_OBJECT).contains(obj)
 
-    fun isSpawned(item: GroundItem): Boolean = chunks.getOrCreate(item.tile).getEntities<GroundItem>(item.tile, EntityType.GROUND_ITEM).contains(item)
+    fun isSpawned(item: RSGroundItem): Boolean = chunks.getOrCreate(item.tile).getEntities<RSGroundItem>(item.tile, EntityType.GROUND_ITEM).contains(item)
 
     /**
-     * Get any [GroundItem] that matches the [predicate].
+     * Get any [RSGroundItem] that matches the [predicate].
      *
      * @return null if no ground item meets the conditions of [predicate].
      */
-    fun getGroundItem(predicate: (GroundItem) -> Boolean): GroundItem? = groundItems.firstOrNull { predicate(it) }
+    fun getGroundItem(predicate: (RSGroundItem) -> Boolean): RSGroundItem? = groundItems.firstOrNull { predicate(it) }
 
     /**
-     * Gets the [GameObject] that is located on [tile] and has a
-     * [GameObject.type] equal to [type].
+     * Gets the [RSGameObject] that is located on [tile] and has a
+     * [RSGameObject.type] equal to [type].
      *
      * @return
-     * null if no [GameObject] with [type] was found in [tile].
+     * null if no [RSGameObject] with [type] was found in [tile].
      */
-    fun getObject(tile: Tile, type: Int): GameObject? = chunks.get(tile, createIfNeeded = true)!!.getEntities<GameObject>(tile, EntityType.STATIC_OBJECT, EntityType.DYNAMIC_OBJECT).firstOrNull { it.type == type }
+    fun getObject(tile: RSTile, type: Int): RSGameObject? = chunks.get(tile, createIfNeeded = true)!!.getEntities<RSGameObject>(tile, EntityType.STATIC_OBJECT, EntityType.DYNAMIC_OBJECT).firstOrNull { it.type == type }
 
-    fun getPlayerForName(username: String): Player? {
+    fun getPlayerForName(username: String): RSPlayer? {
         for (i in 0 until players.capacity) {
             val player = players[i] ?: continue
             if (player.username.equals(username, ignoreCase = true)) {
@@ -493,9 +493,9 @@ class RSWorld(val gameContext: GameContext, val devContext: DevContext) : World 
         return null
     }
 
-    fun getPlayerForUid(uid: PlayerUID): Player? = players.firstOrNull { it.uid.value == uid.value }
+    fun getPlayerForUid(uid: PlayerUID): RSPlayer? = players.firstOrNull { it.uid.value == uid.value }
 
-    fun getShop(name: String): Shop? = plugins.shops.getOrDefault(name, null)
+    fun getShop(name: String): RSShop? = plugins.shops.getOrDefault(name, null)
 
     fun getMultiCombatChunks(): Set<Int> = plugins.multiCombatChunks
 
@@ -517,8 +517,8 @@ class RSWorld(val gameContext: GameContext, val devContext: DevContext) : World 
         return random.nextDouble() <= (chance / 100.0)
     }
 
-    fun findRandomTileAround(centre: Tile, radius: Int, centreWidth: Int = 0, centreLength: Int = 0): Tile? {
-        val tiles = mutableListOf<Tile>()
+    fun findRandomTileAround(centre: RSTile, radius: Int, centreWidth: Int = 0, centreLength: Int = 0): RSTile? {
+        val tiles = mutableListOf<RSTile>()
         for (x in -radius..radius) {
             for (z in -radius..radius) {
                 if (x in 0 until centreWidth && z in 0 until centreLength) {
@@ -543,7 +543,7 @@ class RSWorld(val gameContext: GameContext, val devContext: DevContext) : World 
         logic(plugin)
     }
 
-    fun sendExamine(p: Player, id: Int, type: ExamineEntityType) {
+    fun sendExamine(p: RSPlayer, id: Int, type: ExamineEntityType) {
         val examine = when (type) {
             ExamineEntityType.ITEM -> definitions.get(ItemDef::class.java, id).examine
             ExamineEntityType.NPC -> definitions.get(NpcDef::class.java, id).examine
@@ -558,7 +558,7 @@ class RSWorld(val gameContext: GameContext, val devContext: DevContext) : World 
         }
     }
 
-    fun setNpcDefaults(npc: Npc) {
+    fun setNpcDefaults(npc: RSNpc) {
         val combatDef = plugins.npcCombatDefs.getOrDefault(npc.id, null) ?: NpcCombatDef.DEFAULT
         npc.combatDef = combatDef
 

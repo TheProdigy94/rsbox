@@ -1,11 +1,12 @@
 package io.rsbox.engine.model.entity
 
+import io.rsbox.api.*
+import io.rsbox.api.entity.Pawn
 import io.rsbox.engine.action.NpcDeathAction
 import io.rsbox.engine.action.PlayerDeathAction
 import io.rsbox.engine.event.Event
 import io.rsbox.engine.message.impl.SetMapFlagMessage
 import io.rsbox.engine.model.*
-import io.rsbox.engine.model.attr.*
 import io.rsbox.engine.model.bits.INFINITE_VARS_STORAGE
 import io.rsbox.engine.model.bits.InfiniteVarsType
 import io.rsbox.engine.model.collision.CollisionManager
@@ -16,9 +17,9 @@ import io.rsbox.engine.model.path.PathRequest
 import io.rsbox.engine.model.path.Route
 import io.rsbox.engine.model.path.strategy.BFSPathFindingStrategy
 import io.rsbox.engine.model.path.strategy.NpcPathFindingStrategy
-import io.rsbox.engine.model.queue.QueueTask
+import io.rsbox.engine.model.queue.QueueTaskeTask
 import io.rsbox.engine.model.queue.QueueTaskSet
-import io.rsbox.engine.model.queue.TaskPriority
+import io.rsbox.api.TaskPriority
 import io.rsbox.engine.model.queue.impl.PawnQueueTaskSet
 import io.rsbox.engine.model.region.Chunk
 import io.rsbox.engine.model.timer.FROZEN_TIMER
@@ -40,10 +41,10 @@ import java.util.Queue
  *
  * @author Tom <rspsmods@gmail.com>
  */
-abstract class Pawn(val world: RSWorld) : Entity() {
+abstract class RSPawn(val world: RSWorld) : RSEntity(), Pawn {
 
     /**
-     * The index assigned when this [Pawn] is successfully added to a [PawnList].
+     * The index assigned when this [RSPawn] is successfully added to a [PawnList].
      */
     var index = -1
 
@@ -53,14 +54,14 @@ abstract class Pawn(val world: RSWorld) : Entity() {
     internal var blockBuffer = UpdateBlockBuffer()
 
     /**
-     * The 3D [Tile] that this pawn was standing on, in the last game cycle.
+     * The 3D [RSTile] that this pawn was standing on, in the last game cycle.
      */
-    internal var lastTile: Tile? = null
+    internal var lastTile: RSTile? = null
 
     /**
      * The last tile that was set for the pawn's [io.rsbox.engine.model.region.Chunk].
      */
-    internal var lastChunkTile: Tile? = null
+    internal var lastChunkTile: RSTile? = null
 
     /**
      * Whether or not this pawn can teleported this game cycle.
@@ -211,13 +212,13 @@ abstract class Pawn(val world: RSWorld) : Entity() {
         movementQueue.clear()
     }
 
-    fun getCentreTile(): Tile = tile.transform(getSize() shr 1, getSize() shr 1)
+    fun getCentreTile(): RSTile = tile.transform(getSize() shr 1, getSize() shr 1)
 
     /**
      * Gets the tile the pawn is currently facing towards.
      */
     // Credits: Kris#1337
-    fun getFrontFacingTile(target: Tile, offset: Int = 0): Tile {
+    fun getFrontFacingTile(target: RSTile, offset: Int = 0): RSTile {
         val size = (getSize() shr 1)
         val centre = getCentreTile()
 
@@ -233,29 +234,29 @@ abstract class Pawn(val world: RSWorld) : Entity() {
 
         val tx = Math.round(centre.x + (size * Math.cos(angle))).toInt()
         val tz = Math.round(centre.z + (size * Math.sin(angle))).toInt()
-        return Tile(tx, tz, tile.height)
+        return RSTile(tx, tz, tile.height)
     }
 
     /**
-     * Alias for [getFrontFacingTile] using a [Pawn] as the target tile.
+     * Alias for [getFrontFacingTile] using a [RSPawn] as the target tile.
      */
-    fun getFrontFacingTile(target: Pawn, offset: Int = 0): Tile = getFrontFacingTile(target.getCentreTile(), offset)
+    fun getFrontFacingTile(target: RSPawn, offset: Int = 0): RSTile = getFrontFacingTile(target.getCentreTile(), offset)
 
     /**
      * Initiate combat with [target].
      */
-    fun attack(target: Pawn) {
+    fun attack(target: RSPawn) {
         resetInteractions()
         interruptQueues()
 
-        attr[COMBAT_TARGET_FOCUS_ATTR] = WeakReference(target)
+        attr[COMBAT_TARGET_FOCUS_ATTR] = WeakReference(target as Pawn)
 
         /*
          * Players always have the default combat, and npcs will use default
          * combat <strong>unless</strong> they have a custom npc combat oldplugin
          * bound to their npc id.
          */
-        if (entityType.isPlayer || this is Npc && !world.plugins.executeNpcCombat(this)) {
+        if (entityType.isPlayer || this is RSNpc && !world.plugins.executeNpcCombat(this)) {
             world.plugins.executeCombat(this)
         }
     }
@@ -367,16 +368,16 @@ abstract class Pawn(val world: RSWorld) : Entity() {
      * Walk to all the tiles specified in our [path] queue, using [stepType] as
      * the [MovementQueue.StepType].
      */
-    fun walkPath(path: Queue<Tile>, stepType: MovementQueue.StepType, detectCollision: Boolean) {
+    fun walkPath(path: Queue<RSTile>, stepType: MovementQueue.StepType, detectCollision: Boolean) {
         if (path.isEmpty()) {
-            if (this is Player) {
+            if (this is RSPlayer) {
                 write(SetMapFlagMessage(255, 255))
             }
             return
         }
 
         if (timers.has(FROZEN_TIMER)) {
-            if (this is Player) {
+            if (this is RSPlayer) {
                 writeMessage(MAGIC_STOPS_YOU_FROM_MOVING)
             }
             return
@@ -388,7 +389,7 @@ abstract class Pawn(val world: RSWorld) : Entity() {
 
         movementQueue.clear()
 
-        var tail: Tile? = null
+        var tail: RSTile? = null
         var next = path.poll()
         while (next != null) {
             movementQueue.addStep(next, stepType, detectCollision)
@@ -404,19 +405,19 @@ abstract class Pawn(val world: RSWorld) : Entity() {
          * if the tail is the tile we're standing on, then we don't have to move at all!
          */
         if (tail == null || tail.sameAs(tile)) {
-            if (this is Player) {
+            if (this is RSPlayer) {
                 write(SetMapFlagMessage(255, 255))
             }
             movementQueue.clear()
             return
         }
 
-        if (this is Player && lastKnownRegionBase != null) {
+        if (this is RSPlayer && lastKnownRegionBase != null) {
             write(SetMapFlagMessage(tail.x - lastKnownRegionBase!!.x, tail.z - lastKnownRegionBase!!.z))
         }
     }
 
-    fun walkTo(tile: Tile, stepType: MovementQueue.StepType = MovementQueue.StepType.NORMAL, detectCollision: Boolean = true) = walkTo(tile.x, tile.z, stepType, detectCollision)
+    fun walkTo(tile: RSTile, stepType: MovementQueue.StepType = MovementQueue.StepType.NORMAL, detectCollision: Boolean = true) = walkTo(tile.x, tile.z, stepType, detectCollision)
 
     fun walkTo(x: Int, z: Int, stepType: MovementQueue.StepType = MovementQueue.StepType.NORMAL, detectCollision: Boolean = true) {
         /*
@@ -427,7 +428,7 @@ abstract class Pawn(val world: RSWorld) : Entity() {
         }
 
         if (timers.has(FROZEN_TIMER)) {
-            if (this is Player) {
+            if (this is RSPlayer) {
                 writeMessage(MAGIC_STOPS_YOU_FROM_MOVING)
             }
             return
@@ -460,14 +461,14 @@ abstract class Pawn(val world: RSWorld) : Entity() {
         }
     }
 
-    suspend fun walkTo(it: QueueTask, tile: Tile, stepType: MovementQueue.StepType = MovementQueue.StepType.NORMAL, detectCollision: Boolean = true) = walkTo(it, tile.x, tile.z, stepType, detectCollision)
+    suspend fun walkTo(it: QueueTask, tile: RSTile, stepType: MovementQueue.StepType = MovementQueue.StepType.NORMAL, detectCollision: Boolean = true) = walkTo(it, tile.x, tile.z, stepType, detectCollision)
 
     suspend fun walkTo(it: QueueTask, x: Int, z: Int, stepType: MovementQueue.StepType = MovementQueue.StepType.NORMAL, detectCollision: Boolean = true): Route {
         /*
          * Already standing on requested destination.
          */
         if (tile.x == x && tile.z == z) {
-            return Route(EMPTY_TILE_DEQUE, success = true, tail = Tile(tile))
+            return Route(EMPTY_TILE_DEQUE, success = true, tail = RSTile(tile))
         }
         val multiThread = world.multiThreadPathFinding
         val request = PathRequest.createWalkRequest(this, x, z, projectile = false, detectCollision = detectCollision)
@@ -491,13 +492,13 @@ abstract class Pawn(val world: RSWorld) : Entity() {
 
     fun moveTo(x: Int, z: Int, height: Int = 0) {
         moved = true
-        blockBuffer.teleport = !tile.isWithinRadius(x, z, height, Player.NORMAL_VIEW_DISTANCE)
-        tile = Tile(x, z, height)
+        blockBuffer.teleport = !tile.isWithinRadius(x, z, height, RSPlayer.NORMAL_VIEW_DISTANCE)
+        tile = RSTile(x, z, height)
         movementQueue.clear()
         addBlock(UpdateBlockType.MOVEMENT)
     }
 
-    fun moveTo(tile: Tile) {
+    fun moveTo(tile: RSTile) {
         moveTo(tile.x, tile.z, tile.height)
     }
 
@@ -523,7 +524,7 @@ abstract class Pawn(val world: RSWorld) : Entity() {
         addBlock(UpdateBlockType.FORCE_CHAT)
     }
 
-    fun faceTile(face: Tile, width: Int = 1, length: Int = 1) {
+    fun faceTile(face: RSTile, width: Int = 1, length: Int = 1) {
         if (entityType.isPlayer) {
             val srcX = tile.x * 64
             val srcZ = tile.z * 64
@@ -547,7 +548,7 @@ abstract class Pawn(val world: RSWorld) : Entity() {
         addBlock(UpdateBlockType.FACE_TILE)
     }
 
-    fun facePawn(pawn: Pawn) {
+    fun facePawn(pawn: RSPawn) {
         blockBuffer.faceDegrees = 0
 
         val index = if (pawn.entityType.isPlayer) pawn.index + 32768 else pawn.index
@@ -557,7 +558,7 @@ abstract class Pawn(val world: RSWorld) : Entity() {
             addBlock(UpdateBlockType.FACE_PAWN)
         }
 
-        attr[FACING_PAWN_ATTR] = WeakReference(pawn)
+        attr[FACING_PAWN_ATTR] = WeakReference(pawn as Pawn)
     }
 
     fun resetFacePawn() {
@@ -588,14 +589,14 @@ abstract class Pawn(val world: RSWorld) : Entity() {
     }
 
     /**
-     * Terminates any on-going [QueueTask]s that are being executed by this [Pawn].
+     * Terminates any on-going [QueueTask]s that are being executed by this [RSPawn].
      */
     fun interruptQueues() {
         queues.terminateTasks()
     }
 
     /**
-     * Executes a oldplugin with this [Pawn] as its context.
+     * Executes a oldplugin with this [RSPawn] as its context.
      */
     fun <T> executePlugin(logic: Plugin.() -> T): T {
         val plugin = Plugin(this)
@@ -617,7 +618,11 @@ abstract class Pawn(val world: RSWorld) : Entity() {
         return if (entityType.isPlayer) BFSPathFindingStrategy(collision) else NpcPathFindingStrategy(collision)
     }
 
+    override fun getAttributes(): AttributeMap {
+        return attr
+    }
+
     companion object {
-        private val EMPTY_TILE_DEQUE = ArrayDeque<Tile>()
+        private val EMPTY_TILE_DEQUE = ArrayDeque<RSTile>()
     }
 }

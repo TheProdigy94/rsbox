@@ -4,8 +4,9 @@ import io.rsbox.engine.action.PawnPathAction
 import io.rsbox.engine.message.MessageHandler
 import io.rsbox.engine.message.impl.OpNpc5Message
 import io.rsbox.engine.model.RSWorld
-import io.rsbox.engine.model.attr.INTERACTING_NPC_ATTR
-import io.rsbox.engine.model.attr.INTERACTING_OPT_ATTR
+import io.rsbox.api.INTERACTING_NPC_ATTR
+import io.rsbox.api.INTERACTING_OPT_ATTR
+import io.rsbox.api.entity.Npc
 import io.rsbox.engine.model.entity.Client
 import io.rsbox.engine.model.priv.Privilege
 import java.lang.ref.WeakReference
@@ -22,7 +23,7 @@ class OpNpc5Handler : MessageHandler<OpNpc5Message> {
             return
         }
 
-        log(client, "Npc option 5: index=%d, movement=%d, npc=%s", message.index, message.movementType, npc)
+        log(client, "RSNpc option 5: index=%d, movement=%d, npc=%s", message.index, message.movementType, npc)
 
         if (message.movementType == 1 && world.privileges.isEligible(client.privilege, Privilege.ADMIN_POWER)) {
             client.moveTo(world.findRandomTileAround(npc.tile, 1) ?: npc.tile)
@@ -33,7 +34,7 @@ class OpNpc5Handler : MessageHandler<OpNpc5Message> {
         client.resetInteractions()
 
         client.attr[INTERACTING_OPT_ATTR] = 5
-        client.attr[INTERACTING_NPC_ATTR] = WeakReference(npc)
+        client.attr[INTERACTING_NPC_ATTR] = WeakReference(npc as Npc)
         client.executePlugin(PawnPathAction.walkPlugin)
     }
 }

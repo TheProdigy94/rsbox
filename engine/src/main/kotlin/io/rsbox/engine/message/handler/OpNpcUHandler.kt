@@ -4,10 +4,12 @@ import io.rsbox.engine.action.PawnPathAction
 import io.rsbox.engine.message.MessageHandler
 import io.rsbox.engine.message.impl.OpNpcUMessage
 import io.rsbox.engine.model.RSWorld
-import io.rsbox.engine.model.attr.INTERACTING_ITEM
-import io.rsbox.engine.model.attr.INTERACTING_ITEM_ID
-import io.rsbox.engine.model.attr.INTERACTING_ITEM_SLOT
-import io.rsbox.engine.model.attr.INTERACTING_NPC_ATTR
+import io.rsbox.api.INTERACTING_ITEM
+import io.rsbox.api.INTERACTING_ITEM_ID
+import io.rsbox.api.INTERACTING_ITEM_SLOT
+import io.rsbox.api.INTERACTING_NPC_ATTR
+import io.rsbox.api.entity.Npc
+import io.rsbox.api.item.Item
 import io.rsbox.engine.model.entity.Client
 import io.rsbox.engine.model.priv.Privilege
 import java.lang.ref.WeakReference
@@ -35,7 +37,7 @@ class OpNpcUHandler : MessageHandler<OpNpcUMessage> {
             return
         }
 
-        log(client, "Item on npc: movement=%d, item=%s, slot=%d, npc=%s, index=%d", movementType, item, itemSlot, npc, index)
+        log(client, "RSItem on npc: movement=%d, item=%s, slot=%d, npc=%s, index=%d", movementType, item, itemSlot, npc, index)
 
         if (movementType == 1 && world.privileges.isEligible(client.privilege, Privilege.ADMIN_POWER)) {
             client.moveTo(world.findRandomTileAround(npc.tile, 1) ?: npc.tile)
@@ -45,8 +47,8 @@ class OpNpcUHandler : MessageHandler<OpNpcUMessage> {
         client.interruptQueues()
         client.resetInteractions()
 
-        client.attr[INTERACTING_NPC_ATTR] = WeakReference(npc)
-        client.attr[INTERACTING_ITEM] = WeakReference(item)
+        client.attr[INTERACTING_NPC_ATTR] = WeakReference(npc as Npc)
+        client.attr[INTERACTING_ITEM] = WeakReference(item as Item)
         client.attr[INTERACTING_ITEM_ID] = item.id
         client.attr[INTERACTING_ITEM_SLOT] = itemSlot
         client.executePlugin(PawnPathAction.itemUsePlugin)

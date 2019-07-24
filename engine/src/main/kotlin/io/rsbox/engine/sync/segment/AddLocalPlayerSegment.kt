@@ -1,13 +1,13 @@
 package io.rsbox.engine.sync.segment
 
-import io.rsbox.engine.model.entity.Player
+import io.rsbox.engine.model.entity.RSPlayer
 import io.rsbox.engine.sync.SynchronizationSegment
 import io.rsbox.net.packet.GamePacketBuilder
 
 /**
  * @author Tom <rspsmods@gmail.com>
  */
-class AddLocalPlayerSegment(private val other: Player, private val locationSegment: PlayerLocationHashSegment?) : SynchronizationSegment {
+class AddLocalPlayerSegment(private val other: RSPlayer, private val locationSegment: PlayerLocationHashSegment?) : SynchronizationSegment {
 
     override fun encode(buf: GamePacketBuilder) {
         /*

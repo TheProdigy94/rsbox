@@ -15,13 +15,13 @@ data class Area(val bottomLeftX: Int, val bottomLeftZ: Int, val topRightX: Int, 
      * Example of when the tile is not perfectly centered:
      * [topRightX - bottomLeftZ % 2 != 0] or [topRightZ - bottomLeft % 2 != 0]
      */
-    val centre: Tile get() = Tile(bottomLeftX + (topRightX - bottomLeftX), bottomLeftZ + (topRightZ - bottomLeftZ))
+    val centre: RSTile get() = RSTile(bottomLeftX + (topRightX - bottomLeftX), bottomLeftZ + (topRightZ - bottomLeftZ))
 
-    val bottomLeft: Tile get() = Tile(bottomLeftX, bottomLeftZ)
+    val bottomLeft: RSTile get() = RSTile(bottomLeftX, bottomLeftZ)
 
-    val topRight: Tile get() = Tile(topRightX, topRightZ)
+    val topRight: RSTile get() = RSTile(topRightX, topRightZ)
 
     fun contains(x: Int, z: Int): Boolean = x in bottomLeftX..topRightX && z in bottomLeftZ..topRightZ
 
-    fun contains(t: Tile): Boolean = t.x in bottomLeftX..topRightX && t.z in bottomLeftZ..topRightZ
+    fun contains(t: RSTile): Boolean = t.x in bottomLeftX..topRightX && t.z in bottomLeftZ..topRightZ
 }

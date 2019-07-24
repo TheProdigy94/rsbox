@@ -1,20 +1,22 @@
 package io.rsbox.engine.model.entity
 
+import io.rsbox.api.Tile
+import io.rsbox.api.entity.Entity
 import io.rsbox.engine.model.EntityType
-import io.rsbox.engine.model.Tile
+import io.rsbox.engine.model.RSTile
 import io.rsbox.engine.model.RSWorld
 
 /**
- * An [Entity] can be anything in the world that that maintains a [Tile].
+ * An [RSEntity] can be anything in the world that that maintains a [RSTile].
  *
  * @author Tom <rspsmods@gmail.com>
  */
-abstract class Entity {
+abstract class RSEntity : Entity {
 
     /**
-     * The current 3D [Tile] that this [Pawn] is standing on in the [RSWorld].
+     * The current 3D [RSTile] that this [RSPawn] is standing on in the [RSWorld].
      */
-    lateinit var tile: Tile
+    override lateinit var tile: Tile
 
     abstract val entityType: EntityType
 

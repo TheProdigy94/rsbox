@@ -1,6 +1,6 @@
 package io.rsbox.engine.sync.task
 
-import io.rsbox.engine.model.entity.Player
+import io.rsbox.engine.model.entity.RSPlayer
 import io.rsbox.engine.sync.SynchronizationSegment
 import io.rsbox.engine.sync.SynchronizationTask
 import io.rsbox.engine.sync.segment.*
@@ -11,13 +11,13 @@ import io.rsbox.util.Misc
 /**
  * @author Tom <rspsmods@gmail.com>
  */
-object PlayerSynchronizationTask : SynchronizationTask<Player> {
+object PlayerSynchronizationTask : SynchronizationTask<RSPlayer> {
 
     private const val MAX_LOCAL_PLAYERS = 255
 
     private const val MAX_PLAYER_ADDITIONS_PER_CYCLE = 40
 
-    override fun run(pawn: Player) {
+    override fun run(pawn: RSPlayer) {
         val buf = GamePacketBuilder(pawn.world.playerUpdateBlocks.updateOpcode, PacketType.VARIABLE_SHORT)
         val maskBuf = GamePacketBuilder()
 
@@ -41,7 +41,7 @@ object PlayerSynchronizationTask : SynchronizationTask<Player> {
         }
     }
 
-    private fun getSegments(player: Player): List<SynchronizationSegment> {
+    private fun getSegments(player: RSPlayer): List<SynchronizationSegment> {
         val segments = mutableListOf<SynchronizationSegment>()
 
         segments.add(SetBitAccessSegment())
@@ -65,7 +65,7 @@ object PlayerSynchronizationTask : SynchronizationTask<Player> {
         return segments
     }
 
-    private fun addLocalSegments(player: Player, initial: Boolean, segments: MutableList<SynchronizationSegment>) {
+    private fun addLocalSegments(player: RSPlayer, initial: Boolean, segments: MutableList<SynchronizationSegment>) {
         var skipCount = 0
 
         for (i in 0 until player.gpiLocalCount) {
@@ -164,7 +164,7 @@ object PlayerSynchronizationTask : SynchronizationTask<Player> {
      * The total amount of external players that were added to the local player
      * list.
      */
-    private fun addExternalSegments(player: Player, initial: Boolean, previouslyAdded: Int, segments: MutableList<SynchronizationSegment>): Int {
+    private fun addExternalSegments(player: RSPlayer, initial: Boolean, previouslyAdded: Int, segments: MutableList<SynchronizationSegment>): Int {
         var skipCount = 0
         var added = previouslyAdded
 
@@ -233,7 +233,7 @@ object PlayerSynchronizationTask : SynchronizationTask<Player> {
         return added
     }
 
-    private fun shouldAdd(player: Player, other: Player): Boolean = !other.invisible && other.tile.isWithinRadius(player.tile, Player.NORMAL_VIEW_DISTANCE) && other != player
+    private fun shouldAdd(player: RSPlayer, other: RSPlayer): Boolean = !other.invisible && other.tile.isWithinRadius(player.tile, RSPlayer.NORMAL_VIEW_DISTANCE) && other != player
 
-    private fun shouldRemove(player: Player, other: Player): Boolean = !other.isOnline || other.invisible || !other.tile.isWithinRadius(player.tile, Player.NORMAL_VIEW_DISTANCE)
+    private fun shouldRemove(player: RSPlayer, other: RSPlayer): Boolean = !other.isOnline || other.invisible || !other.tile.isWithinRadius(player.tile, RSPlayer.NORMAL_VIEW_DISTANCE)
 }

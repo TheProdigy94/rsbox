@@ -1,10 +1,12 @@
 package io.rsbox.engine.action
 
 import io.rsbox.engine.fs.def.AnimDef
-import io.rsbox.engine.model.attr.KILLER_ATTR
-import io.rsbox.engine.model.entity.Player
+import io.rsbox.api.KILLER_ATTR
+import io.rsbox.engine.model.entity.RSPlayer
+import io.rsbox.api.TaskPriority
+import io.rsbox.api.entity.Pawn
+import io.rsbox.engine.model.RSTile
 import io.rsbox.engine.model.queue.QueueTask
-import io.rsbox.engine.model.queue.TaskPriority
 import io.rsbox.engine.oldplugin.Plugin
 import io.rsbox.engine.service.log.LoggerService
 import java.lang.ref.WeakReference
@@ -17,7 +19,7 @@ object PlayerDeathAction {
     private const val DEATH_ANIMATION = 836
 
     val deathPlugin: Plugin.() -> Unit = {
-        val player = ctx as Player
+        val player = ctx as RSPlayer
 
         player.interruptQueues()
         player.stopMovement()
@@ -28,16 +30,16 @@ object PlayerDeathAction {
         }
     }
 
-    private suspend fun QueueTask.death(player: Player) {
+    private suspend fun QueueTask.death(player: RSPlayer) {
         val world = player.world
         val deathAnim = world.definitions.get(AnimDef::class.java, DEATH_ANIMATION)
-        val instancedMap = world.instanceAllocator.getMap(player.tile)
+        val instancedMap = world.instanceAllocator.getMap(player.tile as RSTile)
 
         player.damageMap.getMostDamage()?.let { killer ->
-            if (killer is Player) {
+            if (killer is RSPlayer) {
                 world.getService(LoggerService::class.java, searchSubclasses = true)?.logPlayerKill(killer, player)
             }
-            player.attr[KILLER_ATTR] = WeakReference(killer)
+            player.attr[KILLER_ATTR] = WeakReference(killer as Pawn)
         }
 
         world.plugins.executePlayerPreDeath(player)

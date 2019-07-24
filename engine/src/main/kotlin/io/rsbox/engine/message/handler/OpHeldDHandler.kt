@@ -4,8 +4,8 @@ import io.rsbox.engine.game.Game
 import io.rsbox.engine.message.MessageHandler
 import io.rsbox.engine.message.impl.OpHeldDMessage
 import io.rsbox.engine.model.RSWorld
-import io.rsbox.engine.model.attr.INTERACTING_ITEM_SLOT
-import io.rsbox.engine.model.attr.OTHER_ITEM_SLOT_ATTR
+import io.rsbox.api.INTERACTING_ITEM_SLOT
+import io.rsbox.api.OTHER_ITEM_SLOT_ATTR
 import io.rsbox.engine.model.entity.Client
 
 /**

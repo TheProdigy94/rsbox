@@ -1,7 +1,7 @@
 package io.rsbox.engine.model.instance
 
 import io.rsbox.engine.model.PlayerUID
-import io.rsbox.engine.model.Tile
+import io.rsbox.engine.model.RSTile
 import java.util.*
 
 /**
@@ -30,12 +30,12 @@ import java.util.*
  *
  * @author Tom <rspsmods@gmail.com>
  */
-class InstancedMapConfiguration private constructor(val exitTile: Tile, val owner: PlayerUID?, val attributes: EnumSet<InstancedMapAttribute>,
+class InstancedMapConfiguration private constructor(val exitTile: RSTile, val owner: PlayerUID?, val attributes: EnumSet<InstancedMapAttribute>,
                                                     val bypassObjectChunkBounds: Boolean) {
 
     class Builder {
 
-        private var exitTile: Tile? = null
+        private var exitTile: RSTile? = null
 
         private var owner: PlayerUID? = null
 
@@ -52,7 +52,7 @@ class InstancedMapConfiguration private constructor(val exitTile: Tile, val owne
             return InstancedMapConfiguration(exitTile!!, owner, attributes, bypassObjectChunkBounds)
         }
 
-        fun setExitTile(tile: Tile): Builder {
+        fun setExitTile(tile: RSTile): Builder {
             this.exitTile = tile
             return this
         }

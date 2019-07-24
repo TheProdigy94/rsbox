@@ -1,7 +1,7 @@
 package io.rsbox.engine.fs.def
 
 import io.rsbox.engine.fs.Definition
-import io.rsbox.engine.model.entity.GameObject
+import io.rsbox.engine.model.entity.RSGameObject
 import io.rsbox.util.io.BufferUtils.readString
 import io.netty.buffer.ByteBuf
 
@@ -27,12 +27,12 @@ class ObjectDef(override val id: Int) : Definition(id) {
 
     var examine: String? = null
 
-    fun getRotatedWidth(obj: GameObject): Int = when {
+    fun getRotatedWidth(obj: RSGameObject): Int = when {
         (obj.rot and 0x1) == 1 -> length
         else -> width
     }
 
-    fun getRotatedLength(obj: GameObject): Int = when {
+    fun getRotatedLength(obj: RSGameObject): Int = when {
         (obj.rot and 0x1) == 1 -> width
         else -> length
     }

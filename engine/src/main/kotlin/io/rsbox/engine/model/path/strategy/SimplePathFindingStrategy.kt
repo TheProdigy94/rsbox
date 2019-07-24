@@ -1,7 +1,7 @@
 package io.rsbox.engine.model.path.strategy
 
 import io.rsbox.engine.model.Direction
-import io.rsbox.engine.model.Tile
+import io.rsbox.engine.model.RSTile
 import io.rsbox.engine.model.collision.CollisionManager
 import io.rsbox.engine.model.path.PathFindingStrategy
 import io.rsbox.engine.model.path.PathRequest
@@ -27,7 +27,7 @@ class SimplePathFindingStrategy(collision: CollisionManager) : PathFindingStrate
         val targetWidth = Math.max(request.touchRadius, request.targetWidth)
         val targetLength = Math.max(request.touchRadius, request.targetLength)
 
-        val path = ArrayDeque<Tile>()
+        val path = ArrayDeque<RSTile>()
         var success = false
 
         var searchLimit = 2
@@ -71,7 +71,7 @@ class SimplePathFindingStrategy(collision: CollisionManager) : PathFindingStrate
         return Route(path, success, tail = if (path.isNotEmpty()) path.peekLast() else start)
     }
 
-    private fun canTraverse(collision: CollisionManager, tile: Tile, width: Int, length: Int, direction: Direction, projectile: Boolean): Boolean {
+    private fun canTraverse(collision: CollisionManager, tile: RSTile, width: Int, length: Int, direction: Direction, projectile: Boolean): Boolean {
         for (x in 0 until width) {
             for (z in 0 until length) {
                 val transform = tile.transform(x, z)
@@ -83,11 +83,11 @@ class SimplePathFindingStrategy(collision: CollisionManager) : PathFindingStrate
         return true
     }
 
-    private fun areBordering(tile1: Tile, size1: Int, tile2: Tile, size2: Int): Boolean = AabbUtil.areBordering(tile1.x, tile1.z, size1, size1, tile2.x, tile2.z, size2, size2)
+    private fun areBordering(tile1: RSTile, size1: Int, tile2: RSTile, size2: Int): Boolean = AabbUtil.areBordering(tile1.x, tile1.z, size1, size1, tile2.x, tile2.z, size2, size2)
 
-    private fun areDiagonal(tile1: Tile, size1: Int, tile2: Tile, size2: Int): Boolean = AabbUtil.areDiagonal(tile1.x, tile1.z, size1, size1, tile2.x, tile2.z, size2, size2)
+    private fun areDiagonal(tile1: RSTile, size1: Int, tile2: RSTile, size2: Int): Boolean = AabbUtil.areDiagonal(tile1.x, tile1.z, size1, size1, tile2.x, tile2.z, size2, size2)
 
-    private fun areOverlapping(tile1: Tile, size1: Int, tile2: Tile, size2: Int): Boolean = AabbUtil.areOverlapping(tile1.x, tile1.z, size1, size1, tile2.x, tile2.z, size2, size2)
+    private fun areOverlapping(tile1: RSTile, size1: Int, tile2: RSTile, size2: Int): Boolean = AabbUtil.areOverlapping(tile1.x, tile1.z, size1, size1, tile2.x, tile2.z, size2, size2)
 
     private fun areCoordinatesInRange(coord1: Int, size1: Int, coord2: Int, size2: Int): Boolean {
         val a = Pair(coord1, coord1 + size1)

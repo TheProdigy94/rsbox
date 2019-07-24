@@ -2275,7 +2275,7 @@
 - id: 1173
   examine: "Ironically, makes a living from swords."
 - id: 1174
-  examine: "He runs the Herblore Shop."
+  examine: "He runs the Herblore RSShop."
 - id: 1175
   examine: "An amulet trader."
 - id: 1176
@@ -4433,9 +4433,9 @@
 - id: 2356
   examine: "Proprietor of Vigr's Warhammers."
 - id: 2357
-  examine: "Proprietor of the Quality Weapons Shop."
+  examine: "Proprietor of the Quality Weapons RSShop."
 - id: 2358
-  examine: "Proprietor of the Quality Armour Shop."
+  examine: "Proprietor of the Quality Armour RSShop."
 - id: 2359
   examine: "Proprietor of Gunslik's Assorted Items."
 - id: 2360
@@ -11237,7 +11237,7 @@
 - id: 5920
   examine: "Grace's dog, Mark."
 - id: 5921
-  examine: "Designer of the 2013 Player Designed Content Roof Top Agility Courses."
+  examine: "Designer of the 2013 RSPlayer Designed Content Roof Top Agility Courses."
 - id: 5922
   examine: "A human skull used as a ball."
 - id: 5923
@@ -12084,7 +12084,7 @@
 - id: 6565
   examine: "Professional miners don't actually whistle while they work."
 - id: 6566
-  examine: "Designer of the 2014 Player Designed Content Motherlode Mine."
+  examine: "Designer of the 2014 RSPlayer Designed Content Motherlode Mine."
 - id: 6567
   examine: "He became a miner after his agoraphobia stopped him doing Sailing."
 - id: 6568

@@ -82,19 +82,19 @@ class GameService : Service {
 
     /**
      * The amount of time, in milliseconds, that [SequentialPlayerCycleTask]
-     * has taken for each [io.rsbox.engine.model.entity.Player].
+     * has taken for each [io.rsbox.engine.model.entity.RSPlayer].
      */
     internal val playerTimes = Object2LongOpenHashMap<String>()
 
     /**
      * The amount of active [io.rsbox.engine.model.queue.QueueTask]s throughout
-     * the [io.rsbox.engine.model.entity.Player]s.
+     * the [io.rsbox.engine.model.entity.RSPlayer]s.
      */
     internal var totalPlayerQueues = 0
 
     /**
      * The amount of active [io.rsbox.engine.model.queue.QueueTask]s throughout
-     * the [io.rsbox.engine.model.entity.Npc]s.
+     * the [io.rsbox.engine.model.entity.RSNpc]s.
      */
     internal var totalNpcQueues = 0
 
@@ -289,7 +289,7 @@ class GameService : Service {
             /*
              * If the cycle took more than [GameContext.cycleTime]ms, we log the
              * occurrence as well as the time each [GameTask] took to complete,
-             * as well as how long each [io.rsbox.engine.model.entity.Player] took
+             * as well as how long each [io.rsbox.engine.model.entity.RSPlayer] took
              * to process this cycle.
              */
             logger.error { "Cycle took longer than expected: ${(-freeTime) + world.gameContext.cycleTime}ms / ${world.gameContext.cycleTime}ms!" }
