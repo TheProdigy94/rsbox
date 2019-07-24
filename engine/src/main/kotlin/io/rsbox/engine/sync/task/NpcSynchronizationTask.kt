@@ -101,9 +101,9 @@ class NpcSynchronizationTask(private val worldNpcs: Array<RSNpc?>) : Synchroniza
         return segments
     }
 
-    private fun shouldRemove(player: RSPlayer, npc: RSNpc): Boolean = !npc.isSpawned() || npc.invisible || !isWithinView(player, npc.tile)
+    private fun shouldRemove(player: RSPlayer, npc: RSNpc): Boolean = !npc.isSpawned() || npc.invisible || !isWithinView(player, npc.tile as RSTile)
 
-    private fun shouldAdd(player: RSPlayer, npc: RSNpc): Boolean = npc.isSpawned() && !npc.invisible && isWithinView(player, npc.tile) && (npc.owner == null || npc.owner == player)
+    private fun shouldAdd(player: RSPlayer, npc: RSNpc): Boolean = npc.isSpawned() && !npc.invisible && isWithinView(player, npc.tile as RSTile) && (npc.owner == null || npc.owner == player)
 
     private fun isWithinView(player: RSPlayer, tile: RSTile): Boolean = tile.isWithinRadius(player.tile, if (player.hasLargeViewport()) RSPlayer.LARGE_VIEW_DISTANCE else RSPlayer.NORMAL_VIEW_DISTANCE)
 

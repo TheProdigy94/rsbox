@@ -38,8 +38,8 @@ class ChunkCreationTask : GameTask {
             world.chunks.get(lastTile)?.removeEntity(world, this, lastTile)
         }
 
-        world.chunks.get(tile, createIfNeeded = createChunkIfNeeded)?.addEntity(world, this, tile)
-        lastChunkTile = RSTile(tile)
+        world.chunks.get(tile as RSTile, createIfNeeded = createChunkIfNeeded)?.addEntity(world, this, tile as RSTile)
+        lastChunkTile = RSTile(tile as RSTile)
     }
 
     companion object {

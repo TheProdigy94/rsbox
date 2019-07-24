@@ -1,6 +1,6 @@
 package io.rsbox.engine.model.path.strategy
 
-import io.rsbox.engine.model.Direction
+import io.rsbox.api.Direction
 import io.rsbox.engine.model.RSTile
 import io.rsbox.engine.model.collision.CollisionManager
 import io.rsbox.engine.model.path.PathFindingStrategy
@@ -32,7 +32,7 @@ class SimplePathFindingStrategy(collision: CollisionManager) : PathFindingStrate
 
         var searchLimit = 2
         while (searchLimit-- > 0) {
-            var tail = if (path.isNotEmpty()) path.peekLast() else start
+            var tail = if (path.isNotEmpty()) path.peekLast() as RSTile else start
             if (areBordering(tail, sourceWidth, end, targetWidth) && !areDiagonal(tail, sourceWidth, end, targetWidth)
                     && collision.raycast(tail, end, projectile)) {
                 success = true
@@ -52,18 +52,18 @@ class SimplePathFindingStrategy(collision: CollisionManager) : PathFindingStrate
             while ((!areCoordinatesInRange(tail.z, sourceLength, end.z, targetLength)
                             || areDiagonal(tail, sourceLength, end, targetLength)
                             || areOverlapping(tail, sourceLength, end, targetLength))
-                    && (overlapped || !areOverlapping(tail.step(northOrSouth), sourceLength, end, targetLength))
+                    && (overlapped || !areOverlapping(tail.step(northOrSouth) as RSTile, sourceLength, end, targetLength))
                     && canTraverse(collision, tail, sourceWidth, sourceLength, northOrSouth, projectile)) {
-                tail = tail.step(northOrSouth)
+                tail = tail.step(northOrSouth) as RSTile
                 path.add(tail)
             }
 
             while ((!areCoordinatesInRange(tail.x, sourceWidth, end.x, targetWidth)
                             || areDiagonal(tail, sourceWidth, end, targetWidth)
                             || areOverlapping(tail, sourceWidth, end, targetWidth))
-                    && (overlapped || !areOverlapping(tail.step(eastOrWest), sourceWidth, end, targetWidth))
+                    && (overlapped || !areOverlapping(tail.step(eastOrWest) as RSTile, sourceWidth, end, targetWidth))
                     && canTraverse(collision, tail, sourceWidth, sourceLength, eastOrWest, projectile)) {
-                tail = tail.step(eastOrWest)
+                tail = tail.step(eastOrWest) as RSTile
                 path.add(tail)
             }
         }
@@ -75,7 +75,7 @@ class SimplePathFindingStrategy(collision: CollisionManager) : PathFindingStrate
         for (x in 0 until width) {
             for (z in 0 until length) {
                 val transform = tile.transform(x, z)
-                if (!collision.canTraverse(transform, direction, projectile) || !collision.canTraverse(transform.step(direction), direction.getOpposite(), projectile)) {
+                if (!collision.canTraverse(transform as RSTile, direction, projectile) || !collision.canTraverse(transform.step(direction) as RSTile, direction.getOpposite(), projectile)) {
                     return false
                 }
             }

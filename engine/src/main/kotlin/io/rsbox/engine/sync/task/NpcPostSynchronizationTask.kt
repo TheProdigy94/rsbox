@@ -14,7 +14,7 @@ object NpcPostSynchronizationTask : SynchronizationTask<RSNpc> {
         val moved = oldTile == null || !oldTile.sameAs(pawn.tile)
 
         if (moved) {
-            pawn.lastTile = RSTile(pawn.tile)
+            pawn.lastTile = RSTile(pawn.tile as RSTile)
         }
         pawn.moved = false
         pawn.steps = null

@@ -1,8 +1,7 @@
 package io.rsbox.engine.action
 
 import io.rsbox.engine.fs.def.ObjectDef
-import io.rsbox.engine.message.impl.SetMapFlagMessage
-import io.rsbox.engine.model.Direction
+import io.rsbox.api.Direction
 import io.rsbox.engine.model.MovementQueue
 import io.rsbox.api.INTERACTING_ITEM
 import io.rsbox.api.INTERACTING_OBJ_ATTR
@@ -14,8 +13,8 @@ import io.rsbox.engine.model.entity.RSPawn
 import io.rsbox.engine.model.entity.RSPlayer
 import io.rsbox.engine.model.path.PathRequest
 import io.rsbox.engine.model.path.Route
-import io.rsbox.engine.model.queue.QueueTaskeTask
 import io.rsbox.api.TaskPriority
+import io.rsbox.engine.message.impl.SetMapFlagMessage
 import io.rsbox.engine.model.RSTile
 import io.rsbox.engine.model.item.RSItem
 import io.rsbox.engine.model.queue.QueueTask
@@ -174,9 +173,9 @@ object ObjectPathAction {
              * Check if the pawn is within interaction distance of the wall.
              */
             if (pawn.tile.isWithinRadius(tile, 1)) {
-                val dir = Direction.between(tile, pawn.tile)
+                val dir = Direction.between(tile as RSTile, pawn.tile as RSTile)
                 if (dir !in blockedWallDirections && (diagonal || !AabbUtil.areDiagonal(pawn.tile.x, pawn.tile.z, pawn.getSize(), pawn.getSize(), tile.x, tile.z, width, length))) {
-                    return Route(ArrayDeque(), success = true, tail = pawn.tile)
+                    return Route(ArrayDeque(), success = true, tail = pawn.tile as RSTile)
                 }
             }
 
@@ -184,7 +183,7 @@ object ObjectPathAction {
         }
 
         val builder = PathRequest.Builder()
-                .setPoints(pawn.tile, tile)
+                .setPoints(pawn.tile as RSTile, tile as RSTile)
                 .setSourceSize(pawn.getSize(), pawn.getSize())
                 .setProjectilePath(lineOfSightRange != null)
                 .setTargetSize(width, length)
@@ -215,7 +214,7 @@ object ObjectPathAction {
         val route = pawn.createPathFindingStrategy().calculateRoute(builder.build())
 
         if (pawn.timers.has(FROZEN_TIMER) && !pawn.tile.sameAs(route.tail)) {
-            return Route(ArrayDeque(), success = false, tail = pawn.tile)
+            return Route(ArrayDeque(), success = false, tail = pawn.tile as RSTile)
         }
 
         pawn.walkPath(route.path, MovementQueue.StepType.NORMAL, detectCollision = true)
@@ -227,14 +226,14 @@ object ObjectPathAction {
 
         if (pawn.timers.has(STUN_TIMER)) {
             pawn.stopMovement()
-            return Route(ArrayDeque(), success = false, tail = pawn.tile)
+            return Route(ArrayDeque(), success = false, tail = pawn.tile as RSTile)
         }
 
         if (pawn.timers.has(FROZEN_TIMER) && !pawn.tile.sameAs(route.tail)) {
-            return Route(ArrayDeque(), success = false, tail = pawn.tile)
+            return Route(ArrayDeque(), success = false, tail = pawn.tile as RSTile)
         }
 
-        if (wall && !route.success && pawn.tile.isWithinRadius(tile, 1) && Direction.between(tile, pawn.tile) !in blockedWallDirections) {
+        if (wall && !route.success && pawn.tile.isWithinRadius(tile, 1) && Direction.between(tile, pawn.tile as RSTile) !in blockedWallDirections) {
             return Route(route.path, success = true, tail = route.tail)
         }
 
@@ -249,7 +248,7 @@ object ObjectPathAction {
         when (type) {
             ObjectType.LENGTHWISE_WALL.value -> {
                 if (!pawn.tile.sameAs(obj.tile)) {
-                    pawn.faceTile(obj.tile)
+                    pawn.faceTile(obj.tile as RSTile)
                 }
             }
             ObjectType.INTERACTABLE_WALL_DECORATION.value, ObjectType.INTERACTABLE_WALL.value -> {
@@ -260,7 +259,7 @@ object ObjectPathAction {
                     3 -> Direction.SOUTH
                     else -> throw IllegalStateException("Invalid object rotation: $obj")
                 }
-                pawn.faceTile(pawn.tile.step(dir))
+                pawn.faceTile(pawn.tile.step(dir) as RSTile)
             }
             else -> {
                 var width = def.width
@@ -269,7 +268,7 @@ object ObjectPathAction {
                     width = def.length
                     length = def.width
                 }
-                pawn.faceTile(obj.tile.transform(width shr 1, length shr 1), width, length)
+                pawn.faceTile(obj.tile.transform(width shr 1, length shr 1) as RSTile, width, length)
             }
         }
     }

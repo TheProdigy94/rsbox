@@ -25,7 +25,7 @@ class OpObjUHandler : MessageHandler<OpObjUMessage> {
          * If tile is too far away, don't process it.
          */
         val tile = RSTile(message.x, message.z, client.tile.height)
-        if (!tile.viewableFrom(client.tile, RSPlayer.TILE_VIEW_DISTANCE)) {
+        if (!tile.viewableFrom(client.tile as RSTile, RSPlayer.TILE_VIEW_DISTANCE)) {
             return
         }
 
@@ -46,7 +46,7 @@ class OpObjUHandler : MessageHandler<OpObjUMessage> {
                 item.id, item.amount, groundItem.item, groundItem.amount, tile.x, tile.z, message.movementType)
 
         if (message.movementType == 1 && world.privileges.isEligible(client.privilege, Privilege.ADMIN_POWER)) {
-            client.moveTo(groundItem.tile)
+            client.moveTo(groundItem.tile as RSTile)
         }
 
         client.closeInterfaceModal()

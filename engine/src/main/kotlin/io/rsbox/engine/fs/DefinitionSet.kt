@@ -1,7 +1,7 @@
 package io.rsbox.engine.fs
 
 import io.rsbox.engine.fs.def.*
-import io.rsbox.engine.model.Direction
+import io.rsbox.api.Direction
 import io.rsbox.engine.model.RSTile
 import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.model.collision.CollisionManager
@@ -232,7 +232,7 @@ class DefinitionSet {
                 if (bridges.contains(tile.transform(1))) {
                     return@forEach
                 }
-                val obj = StaticObject(loc.id, loc.type, loc.orientation, if (bridges.contains(tile)) tile.transform(-1) else tile)
+                val obj = StaticObject(loc.id, loc.type, loc.orientation, if (bridges.contains(tile)) tile.transform(-1) as RSTile else tile)
                 world.chunks.getOrCreate(tile).addEntity(world, obj, obj.tile as RSTile)
             }
             return true

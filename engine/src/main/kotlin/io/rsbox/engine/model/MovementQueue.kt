@@ -1,5 +1,6 @@
 package io.rsbox.engine.model
 
+import io.rsbox.api.Direction
 import io.rsbox.engine.model.MovementQueue.Step
 import io.rsbox.engine.model.entity.RSPawn
 import io.rsbox.engine.sync.block.UpdateBlockType
@@ -36,7 +37,7 @@ class MovementQueue(val pawn: RSPawn) {
 
     fun addStep(step: RSTile, type: StepType, detectCollision: Boolean) {
         val current = if (steps.any()) steps.peekLast().tile else pawn.tile
-        addStep(current, step, type, detectCollision)
+        addStep(current as RSTile, step, type, detectCollision)
     }
 
     fun cycle() {
@@ -51,7 +52,7 @@ class MovementQueue(val pawn: RSPawn) {
 
             walkDirection = Direction.between(tile, next.tile)
 
-            if (walkDirection != Direction.NONE && (!next.detectCollision || collision.canTraverse(tile, walkDirection, projectile = false))) {
+            if (walkDirection != Direction.NONE && (!next.detectCollision || collision.canTraverse(tile as RSTile, walkDirection, projectile = false))) {
                 tile = RSTile(next.tile)
                 pawn.lastFacingDirection = walkDirection
 
@@ -81,7 +82,7 @@ class MovementQueue(val pawn: RSPawn) {
 
             if (walkDirection != null && walkDirection != Direction.NONE) {
                 pawn.steps = StepDirection(walkDirection, runDirection)
-                pawn.tile = RSTile(tile)
+                pawn.tile = RSTile(tile as RSTile)
                 if (runDirection != null) {
                     pawn.addBlock(UpdateBlockType.MOVEMENT)
                 }
@@ -108,7 +109,7 @@ class MovementQueue(val pawn: RSPawn) {
             }
 
             val step = next.transform(-dx, -dz)
-            steps.add(Step(step, type, detectCollision))
+            steps.add(Step(step as RSTile, type, detectCollision))
         }
     }
 

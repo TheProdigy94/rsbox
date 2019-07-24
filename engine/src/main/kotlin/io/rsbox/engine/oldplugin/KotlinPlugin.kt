@@ -6,7 +6,7 @@ import io.rsbox.engine.event.Event
 import io.rsbox.engine.fs.def.ItemDef
 import io.rsbox.engine.fs.def.NpcDef
 import io.rsbox.engine.fs.def.ObjectDef
-import io.rsbox.engine.model.Direction
+import io.rsbox.api.Direction
 import io.rsbox.engine.model.RSTile
 import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.model.combat.NpcCombatDef

@@ -1,6 +1,6 @@
 package io.rsbox.engine.model.path
 
-import io.rsbox.engine.model.Direction
+import io.rsbox.api.Direction
 import io.rsbox.engine.model.RSTile
 import io.rsbox.engine.model.entity.RSPawn
 import io.rsbox.engine.model.path.PathRequest.ClipFlag
@@ -232,7 +232,7 @@ class PathRequest private constructor(val start: RSTile, val sourceWidth: Int, v
          * Creates a default walk request.
          */
         fun createWalkRequest(pawn: RSPawn, x: Int, z: Int, projectile: Boolean, detectCollision: Boolean): PathRequest = Builder()
-                .setPoints(start = RSTile(pawn.tile), end = RSTile(x, z, pawn.tile.height))
+                .setPoints(start = RSTile(pawn.tile as RSTile), end = RSTile(x, z, pawn.tile.height))
                 .setSourceSize(width = pawn.getSize(), length = pawn.getSize())
                 .setTargetSize(width = 0, length = 0)
                 .setProjectilePath(projectile)

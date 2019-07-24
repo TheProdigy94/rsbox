@@ -2,7 +2,7 @@ package io.rsbox.engine.model.region
 
 import io.rsbox.engine.message.impl.UpdateZonePartialEnclosedMessage
 import io.rsbox.engine.message.impl.UpdateZonePartialFollowsMessage
-import io.rsbox.engine.model.Direction
+import io.rsbox.api.Direction
 import io.rsbox.engine.model.EntityType
 import io.rsbox.engine.model.RSTile
 import io.rsbox.engine.model.RSWorld

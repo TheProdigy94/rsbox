@@ -2,7 +2,7 @@ package io.rsbox.engine.model.collision
 
 import io.rsbox.engine.fs.DefinitionSet
 import io.rsbox.engine.fs.def.ObjectDef
-import io.rsbox.engine.model.Direction
+import io.rsbox.api.Direction
 import io.rsbox.engine.model.RSTile
 import io.rsbox.engine.model.entity.RSGameObject
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
@@ -41,7 +41,7 @@ class CollisionUpdate private constructor(val type: Type, val flags: Object2Obje
 
         private fun putWall(tile: RSTile, impenetrable: Boolean, orientation: Direction) {
             putTile(tile, impenetrable, orientation)
-            putTile(tile.step(orientation), impenetrable, orientation.getOpposite())
+            putTile(tile.step(orientation) as RSTile, impenetrable, orientation.getOpposite())
         }
 
         private fun putLargeCornerWall(tile: RSTile, impenetrable: Boolean, orientation: Direction) {
@@ -49,7 +49,7 @@ class CollisionUpdate private constructor(val type: Type, val flags: Object2Obje
             putTile(tile, impenetrable, *directions)
 
             directions.forEach { dir ->
-                putTile(tile.step(dir), impenetrable, dir.getOpposite())
+                putTile(tile.step(dir) as RSTile, impenetrable, dir.getOpposite())
             }
         }
 
@@ -86,11 +86,11 @@ class CollisionUpdate private constructor(val type: Type, val flags: Object2Obje
                     }
                 }
             } else if (type == ObjectType.LENGTHWISE_WALL.value) {
-                putWall(tile, impenetrable, Direction.WNES[orientation])
+                putWall(tile as RSTile, impenetrable, Direction.WNES[orientation])
             } else if (type == ObjectType.TRIANGULAR_CORNER.value || type == ObjectType.RECTANGULAR_CORNER.value) {
-                putWall(tile, impenetrable, Direction.WNES_DIAGONAL[orientation])
+                putWall(tile as RSTile, impenetrable, Direction.WNES_DIAGONAL[orientation])
             } else if (type == ObjectType.WALL_CORNER.value) {
-                putLargeCornerWall(tile, impenetrable, Direction.WNES_DIAGONAL[orientation])
+                putLargeCornerWall(tile as RSTile, impenetrable, Direction.WNES_DIAGONAL[orientation])
             }
         }
 

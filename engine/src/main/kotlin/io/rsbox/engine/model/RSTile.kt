@@ -1,6 +1,7 @@
 package io.rsbox.engine.model
 
 import com.google.common.base.MoreObjects
+import io.rsbox.api.Direction
 import io.rsbox.api.Tile
 import io.rsbox.engine.model.region.Chunk
 import io.rsbox.engine.model.region.ChunkCoords
@@ -55,17 +56,17 @@ class RSTile : Tile {
 
     constructor(other: RSTile) : this(other.x, other.z, other.height)
 
-    fun transform(x: Int, z: Int, height: Int) = RSTile(this.x + x, this.z + z, this.height + height)
+    override fun transform(x: Int, z: Int, height: Int) = RSTile(this.x + x, this.z + z, this.height + height)
 
-    fun transform(x: Int, z: Int): RSTile = RSTile(this.x + x, this.z + z, this.height)
+    override fun transform(x: Int, z: Int): Tile = RSTile(this.x + x, this.z + z, this.height)
 
-    fun transform(height: Int): RSTile = RSTile(this.x, this.z, this.height + height)
+    override fun transform(height: Int): Tile = RSTile(this.x, this.z, this.height + height)
 
     fun viewableFrom(other: RSTile, viewDistance: Int = 15): Boolean = getDistance(other) <= viewDistance
 
-    fun step(direction: Direction, num: Int = 1): RSTile = RSTile(this.x + (num * direction.getDeltaX()), this.z + (num * direction.getDeltaZ()), this.height)
+    override fun step(direction: Direction, num: Int): Tile = RSTile(this.x + (num * direction.getDeltaX()), this.z + (num * direction.getDeltaZ()), this.height)
 
-    fun transformAndRotate(localX: Int, localZ: Int, orientation: Int, width: Int = 1, length: Int = 1): RSTile {
+    fun transformAndRotate(localX: Int, localZ: Int, orientation: Int, width: Int = 1, length: Int = 1): Tile {
         val localWidth = Chunk.CHUNK_SIZE - 1
         val localLength = Chunk.CHUNK_SIZE - 1
 
@@ -78,7 +79,7 @@ class RSTile : Tile {
         }
     }
 
-    fun isWithinRadius(otherX: Int, otherZ: Int, otherHeight: Int, radius: Int): Boolean {
+    override fun isWithinRadius(otherX: Int, otherZ: Int, otherHeight: Int, radius: Int): Boolean {
         if (otherHeight != height) {
             return false
         }
@@ -94,7 +95,7 @@ class RSTile : Tile {
      * @return true
      * if the tiles are on the same height and within radius of [radius] tiles.
      */
-    fun isWithinRadius(other: RSTile, radius: Int): Boolean = isWithinRadius(other.x, other.z, other.height, radius)
+    override fun isWithinRadius(other: Tile, radius: Int): Boolean = isWithinRadius(other.x, other.z, other.height, radius)
 
     fun isInSameChunk(other: RSTile): Boolean = (x shr 3) == (other.x shr 3) && (z shr 3) == (other.z shr 3)
 

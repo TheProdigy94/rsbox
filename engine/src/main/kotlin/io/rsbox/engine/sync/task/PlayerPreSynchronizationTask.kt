@@ -18,7 +18,7 @@ object PlayerPreSynchronizationTask : SynchronizationTask<RSPlayer> {
         pawn.movementQueue.cycle()
 
         val last = pawn.lastKnownRegionBase
-        val current = pawn.tile
+        val current = pawn.tile as RSTile
 
         if (last == null || shouldRebuildRegion(last, current)) {
             val regionX = ((current.x shr 3) - (Chunk.MAX_VIEWPORT shr 4)) shl 3
@@ -29,7 +29,7 @@ object PlayerPreSynchronizationTask : SynchronizationTask<RSPlayer> {
             val xteaService = pawn.world.xteaKeyService
             val instance = pawn.world.instanceAllocator.getMap(current)
             val rebuildMessage = when {
-                instance != null -> RebuildRegionMessage(current.x shr 3, current.z shr 3, 1, instance.getCoordinates(pawn.tile), xteaService)
+                instance != null -> RebuildRegionMessage(current.x shr 3, current.z shr 3, 1, instance.getCoordinates(pawn.tile as RSTile), xteaService)
                 else -> RebuildNormalMessage(current.x shr 3, current.z shr 3, xteaService)
             }
             pawn.write(rebuildMessage)

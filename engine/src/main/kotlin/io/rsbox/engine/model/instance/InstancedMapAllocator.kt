@@ -80,7 +80,7 @@ class InstancedMapAllocator {
              * instance to the [InstancedMap.exitTile].
              */
             world.players.forEach { player ->
-                if (map.area.contains(player.tile)) {
+                if (map.area.contains(player.tile as RSTile)) {
                     player.moveTo(map.exitTile)
                 }
             }
@@ -92,7 +92,7 @@ class InstancedMapAllocator {
     internal fun logout(player: RSPlayer) {
         val world = player.world
 
-        getMap(player.tile)?.let { map ->
+        getMap(player.tile as RSTile)?.let { map ->
             player.moveTo(map.exitTile)
 
             if (map.attr.contains(InstancedMapAttribute.DEALLOCATE_ON_LOGOUT)) {
@@ -107,7 +107,7 @@ class InstancedMapAllocator {
     internal fun death(player: RSPlayer) {
         val world = player.world
 
-        getMap(player.tile)?.let { map ->
+        getMap(player.tile as RSTile)?.let { map ->
             if (map.attr.contains(InstancedMapAttribute.DEALLOCATE_ON_DEATH)) {
                 val mapOwner = map.owner!! // If map has this attribute, they should also set an owner.
                 if (player.uid == mapOwner) {
@@ -127,7 +127,7 @@ class InstancedMapAllocator {
                  * If there's no players in the [map] area, we can de-allocate
                  * the map.
                  */
-                if (world.players.none { map.area.contains(it.tile) }) {
+                if (world.players.none { map.area.contains(it.tile as RSTile) }) {
                     deallocate(world, map)
                 }
             }
@@ -166,7 +166,7 @@ class InstancedMapAllocator {
                         val copyChunk = world.chunks.get(copyTile.chunkCoords, createIfNeeded = true)!!
 
                         copyChunk.getEntities<StaticObject>(EntityType.STATIC_OBJECT).forEach { obj ->
-                            if (obj.tile.height == chunkH && obj.tile.isInSameChunk(copyTile)) {
+                            if (obj.tile.height == chunkH && (obj.tile as RSTile).isInSameChunk(copyTile)) {
                                 val def = obj.getDef(world.definitions)
                                 val width = def.getRotatedWidth(obj)
                                 val length = def.getRotatedLength(obj)
@@ -174,11 +174,11 @@ class InstancedMapAllocator {
                                 val localX = obj.tile.x % 8
                                 val localZ = obj.tile.z % 8
 
-                                val newObj = DynamicObject(obj.id, obj.type, (obj.rot + chunk.rot) and 0x3, baseTile.transformAndRotate(localX, localZ, chunk.rot, width, length))
-                                val insideChunk = newObj.tile.isInSameChunk(baseTile)
+                                val newObj = DynamicObject(obj.id, obj.type, (obj.rot + chunk.rot) and 0x3, baseTile.transformAndRotate(localX, localZ, chunk.rot, width, length) as RSTile)
+                                val insideChunk = (newObj.tile as RSTile).isInSameChunk(baseTile)
 
                                 if (insideChunk) {
-                                    newChunk.addEntity(world, newObj, newObj.tile)
+                                    newChunk.addEntity(world, newObj, newObj.tile as RSTile)
                                 } else if (!bypassObjectChunkBounds) {
                                     throw IllegalStateException("Could not copy object due to its size and rotation outcome (object rotation + chunk rotation). " +
                                             "The object would, otherwise, be spawned out of bounds of its original chunk. [obj=$obj, copy=$newObj]")
@@ -212,7 +212,7 @@ class InstancedMapAllocator {
 
         for (i in 0 until regionCount) {
             val tile = map.area.bottomLeft.transform(i * Chunk.REGION_SIZE, i * Chunk.REGION_SIZE)
-            chunks.remove(tile.chunkCoords)
+            chunks.remove((tile as RSTile).chunkCoords)
         }
     }
 

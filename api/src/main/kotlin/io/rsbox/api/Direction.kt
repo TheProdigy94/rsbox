@@ -1,4 +1,4 @@
-package io.rsbox.engine.model
+package io.rsbox.api
 
 /**
  * Represents cardinal and ordinal directions in the game.
@@ -76,19 +76,52 @@ enum class Direction(val orientationValue: Int, val playerWalkValue: Int, val np
 
     companion object {
 
-        val NESW = arrayOf(NORTH, EAST, SOUTH, WEST)
+        val NESW = arrayOf(
+            NORTH,
+            EAST,
+            SOUTH,
+            WEST
+        )
 
-        val WNES = arrayOf(WEST, NORTH, EAST, SOUTH)
+        val WNES = arrayOf(
+            WEST,
+            NORTH,
+            EAST,
+            SOUTH
+        )
 
-        val WNES_DIAGONAL = arrayOf(NORTH_WEST, NORTH_EAST, SOUTH_EAST, SOUTH_WEST)
+        val WNES_DIAGONAL = arrayOf(
+            NORTH_WEST,
+            NORTH_EAST,
+            SOUTH_EAST,
+            SOUTH_WEST
+        )
 
-        val RS_ORDER = arrayOf(WEST, EAST, NORTH, SOUTH, SOUTH_WEST, SOUTH_EAST, NORTH_WEST, NORTH_EAST)
+        val RS_ORDER = arrayOf(
+            WEST,
+            EAST,
+            NORTH,
+            SOUTH,
+            SOUTH_WEST,
+            SOUTH_EAST,
+            NORTH_WEST,
+            NORTH_EAST
+        )
 
-        val ANGLED_ORDER = arrayOf(NORTH, NORTH_EAST, EAST, SOUTH_EAST, SOUTH, SOUTH_WEST, WEST, NORTH_WEST)
+        val ANGLED_ORDER = arrayOf(
+            NORTH,
+            NORTH_EAST,
+            EAST,
+            SOUTH_EAST,
+            SOUTH,
+            SOUTH_WEST,
+            WEST,
+            NORTH_WEST
+        )
 
         fun getForAngle(angle: Int): Direction = ANGLED_ORDER[angle / 45]
 
-        fun between(current: RSTile, next: RSTile): Direction {
+        fun between(current: Tile, next: Tile): Direction {
             val deltaX = next.x - current.x
             val deltaZ = next.z - current.z
 

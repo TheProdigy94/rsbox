@@ -17,9 +17,9 @@ import io.rsbox.engine.model.path.PathRequest
 import io.rsbox.engine.model.path.Route
 import io.rsbox.engine.model.path.strategy.BFSPathFindingStrategy
 import io.rsbox.engine.model.path.strategy.NpcPathFindingStrategy
-import io.rsbox.engine.model.queue.QueueTaskeTask
 import io.rsbox.engine.model.queue.QueueTaskSet
 import io.rsbox.api.TaskPriority
+import io.rsbox.engine.model.queue.QueueTask
 import io.rsbox.engine.model.queue.impl.PawnQueueTaskSet
 import io.rsbox.engine.model.region.Chunk
 import io.rsbox.engine.model.timer.FROZEN_TIMER
@@ -212,7 +212,7 @@ abstract class RSPawn(val world: RSWorld) : RSEntity(), Pawn {
         movementQueue.clear()
     }
 
-    fun getCentreTile(): RSTile = tile.transform(getSize() shr 1, getSize() shr 1)
+    fun getCentreTile(): RSTile = tile.transform(getSize() shr 1, getSize() shr 1) as RSTile
 
     /**
      * Gets the tile the pawn is currently facing towards.
@@ -468,7 +468,7 @@ abstract class RSPawn(val world: RSWorld) : RSEntity(), Pawn {
          * Already standing on requested destination.
          */
         if (tile.x == x && tile.z == z) {
-            return Route(EMPTY_TILE_DEQUE, success = true, tail = RSTile(tile))
+            return Route(EMPTY_TILE_DEQUE, success = true, tail = RSTile(tile as RSTile))
         }
         val multiThread = world.multiThreadPathFinding
         val request = PathRequest.createWalkRequest(this, x, z, projectile = false, detectCollision = detectCollision)
@@ -610,7 +610,7 @@ abstract class RSPawn(val world: RSWorld) : RSEntity(), Pawn {
 
     internal fun createPathFindingStrategy(copyChunks: Boolean = false): PathFindingStrategy {
         val collision: CollisionManager = if (copyChunks) {
-            val chunks = world.chunks.copyChunksWithinRadius(tile.chunkCoords, height = tile.height, radius = Chunk.CHUNK_VIEW_RADIUS)
+            val chunks = world.chunks.copyChunksWithinRadius((tile as RSTile).chunkCoords, height = tile.height, radius = Chunk.CHUNK_VIEW_RADIUS)
             CollisionManager(chunks, createChunksIfNeeded = false)
         } else {
             world.collision

@@ -44,7 +44,7 @@ class OpLocUHandler : MessageHandler<OpLocUMessage> {
 
         // If the tile is too far away, do nothing
         val tile = RSTile(message.x, message.z, client.tile.height)
-        if (!tile.viewableFrom(client.tile, RSPlayer.TILE_VIEW_DISTANCE)) {
+        if (!tile.viewableFrom(client.tile as RSTile, RSPlayer.TILE_VIEW_DISTANCE)) {
             return
         }
 
@@ -54,7 +54,7 @@ class OpLocUHandler : MessageHandler<OpLocUMessage> {
 
         if (message.movementType == 1 && world.privileges.isEligible(client.privilege, Privilege.ADMIN_POWER)) {
             val def = obj.getDef(world.definitions)
-            client.moveTo(world.findRandomTileAround(obj.tile, radius = 1, centreWidth = def.width, centreLength = def.length) ?: obj.tile)
+            client.moveTo(world.findRandomTileAround(obj.tile as RSTile, radius = 1, centreWidth = def.width, centreLength = def.length) ?: obj.tile as RSTile)
         }
 
         log(client, "RSItem on object: item=%d, slot=%d, obj=%d, x=%d, z=%d", message.item, message.slot, message.obj, message.x, message.z)

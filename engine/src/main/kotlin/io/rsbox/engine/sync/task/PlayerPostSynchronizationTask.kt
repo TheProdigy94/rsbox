@@ -17,7 +17,7 @@ object PlayerPostSynchronizationTask : SynchronizationTask<RSPlayer> {
         val changedHeight = oldTile?.height != pawn.tile.height
 
         if (moved) {
-            pawn.lastTile = RSTile(pawn.tile)
+            pawn.lastTile = RSTile(pawn.tile as RSTile)
         }
         pawn.moved = false
         pawn.steps = null
@@ -25,7 +25,7 @@ object PlayerPostSynchronizationTask : SynchronizationTask<RSPlayer> {
 
         if (moved) {
             val oldChunk = if (oldTile != null) pawn.world.chunks.get(oldTile.chunkCoords, createIfNeeded = false) else null
-            val newChunk = pawn.world.chunks.get(pawn.tile.chunkCoords, createIfNeeded = false)
+            val newChunk = pawn.world.chunks.get((pawn.tile as RSTile).chunkCoords, createIfNeeded = false)
             if (newChunk != null && (oldChunk != newChunk || changedHeight)) {
                 pawn.world.getService(GameService::class.java)?.let { service ->
                     val newSurroundings = newChunk.coords.getSurroundingCoords()

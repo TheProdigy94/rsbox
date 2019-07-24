@@ -24,7 +24,7 @@ import io.rsbox.engine.model.interf.*
 import io.rsbox.engine.model.interf.listener.PlayerInterfaceListener
 import io.rsbox.engine.model.item.RSItem
 import io.rsbox.engine.model.priv.Privilege
-import io.rsbox.engine.model.queue.QueueTaskeTask
+import io.rsbox.engine.model.queue.QueueTask
 import io.rsbox.engine.model.shop.RSShop
 import io.rsbox.engine.model.skill.SkillSet
 import io.rsbox.engine.model.timer.ACTIVE_COMBAT_TIMER

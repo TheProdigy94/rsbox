@@ -18,9 +18,9 @@ import io.rsbox.engine.model.entity.*
 import io.rsbox.engine.model.instance.InstancedMapAllocator
 import io.rsbox.engine.model.npcdrops.NpcDropTableDef
 import io.rsbox.engine.model.priv.PrivilegeSet
-import io.rsbox.engine.model.queue.QueueTaskeTask
 import io.rsbox.engine.model.queue.QueueTaskSet
 import io.rsbox.api.TaskPriority
+import io.rsbox.engine.model.queue.QueueTask
 import io.rsbox.engine.model.queue.impl.WorldQueueTaskSet
 import io.rsbox.engine.model.region.ChunkSet
 import io.rsbox.engine.model.shop.RSShop
@@ -280,9 +280,9 @@ class RSWorld(val gameContext: GameContext, val devContext: DevContext) : World 
                  * reached the public delay set by our game, we make it public.
                  */
                 groundItem.removeOwner()
-                chunks.get(groundItem.tile)?.let { chunk ->
-                    chunk.removeEntity(this, groundItem, groundItem.tile)
-                    chunk.addEntity(this, groundItem, groundItem.tile)
+                chunks.get(groundItem.tile as RSTile)?.let { chunk ->
+                    chunk.removeEntity(this, groundItem, groundItem.tile as RSTile)
+                    chunk.addEntity(this, groundItem, groundItem.tile as RSTile)
                 }
             }
         }
@@ -361,7 +361,7 @@ class RSWorld(val gameContext: GameContext, val devContext: DevContext) : World 
 
     fun unregister(p: RSPlayer) {
         players.remove(p)
-        chunks.get(p.tile)?.removeEntity(this, p, p.tile)
+        chunks.get(p.tile as RSTile)?.removeEntity(this, p, p.tile as RSTile)
     }
 
     fun spawn(npc: RSNpc): Boolean {
@@ -375,12 +375,12 @@ class RSWorld(val gameContext: GameContext, val devContext: DevContext) : World 
 
     fun remove(npc: RSNpc) {
         npcs.remove(npc)
-        chunks.get(npc.tile)?.removeEntity(this, npc, npc.tile)
+        chunks.get(npc.tile as RSTile)?.removeEntity(this, npc, npc.tile as RSTile)
     }
 
     fun spawn(obj: RSGameObject) {
         val tile = obj.tile
-        val chunk = chunks.getOrCreate(tile)
+        val chunk = chunks.getOrCreate(tile as RSTile)
 
         val oldObj = chunk.getEntities<RSGameObject>(tile, EntityType.STATIC_OBJECT, EntityType.DYNAMIC_OBJECT).firstOrNull { it.type == obj.type }
         if (oldObj != null) {
@@ -391,14 +391,14 @@ class RSWorld(val gameContext: GameContext, val devContext: DevContext) : World 
 
     fun remove(obj: RSGameObject) {
         val tile = obj.tile
-        val chunk = chunks.getOrCreate(tile)
+        val chunk = chunks.getOrCreate(tile as RSTile)
 
         chunk.removeEntity(this, obj, tile)
     }
 
     fun spawn(item: RSGroundItem) {
         val tile = item.tile
-        val chunk = chunks.getOrCreate(tile)
+        val chunk = chunks.getOrCreate(tile as RSTile)
 
         val def = definitions.get(ItemDef::class.java, item.item)
 
@@ -419,7 +419,7 @@ class RSWorld(val gameContext: GameContext, val devContext: DevContext) : World 
 
     fun remove(item: RSGroundItem) {
         val tile = item.tile
-        val chunk = chunks.getOrCreate(tile)
+        val chunk = chunks.getOrCreate(tile as RSTile)
 
         groundItems.remove(item)
         chunk.removeEntity(this, item, tile)
@@ -432,14 +432,14 @@ class RSWorld(val gameContext: GameContext, val devContext: DevContext) : World 
 
     fun spawn(projectile: Projectile) {
         val tile = projectile.tile
-        val chunk = chunks.getOrCreate(tile)
+        val chunk = chunks.getOrCreate(tile as RSTile)
 
         chunk.addEntity(this, projectile, tile)
     }
 
     fun spawn(sound: AreaSound) {
         val tile = sound.tile
-        val chunk = chunks.getOrCreate(tile)
+        val chunk = chunks.getOrCreate(tile as RSTile)
 
         chunk.addEntity(this, sound, tile)
     }
@@ -450,22 +450,22 @@ class RSWorld(val gameContext: GameContext, val devContext: DevContext) : World 
     fun removeAll(area: Area) {
         for (i in 0 until npcs.capacity) {
             val npc = npcs[i] ?: continue
-            if (area.contains(npc.tile)) {
+            if (area.contains(npc.tile as RSTile)) {
                 remove(npc)
             }
         }
 
         for (i in 0 until groundItems.size) {
             val item = groundItems[i] ?: continue
-            if (area.contains(item.tile)) {
+            if (area.contains(item.tile as RSTile)) {
                 remove(item)
             }
         }
     }
 
-    fun isSpawned(obj: RSGameObject): Boolean = chunks.getOrCreate(obj.tile).getEntities<RSGameObject>(obj.tile, EntityType.STATIC_OBJECT, EntityType.DYNAMIC_OBJECT).contains(obj)
+    fun isSpawned(obj: RSGameObject): Boolean = chunks.getOrCreate(obj.tile as RSTile).getEntities<RSGameObject>(obj.tile as RSTile, EntityType.STATIC_OBJECT, EntityType.DYNAMIC_OBJECT).contains(obj)
 
-    fun isSpawned(item: RSGroundItem): Boolean = chunks.getOrCreate(item.tile).getEntities<RSGroundItem>(item.tile, EntityType.GROUND_ITEM).contains(item)
+    fun isSpawned(item: RSGroundItem): Boolean = chunks.getOrCreate(item.tile as RSTile).getEntities<RSGroundItem>(item.tile as RSTile, EntityType.GROUND_ITEM).contains(item)
 
     /**
      * Get any [RSGroundItem] that matches the [predicate].
@@ -524,7 +524,7 @@ class RSWorld(val gameContext: GameContext, val devContext: DevContext) : World 
                 if (x in 0 until centreWidth && z in 0 until centreLength) {
                     continue
                 }
-                tiles.add(centre.transform(x, z))
+                tiles.add(centre.transform(x, z) as RSTile)
             }
         }
         val filtered = tiles.filter { tile -> !collision.isClipped(tile) }

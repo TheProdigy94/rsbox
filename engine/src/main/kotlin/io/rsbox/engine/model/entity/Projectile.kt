@@ -100,10 +100,10 @@ class Projectile private constructor(val targetPawn: RSPawn?, val targetTile: RS
             }
 
             if (lifespan == -1) {
-                lifespan = start.getDistance(target) * 5
+                lifespan = start.getDistance(target as RSTile) * 5
             }
 
-            val projectile = Projectile(targetPawn, target, gfx, startHeight, endHeight, steepness, angle, delay, lifespan)
+            val projectile = Projectile(targetPawn, target as RSTile, gfx, startHeight, endHeight, steepness, angle, delay, lifespan)
             projectile.tile = start
             return projectile
         }

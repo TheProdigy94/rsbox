@@ -1,7 +1,7 @@
 package io.rsbox.engine.model.collision
 
 import io.rsbox.engine.fs.DefinitionSet
-import io.rsbox.engine.model.Direction
+import io.rsbox.api.Direction
 import io.rsbox.engine.model.RSTile
 import io.rsbox.engine.model.entity.RSGameObject
 import io.rsbox.engine.model.region.Chunk
@@ -26,7 +26,7 @@ class CollisionManager(val chunks: ChunkSet, val createChunksIfNeeded: Boolean =
         if (direction.isDiagonal()) {
             direction.getDiagonalComponents().forEach { other ->
                 val diagonalTile = tile.step(other)
-                val diagonalChunk = chunks.get(diagonalTile, createChunksIfNeeded)!!
+                val diagonalChunk = chunks.get(diagonalTile as RSTile, createChunksIfNeeded)!!
                 if (diagonalChunk.isBlocked(diagonalTile, other.getOpposite(), projectile)) {
                     return false
                 }

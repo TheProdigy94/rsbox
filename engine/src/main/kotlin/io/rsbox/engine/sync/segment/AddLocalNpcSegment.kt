@@ -1,6 +1,6 @@
 package io.rsbox.engine.sync.segment
 
-import io.rsbox.engine.model.Direction
+import io.rsbox.api.Direction
 import io.rsbox.engine.model.entity.RSNpc
 import io.rsbox.engine.model.entity.RSPlayer
 import io.rsbox.engine.sync.SynchronizationSegment

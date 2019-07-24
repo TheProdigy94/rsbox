@@ -7,6 +7,7 @@ import io.rsbox.api.INTERACTING_COMPONENT_CHILD
 import io.rsbox.api.INTERACTING_COMPONENT_PARENT
 import io.rsbox.api.INTERACTING_NPC_ATTR
 import io.rsbox.api.entity.Npc
+import io.rsbox.engine.model.RSTile
 import io.rsbox.engine.model.entity.Client
 import io.rsbox.engine.model.entity.RSEntity
 import io.rsbox.engine.model.priv.Privilege
@@ -32,7 +33,7 @@ class OpNpcTHandler : MessageHandler<OpNpcTMessage> {
         client.resetInteractions()
 
         if (message.movementType == 1 && world.privileges.isEligible(client.privilege, Privilege.ADMIN_POWER)) {
-            client.moveTo(world.findRandomTileAround(npc.tile, 1) ?: npc.tile)
+            client.moveTo(world.findRandomTileAround(npc.tile as RSTile, 1) ?: npc.tile as RSTile)
         }
 
         client.closeInterfaceModal()

@@ -1,7 +1,7 @@
 package io.rsbox.engine.model.collision
 
 import com.google.common.base.MoreObjects
-import io.rsbox.engine.model.Direction
+import io.rsbox.api.Direction
 import java.util.*
 import kotlin.experimental.inv
 import kotlin.experimental.or

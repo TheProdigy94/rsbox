@@ -1,6 +1,6 @@
 package io.rsbox.engine.model.entity
 
-import io.rsbox.engine.model.Direction
+import io.rsbox.api.Direction
 import io.rsbox.engine.model.RSTile
 
 class NPCSpawn(npcId: Int, tile: RSTile, walkRadius: Int, dir: Direction) {

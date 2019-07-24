@@ -36,7 +36,7 @@ class PlayerUpdateBlockSegment(val other: RSPlayer, private val newPlayer: Boole
                 }
                 else -> {
                     mask = mask or blocks.updateBlocks[UpdateBlockType.FACE_TILE]!!.bit
-                    forceFace = other.tile.step(other.lastFacingDirection)
+                    forceFace = other.tile.step(other.lastFacingDirection) as RSTile
                 }
             }
         }

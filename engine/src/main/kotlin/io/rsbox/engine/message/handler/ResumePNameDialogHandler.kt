@@ -4,7 +4,7 @@ import io.rsbox.engine.message.MessageHandler
 import io.rsbox.engine.message.impl.ResumePNameDialogMessage
 import io.rsbox.engine.model.RSWorld
 import io.rsbox.engine.model.entity.Client
-import io.rsbox.engine.model.queue.QueueTaskeTask
+import io.rsbox.engine.model.queue.QueueTask
 
 /**
  * @author Tom <rspsmods@gmail.com>

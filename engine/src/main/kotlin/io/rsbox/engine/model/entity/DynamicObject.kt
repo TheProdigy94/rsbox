@@ -10,9 +10,9 @@ import io.rsbox.engine.model.RSTile
  */
 class DynamicObject(id: Int, type: Int, rot: Int, tile: RSTile) : RSGameObject(id, type, rot, tile) {
 
-    constructor(other: RSGameObject) : this(other.id, other.type, other.rot, RSTile(other.tile))
+    constructor(other: RSGameObject) : this(other.id, other.type, other.rot, RSTile(other.tile as RSTile))
 
-    constructor(other: RSGameObject, id: Int) : this(id, other.type, other.rot, RSTile(other.tile))
+    constructor(other: RSGameObject, id: Int) : this(id, other.type, other.rot, RSTile(other.tile as RSTile))
 
     override val entityType: EntityType = EntityType.DYNAMIC_OBJECT
 }

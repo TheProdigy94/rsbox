@@ -1,6 +1,6 @@
 package io.rsbox.engine.model.path.strategy
 
-import io.rsbox.engine.model.Direction
+import io.rsbox.api.Direction
 import io.rsbox.engine.model.RSTile
 import io.rsbox.engine.model.collision.CollisionManager
 import io.rsbox.engine.model.path.PathFindingStrategy
@@ -58,13 +58,13 @@ class BFSPathFindingStrategy(collision: CollisionManager) : PathFindingStrategy(
             }
 
             order.sortBy {
-                val step = head.tile.step(it)
+                val step = head.tile.step(it) as RSTile
                 step.getDelta(end) + step.getDelta(head.tile)
             }
 
             for (direction in order) {
                 val tile = head.tile.step(direction)
-                val node = Node(tile = tile, parent = head)
+                val node = Node(tile = tile as RSTile, parent = head)
                 if (!closed.contains(node) && start.isWithinRadius(tile, MAX_DISTANCE)
                         && !isStepBlocked(head.tile, tile, sourceWidth, sourceLength, clipNode, clipLink)) {
                     node.cost = head.cost + 1
@@ -103,10 +103,10 @@ class BFSPathFindingStrategy(collision: CollisionManager) : PathFindingStrategy(
         for (x in 0 until width) {
             for (z in 0 until length) {
                 val transform = node.transform(x, z)
-                if (clipNode && isTileBlocked(transform, link)) {
+                if (clipNode && isTileBlocked(transform as RSTile, link)) {
                     return true
                 }
-                if (clipLink && isTileBlocked(link, transform)) {
+                if (clipLink && isTileBlocked(link, transform as RSTile)) {
                     return true
                 }
             }
@@ -195,7 +195,7 @@ class BFSPathFindingStrategy(collision: CollisionManager) : PathFindingStrategy(
         } else {
             for (x in -1..targetWidth) {
                 for (z in -1..targetLength) {
-                    val tile = end.transform(x, z)
+                    val tile = end.transform(x, z) as RSTile
 
                     if (clipDiagonals && isDiagonalTile(tile, end, targetWidth, targetLength)
                             || clipDirections && isTargetDirectionBlocked(tile, end, targetWidth, targetLength, request.blockedDirections)
@@ -217,7 +217,7 @@ class BFSPathFindingStrategy(collision: CollisionManager) : PathFindingStrategy(
                         continue
                     }
                     val tile = end.transform(x, z)
-                    validTiles.add(tile)
+                    validTiles.add(tile as RSTile)
                 }
             }
         }

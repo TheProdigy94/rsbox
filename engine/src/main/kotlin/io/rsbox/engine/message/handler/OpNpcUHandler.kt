@@ -10,6 +10,7 @@ import io.rsbox.api.INTERACTING_ITEM_SLOT
 import io.rsbox.api.INTERACTING_NPC_ATTR
 import io.rsbox.api.entity.Npc
 import io.rsbox.api.item.Item
+import io.rsbox.engine.model.RSTile
 import io.rsbox.engine.model.entity.Client
 import io.rsbox.engine.model.priv.Privilege
 import java.lang.ref.WeakReference
@@ -40,7 +41,7 @@ class OpNpcUHandler : MessageHandler<OpNpcUMessage> {
         log(client, "RSItem on npc: movement=%d, item=%s, slot=%d, npc=%s, index=%d", movementType, item, itemSlot, npc, index)
 
         if (movementType == 1 && world.privileges.isEligible(client.privilege, Privilege.ADMIN_POWER)) {
-            client.moveTo(world.findRandomTileAround(npc.tile, 1) ?: npc.tile)
+            client.moveTo(world.findRandomTileAround(npc.tile as RSTile, 1) ?: npc.tile as RSTile)
         }
 
         client.closeInterfaceModal()
