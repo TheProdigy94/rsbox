@@ -62,7 +62,7 @@ class PluginRepository(val world: RSWorld) {
 
     /**
      * This oldplugin is used to check if a player has a menu opened and any
-     * [io.rsbox.engine.model.queue.QueueTask] with a [io.rsbox.engine.model.queue.TaskPriority.STANDARD]
+     * [io.rsbox.engine.model.queue.RSQueueTask] with a [io.rsbox.engine.model.queue.TaskPriority.STANDARD]
      * priority should wait before executing.
      */
     private var isMenuOpenedPlugin: (Plugin.() -> Boolean)? = null

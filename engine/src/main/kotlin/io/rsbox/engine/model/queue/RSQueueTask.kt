@@ -1,8 +1,8 @@
 package io.rsbox.engine.model.queue
 
+import io.rsbox.api.QueueTask
 import io.rsbox.api.TaskPriority
 import io.rsbox.api.Tile
-import io.rsbox.engine.model.RSTile
 import io.rsbox.engine.model.entity.RSPawn
 import io.rsbox.engine.model.entity.RSPlayer
 import mu.KLogging
@@ -14,7 +14,7 @@ import kotlin.coroutines.*
  *
  * @author Tom <rspsmods@gmail.com>
  */
-data class QueueTask(val ctx: Any, val priority: TaskPriority) : Continuation<Unit> {
+data class RSQueueTask(val ctx: Any, val priority: TaskPriority) : Continuation<Unit>, QueueTask {
 
     lateinit var coroutine: Continuation<Unit>
 
@@ -32,7 +32,7 @@ data class QueueTask(val ctx: Any, val priority: TaskPriority) : Continuation<Un
      * Represents an action that should be executed if, and only if, this task
      * was terminated via [terminate].
      */
-    var terminateAction: ((QueueTask).() -> Unit)? = null
+    var terminateAction: ((RSQueueTask).() -> Unit)? = null
 
     /**
      * The next [SuspendableStep], if any, that must be handled once a [SuspendableCondition]
@@ -136,7 +136,7 @@ data class QueueTask(val ctx: Any, val priority: TaskPriority) : Continuation<Un
     }
 
     override fun equals(other: Any?): Boolean {
-        val o = other as? QueueTask ?: return false
+        val o = other as? RSQueueTask ?: return false
         return super.equals(o) && o.coroutine == coroutine
     }
 

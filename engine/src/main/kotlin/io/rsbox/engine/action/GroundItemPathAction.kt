@@ -10,7 +10,7 @@ import io.rsbox.engine.model.entity.RSPlayer
 import io.rsbox.engine.model.item.RSItem
 import io.rsbox.api.TaskPriority
 import io.rsbox.engine.model.RSTile
-import io.rsbox.engine.model.queue.QueueTask
+import io.rsbox.engine.model.queue.RSQueueTask
 import io.rsbox.engine.oldplugin.Plugin
 import io.rsbox.engine.service.log.LoggerService
 import java.lang.ref.WeakReference
@@ -37,7 +37,7 @@ object GroundItemPathAction {
             handleAction(p, item, opt)
         } else {
             p.walkTo(item.tile as RSTile, MovementQueue.StepType.NORMAL)
-            p.queue(TaskPriority.STANDARD) {
+            p.queue(TaskPriority.STANDARD) { (this as RSQueueTask)
                 terminateAction = {
                     p.stopMovement()
                     p.write(SetMapFlagMessage(255, 255))
@@ -47,7 +47,7 @@ object GroundItemPathAction {
         }
     }
 
-    private suspend fun QueueTask.awaitArrival(item: RSGroundItem, opt: Int) {
+    private suspend fun RSQueueTask.awaitArrival(item: RSGroundItem, opt: Int) {
         val p = ctx as RSPlayer
         val destination = p.movementQueue.peekLast()
         if (destination == null) {

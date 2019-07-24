@@ -8,7 +8,7 @@ import kotlin.coroutines.resume
 
 /**
  * A [QueueTaskSet] implementation for [io.rsbox.engine.model.entity.RSPawn]s.
- * Each [io.rsbox.engine.model.queue.QueueTask] is handled one at a time.
+ * Each [io.rsbox.engine.model.queue.RSQueueTask] is handled one at a time.
  *
  * @author Tom <rspsmods@gmail.com>
  */

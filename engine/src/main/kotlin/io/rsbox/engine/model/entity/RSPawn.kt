@@ -19,7 +19,7 @@ import io.rsbox.engine.model.path.strategy.BFSPathFindingStrategy
 import io.rsbox.engine.model.path.strategy.NpcPathFindingStrategy
 import io.rsbox.engine.model.queue.QueueTaskSet
 import io.rsbox.api.TaskPriority
-import io.rsbox.engine.model.queue.QueueTask
+import io.rsbox.engine.model.queue.RSQueueTask
 import io.rsbox.engine.model.queue.impl.PawnQueueTaskSet
 import io.rsbox.engine.model.region.Chunk
 import io.rsbox.engine.model.timer.FROZEN_TIMER
@@ -461,9 +461,9 @@ abstract class RSPawn(val world: RSWorld) : RSEntity(), Pawn {
         }
     }
 
-    suspend fun walkTo(it: QueueTask, tile: RSTile, stepType: MovementQueue.StepType = MovementQueue.StepType.NORMAL, detectCollision: Boolean = true) = walkTo(it, tile.x, tile.z, stepType, detectCollision)
+    suspend fun walkTo(it: RSQueueTask, tile: RSTile, stepType: MovementQueue.StepType = MovementQueue.StepType.NORMAL, detectCollision: Boolean = true) = walkTo(it, tile.x, tile.z, stepType, detectCollision)
 
-    suspend fun walkTo(it: QueueTask, x: Int, z: Int, stepType: MovementQueue.StepType = MovementQueue.StepType.NORMAL, detectCollision: Boolean = true): Route {
+    suspend fun walkTo(it: RSQueueTask, x: Int, z: Int, stepType: MovementQueue.StepType = MovementQueue.StepType.NORMAL, detectCollision: Boolean = true): Route {
         /*
          * Already standing on requested destination.
          */
@@ -584,12 +584,12 @@ abstract class RSPawn(val world: RSWorld) : RSEntity(), Pawn {
         resetFacePawn()
     }
 
-    fun queue(priority: TaskPriority = TaskPriority.STANDARD, logic: suspend QueueTask.(CoroutineScope) -> Unit) {
+    override fun queue(priority: TaskPriority, logic: suspend QueueTask.(CoroutineScope) -> Unit) {
         queues.queue(this, world.coroutineDispatcher, priority, logic)
     }
 
     /**
-     * Terminates any on-going [QueueTask]s that are being executed by this [RSPawn].
+     * Terminates any on-going [RSQueueTask]s that are being executed by this [RSPawn].
      */
     fun interruptQueues() {
         queues.terminateTasks()

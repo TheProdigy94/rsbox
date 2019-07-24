@@ -24,7 +24,7 @@ import io.rsbox.engine.model.interf.*
 import io.rsbox.engine.model.interf.listener.PlayerInterfaceListener
 import io.rsbox.engine.model.item.RSItem
 import io.rsbox.engine.model.priv.Privilege
-import io.rsbox.engine.model.queue.QueueTask
+import io.rsbox.engine.model.queue.RSQueueTask
 import io.rsbox.engine.model.shop.RSShop
 import io.rsbox.engine.model.skill.SkillSet
 import io.rsbox.engine.model.timer.ACTIVE_COMBAT_TIMER
@@ -241,7 +241,7 @@ open class RSPlayer(world: RSWorld) : RSPawn(world), Player {
         addBlock(UpdateBlockType.FORCE_MOVEMENT)
     }
 
-    suspend fun forceMove(task: QueueTask, movement: ForcedMovement, cycleDuration: Int = movement.maxDuration / 30) {
+    suspend fun forceMove(task: RSQueueTask, movement: ForcedMovement, cycleDuration: Int = movement.maxDuration / 30) {
         movementQueue.clear()
         lock = LockState.DELAY_ACTIONS
 

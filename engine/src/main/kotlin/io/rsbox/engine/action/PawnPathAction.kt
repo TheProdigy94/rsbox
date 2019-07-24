@@ -12,7 +12,7 @@ import io.rsbox.engine.model.path.PathRequest
 import io.rsbox.api.TaskPriority
 import io.rsbox.api.entity.Npc
 import io.rsbox.engine.model.item.RSItem
-import io.rsbox.engine.model.queue.QueueTask
+import io.rsbox.engine.model.queue.RSQueueTask
 import io.rsbox.engine.model.timer.FROZEN_TIMER
 import io.rsbox.engine.model.timer.RESET_PAWN_FACING_TIMER
 import io.rsbox.engine.model.timer.STUN_TIMER
@@ -41,7 +41,7 @@ object PawnPathAction {
          */
         val lineOfSightRange = if (other is RSNpc) world.plugins.getNpcInteractionDistance(other.id) else null
 
-        pawn.queue(TaskPriority.STANDARD) {
+        pawn.queue(TaskPriority.STANDARD) { this as RSQueueTask
             terminateAction = {
                 pawn.stopMovement()
                 if (pawn is RSPlayer) {
@@ -66,7 +66,7 @@ object PawnPathAction {
          */
         val lineOfSightRange = if (other is RSNpc) world.plugins.getNpcInteractionDistance(other.id) else null
 
-        pawn.queue(TaskPriority.STANDARD) {
+        pawn.queue(TaskPriority.STANDARD) { this as RSQueueTask
             terminateAction = {
                 pawn.stopMovement()
                 if (pawn is RSPlayer) {
@@ -78,7 +78,7 @@ object PawnPathAction {
         }
     }
 
-    private suspend fun walk(it: QueueTask, pawn: RSPawn, other: RSPawn, opt: Int, lineOfSightRange: Int?) {
+    private suspend fun walk(it: RSQueueTask, pawn: RSPawn, other: RSPawn, opt: Int, lineOfSightRange: Int?) {
         val world = pawn.world
         val initialTile = RSTile(other.tile as RSTile)
 
@@ -166,7 +166,7 @@ object PawnPathAction {
         }
     }
 
-    suspend fun walkTo(it: QueueTask, pawn: RSPawn, target: RSPawn, interactionRange: Int, lineOfSight: Boolean): Boolean {
+    suspend fun walkTo(it: RSQueueTask, pawn: RSPawn, target: RSPawn, interactionRange: Int, lineOfSight: Boolean): Boolean {
         val sourceSize = pawn.getSize()
         val targetSize = target.getSize()
         val sourceTile = pawn.tile

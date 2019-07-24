@@ -17,7 +17,7 @@ import io.rsbox.api.TaskPriority
 import io.rsbox.engine.message.impl.SetMapFlagMessage
 import io.rsbox.engine.model.RSTile
 import io.rsbox.engine.model.item.RSItem
-import io.rsbox.engine.model.queue.QueueTask
+import io.rsbox.engine.model.queue.RSQueueTask
 import io.rsbox.engine.model.timer.FROZEN_TIMER
 import io.rsbox.engine.model.timer.STUN_TIMER
 import io.rsbox.engine.oldplugin.Plugin
@@ -35,7 +35,7 @@ import java.util.EnumSet
 object ObjectPathAction {
 
     fun walk(player: RSPlayer, obj: RSGameObject, lineOfSightRange: Int?, logic: Plugin.() -> Unit) {
-        player.queue(TaskPriority.STANDARD) {
+        player.queue(TaskPriority.STANDARD) { this as RSQueueTask
             terminateAction = {
                 player.stopMovement()
                 player.write(SetMapFlagMessage(255, 255))
@@ -93,7 +93,7 @@ object ObjectPathAction {
         }
     }
 
-    private suspend fun QueueTask.walkTo(obj: RSGameObject, lineOfSightRange: Int?): Route {
+    private suspend fun RSQueueTask.walkTo(obj: RSGameObject, lineOfSightRange: Int?): Route {
         val pawn = ctx as RSPawn
 
         val def = obj.getDef(pawn.world.definitions)

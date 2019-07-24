@@ -5,7 +5,7 @@ import io.rsbox.engine.service.GameService
 
 /**
  * A [GameTask] responsible for going over all the active
- * [io.rsbox.engine.model.queue.QueueTask]s.
+ * [io.rsbox.engine.model.queue.RSQueueTask]s.
  *
  * @author Tom <rspsmods@gmail.com>
  */

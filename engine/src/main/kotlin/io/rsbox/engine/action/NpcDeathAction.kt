@@ -10,7 +10,7 @@ import io.rsbox.api.entity.Pawn
 import io.rsbox.engine.fs.def.AnimDef
 import io.rsbox.engine.message.impl.SynthSoundMessage
 import io.rsbox.engine.model.npcdrops.NpcDropHandler
-import io.rsbox.engine.model.queue.QueueTask
+import io.rsbox.engine.model.queue.RSQueueTask
 import io.rsbox.engine.oldplugin.Plugin
 import io.rsbox.engine.service.log.LoggerService
 import java.lang.ref.WeakReference
@@ -29,12 +29,12 @@ object NpcDeathAction {
         npc.stopMovement()
         npc.lock()
 
-        npc.queue(TaskPriority.STRONG) {
+        npc.queue(TaskPriority.STRONG) { this as RSQueueTask
             death(npc)
         }
     }
 
-    private suspend fun QueueTask.death(npc: RSNpc) {
+    private suspend fun RSQueueTask.death(npc: RSNpc) {
         val world = npc.world
         val deathAnimation = npc.combatDef.deathAnimation
         val deathSound = npc.combatDef.deathSound

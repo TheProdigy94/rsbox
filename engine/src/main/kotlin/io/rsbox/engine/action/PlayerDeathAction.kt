@@ -6,7 +6,7 @@ import io.rsbox.engine.model.entity.RSPlayer
 import io.rsbox.api.TaskPriority
 import io.rsbox.api.entity.Pawn
 import io.rsbox.engine.model.RSTile
-import io.rsbox.engine.model.queue.QueueTask
+import io.rsbox.engine.model.queue.RSQueueTask
 import io.rsbox.engine.oldplugin.Plugin
 import io.rsbox.engine.service.log.LoggerService
 import java.lang.ref.WeakReference
@@ -25,12 +25,12 @@ object PlayerDeathAction {
         player.stopMovement()
         player.lock()
 
-        player.queue(TaskPriority.STRONG) {
+        player.queue(TaskPriority.STRONG) { this as RSQueueTask
             death(player)
         }
     }
 
-    private suspend fun QueueTask.death(player: RSPlayer) {
+    private suspend fun RSQueueTask.death(player: RSPlayer) {
         val world = player.world
         val deathAnim = world.definitions.get(AnimDef::class.java, DEATH_ANIMATION)
         val instancedMap = world.instanceAllocator.getMap(player.tile as RSTile)

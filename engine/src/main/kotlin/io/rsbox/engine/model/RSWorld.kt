@@ -20,7 +20,7 @@ import io.rsbox.engine.model.npcdrops.NpcDropTableDef
 import io.rsbox.engine.model.priv.PrivilegeSet
 import io.rsbox.engine.model.queue.QueueTaskSet
 import io.rsbox.api.TaskPriority
-import io.rsbox.engine.model.queue.QueueTask
+import io.rsbox.engine.model.queue.RSQueueTask
 import io.rsbox.engine.model.queue.impl.WorldQueueTaskSet
 import io.rsbox.engine.model.region.ChunkSet
 import io.rsbox.engine.model.shop.RSShop
@@ -534,7 +534,7 @@ class RSWorld(val gameContext: GameContext, val devContext: DevContext) : World 
         return null
     }
 
-    fun queue(logic: suspend QueueTask.(CoroutineScope) -> Unit) {
+    fun queue(logic: suspend RSQueueTask.(CoroutineScope) -> Unit) {
         queues.queue(this, coroutineDispatcher, TaskPriority.STANDARD, logic)
     }
 

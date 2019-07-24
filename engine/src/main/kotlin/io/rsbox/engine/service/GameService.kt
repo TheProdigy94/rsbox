@@ -87,19 +87,19 @@ class GameService : Service {
     internal val playerTimes = Object2LongOpenHashMap<String>()
 
     /**
-     * The amount of active [io.rsbox.engine.model.queue.QueueTask]s throughout
+     * The amount of active [io.rsbox.engine.model.queue.RSQueueTask]s throughout
      * the [io.rsbox.engine.model.entity.RSPlayer]s.
      */
     internal var totalPlayerQueues = 0
 
     /**
-     * The amount of active [io.rsbox.engine.model.queue.QueueTask]s throughout
+     * The amount of active [io.rsbox.engine.model.queue.RSQueueTask]s throughout
      * the [io.rsbox.engine.model.entity.RSNpc]s.
      */
     internal var totalNpcQueues = 0
 
     /**
-     * The amount of active [io.rsbox.engine.model.queue.QueueTask]s throughout
+     * The amount of active [io.rsbox.engine.model.queue.RSQueueTask]s throughout
      * the [io.rsbox.engine.model.RSWorld].
      */
     internal var totalWorldQueues = 0

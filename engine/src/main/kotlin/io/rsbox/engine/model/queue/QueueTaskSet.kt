@@ -13,14 +13,14 @@ import kotlin.coroutines.createCoroutine
  */
 abstract class QueueTaskSet {
 
-    protected val queue: LinkedList<QueueTask> = LinkedList()
+    protected val queue: LinkedList<RSQueueTask> = LinkedList()
 
     val size: Int get() = queue.size
 
     abstract fun cycle()
 
-    fun queue(ctx: Any, dispatcher: CoroutineDispatcher, priority: TaskPriority, block: suspend QueueTask.(CoroutineScope) -> Unit) {
-        val task = QueueTask(ctx, priority)
+    fun queue(ctx: Any, dispatcher: CoroutineDispatcher, priority: TaskPriority, block: suspend RSQueueTask.(CoroutineScope) -> Unit) {
+        val task = RSQueueTask(ctx, priority)
         val suspendBlock = suspend { block(task, CoroutineScope(dispatcher)) }
 
         task.coroutine = suspendBlock.createCoroutine(completion = task)
@@ -45,7 +45,7 @@ abstract class QueueTaskSet {
     }
 
     /**
-     * Remove all [QueueTask] from our [queue], invoking each task's [QueueTask.terminate]
+     * Remove all [RSQueueTask] from our [queue], invoking each task's [RSQueueTask.terminate]
      * before-hand.
      */
     fun terminateTasks() {

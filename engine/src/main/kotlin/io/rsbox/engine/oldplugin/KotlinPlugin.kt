@@ -288,7 +288,7 @@ abstract class KotlinPlugin(private val r: PluginRepository, val world: RSWorld,
     fun set_modal_close_logic(logic: (Plugin).() -> Unit) = r.bindModalClose(logic)
 
     /**
-     * Set the logic to check if a player has a menu opened and any [io.rsbox.engine.model.queue.QueueTask]
+     * Set the logic to check if a player has a menu opened and any [io.rsbox.engine.model.queue.RSQueueTask]
      * with a [io.rsbox.engine.model.queue.TaskPriority.STANDARD] priority should wait before executing.
      *
      * @see PluginRepository.isMenuOpenedPlugin
