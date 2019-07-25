@@ -1,4 +1,4 @@
-package io.rsbox.engine.model
+package io.rsbox.api
 
 /**
  * A [LockState] is a state in which an entity can be found in that will

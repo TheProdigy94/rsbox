@@ -613,7 +613,7 @@ open class RSPlayer(world: RSWorld) : RSPawn(world), Player {
         }
     }
 
-    fun setInterfaceUnderlay(color: Int, transparency: Int) {
+    override fun setInterfaceUnderlay(color: Int, transparency: Int) {
         runClientScript(2524, color, transparency)
     }
 
@@ -775,7 +775,7 @@ open class RSPlayer(world: RSWorld) : RSPawn(world), Player {
             .toString()
 
     /////////////////////// PACKETS /////////////////////////////
-    fun setComponentText(interfaceId: Int, component: Int, text: String) {
+    override fun setComponentText(interfaceId: Int, component: Int, text: String) {
         write(IfSetTextMessage(interfaceId, component, text))
     }
 
@@ -783,38 +783,38 @@ open class RSPlayer(world: RSWorld) : RSPawn(world), Player {
         write(RunClientScriptMessage(id, *args))
     }
 
-    fun setVarbit(id: Int, value: Int) {
+    override fun setVarbit(id: Int, value: Int) {
         val def = world.definitions.get(VarbitDef::class.java, id)
         varps.setBit(def.varp, def.startBit, def.endBit, value)
     }
 
-    fun getVarbit(id: Int): Int {
+    override fun getVarbit(id: Int): Int {
         val def = world.definitions.get(VarbitDef::class.java, id)
         return varps.getBit(def.varp, def.startBit, def.endBit)
     }
 
-    fun getVarp(id: Int): Int = varps.getState(id)
+    override fun getVarp(id: Int): Int = varps.getState(id)
 
-    fun setVarp(id: Int, value: Int) {
+    override fun setVarp(id: Int, value: Int) {
         varps.setState(id, value)
     }
 
-    fun toggleVarp(id: Int) {
+    override fun toggleVarp(id: Int) {
         varps.setState(id, varps.getState(id) xor 1)
     }
 
-    fun syncVarp(id: Int) {
+    override fun syncVarp(id: Int) {
         setVarp(id, getVarp(id))
     }
 
-    fun addOption(option: String, id: Int, leftClick: Boolean = false) {
+    override fun addOption(option: String, id: Int, leftClick: Boolean) {
         check(id in 1..options.size) { "Option id must range from [1-${options.size}]" }
         val index = id - 1
         options[index] = option
         write(SetOpPlayerMessage(option, index, leftClick))
     }
 
-    fun sendRunEnergy(energy: Int) {
+    override fun sendRunEnergy(energy: Int) {
         write(UpdateRunEnergyMessage(energy))
     }
 
@@ -853,6 +853,11 @@ open class RSPlayer(world: RSWorld) : RSPawn(world), Player {
 
     override fun filterableMessage(message: String) {
         write(MessageGameMessage(type = ChatMessageType.SPAM.id, message = message, username = null))
+    }
+
+    override fun toggleVarbit(id: Int) {
+        val def = world.definitions.get(VarbitDef::class.java, id)
+        varps.setBit(def.varp, def.startBit, def.endBit, getVarbit(id) xor 1)
     }
 
     companion object {

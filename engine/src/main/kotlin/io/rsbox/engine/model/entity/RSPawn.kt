@@ -7,8 +7,8 @@ import io.rsbox.engine.action.PlayerDeathAction
 import io.rsbox.engine.event.Event
 import io.rsbox.engine.message.impl.SetMapFlagMessage
 import io.rsbox.engine.model.*
-import io.rsbox.engine.model.bits.INFINITE_VARS_STORAGE
-import io.rsbox.engine.model.bits.InfiniteVarsType
+import io.rsbox.api.bits.INFINITE_VARS_STORAGE
+import io.rsbox.api.bits.InfiniteVarsType
 import io.rsbox.engine.model.collision.CollisionManager
 import io.rsbox.engine.model.combat.DamageMap
 import io.rsbox.engine.model.path.FutureRoute
@@ -30,6 +30,10 @@ import io.rsbox.engine.oldplugin.Plugin
 import io.rsbox.engine.service.log.LoggerService
 import io.rsbox.engine.sync.block.UpdateBlockBuffer
 import io.rsbox.api.UpdateBlockType
+import io.rsbox.api.entity.GameObject
+import io.rsbox.api.entity.Npc
+import io.rsbox.api.entity.Player
+import io.rsbox.api.item.Item
 import kotlinx.coroutines.CoroutineScope
 import java.lang.ref.WeakReference
 import java.util.ArrayDeque
@@ -192,6 +196,10 @@ abstract class RSPawn(val world: RSWorld) : RSEntity(), Pawn {
      */
     override fun unlock() {
         lock = LockState.NONE
+    }
+
+    override fun getLockState(): LockState {
+        return lock
     }
 
     /**
@@ -617,6 +625,26 @@ abstract class RSPawn(val world: RSWorld) : RSEntity(), Pawn {
         }
         return if (entityType.isPlayer) BFSPathFindingStrategy(collision) else NpcPathFindingStrategy(collision)
     }
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    override fun getCommandArgs(): Array<String> = attr[COMMAND_ARGS_ATTR]!!
+
+    override fun getInteractingSlot(): Int = attr[INTERACTING_SLOT_ATTR]!!
+
+    override fun getInteractingItem(): Item = attr[INTERACTING_ITEM]!!.get()!!
+
+    override fun getInteractingItemId(): Int = attr[INTERACTING_ITEM_ID]!!
+
+    override fun getInteractingItemSlot(): Int = attr[INTERACTING_ITEM_SLOT]!!
+
+    override fun getInteractingOption(): Int = attr[INTERACTING_OPT_ATTR]!!
+
+    override fun getInteractingGameObj(): GameObject = attr[INTERACTING_OBJ_ATTR]!!.get()!!
+
+    override fun getInteractingNpc(): Npc = attr[INTERACTING_NPC_ATTR]!!.get()!!
+
+    override fun getInteractingPlayer() : Player = attr[INTERACTING_PLAYER_ATTR]!!.get()!!
 
     override fun getAttributes(): AttributeMap {
         return attr

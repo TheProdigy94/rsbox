@@ -60,4 +60,26 @@ interface Player : Pawn {
     fun setInterfaceEvents(interfaceId: Int, component: Int, from: Int, to: Int, setting: Int)
 
     fun setInterfaceEvents(interfaceId: Int, component: Int, range: IntRange, setting: Int)
+
+    fun setComponentText(interfaceId: Int, component: Int, text: String)
+
+    fun setVarbit(id: Int, value: Int)
+
+    fun getVarbit(id: Int): Int
+
+    fun getVarp(id: Int): Int
+
+    fun setVarp(id: Int, value: Int)
+
+    fun toggleVarp(id: Int)
+
+    fun syncVarp(id: Int)
+
+    fun addOption(option: String, id: Int, leftClick: Boolean = false)
+
+    fun sendRunEnergy(energy: Int)
+
+    fun toggleVarbit(id: Int)
+
+    fun setInterfaceUnderlay(color: Int, transparency: Int)
 }

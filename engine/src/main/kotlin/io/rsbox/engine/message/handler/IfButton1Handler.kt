@@ -6,6 +6,9 @@ import io.rsbox.engine.model.RSWorld
 import io.rsbox.api.INTERACTING_ITEM_ID
 import io.rsbox.api.INTERACTING_OPT_ATTR
 import io.rsbox.api.INTERACTING_SLOT_ATTR
+import io.rsbox.api.entity.Player
+import io.rsbox.api.event.EventManager
+import io.rsbox.api.event.inter.ButtonClickEvent
 import io.rsbox.engine.model.entity.RSClient
 
 /**
@@ -28,7 +31,8 @@ class IfButton1Handler : MessageHandler<IfButtonMessage> {
         client.attr[INTERACTING_ITEM_ID] = message.item
         client.attr[INTERACTING_SLOT_ATTR] = message.slot
 
-        if (world.plugins.executeButton(client, interfaceId, component)) {
+        if(!EventManager.fireEvent(ButtonClickEvent::class.java, client as Player, interfaceId, component)) {
+            // Event cancelled
             return
         }
 

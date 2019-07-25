@@ -1,7 +1,7 @@
-package io.rsbox.engine.model.bits
+package io.rsbox.api.bits
 
 /**
- * Represents one, or multiple, bits that can be stored inside a [BitStorage].
+ * Represents one, or multiple, bits that can be stored inside a [RSBitStorage].
  *
  * @author Tom <rspsmods@gmail.com>
  */

@@ -1,7 +1,7 @@
 package io.rsbox.engine.action
 
 import io.rsbox.api.KILLER_ATTR
-import io.rsbox.engine.model.LockState
+import io.rsbox.api.LockState
 import io.rsbox.engine.model.RSTile
 import io.rsbox.engine.model.entity.RSNpc
 import io.rsbox.engine.model.entity.RSPlayer
