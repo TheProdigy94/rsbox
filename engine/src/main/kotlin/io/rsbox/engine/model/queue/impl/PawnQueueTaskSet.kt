@@ -2,17 +2,17 @@ package io.rsbox.engine.model.queue.impl
 
 import io.rsbox.engine.game.Game
 import io.rsbox.engine.model.entity.RSPlayer
-import io.rsbox.engine.model.queue.QueueTaskSet
+import io.rsbox.engine.model.queue.RSQueueTaskSet
 import io.rsbox.api.TaskPriority
 import kotlin.coroutines.resume
 
 /**
- * A [QueueTaskSet] implementation for [io.rsbox.engine.model.entity.RSPawn]s.
+ * A [RSQueueTaskSet] implementation for [io.rsbox.engine.model.entity.RSPawn]s.
  * Each [io.rsbox.engine.model.queue.RSQueueTask] is handled one at a time.
  *
  * @author Tom <rspsmods@gmail.com>
  */
-class PawnQueueTaskSet : QueueTaskSet() {
+class PawnQueueTaskSet : RSQueueTaskSet() {
 
     override fun cycle() {
         while (true) {

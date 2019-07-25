@@ -4,6 +4,7 @@ import io.rsbox.api.*
 import io.rsbox.api.entity.Npc
 import io.rsbox.api.entity.Pawn
 import io.rsbox.api.entity.Player
+import io.rsbox.engine.message.impl.ResumePauseButtonMessage
 import io.rsbox.engine.model.entity.RSNpc
 import io.rsbox.engine.model.entity.RSPawn
 import io.rsbox.engine.model.entity.RSPlayer
@@ -47,11 +48,11 @@ data class RSQueueTask(val ctx: Any, val priority: TaskPriority) : Continuation<
      */
     override val context: CoroutineContext = EmptyCoroutineContext
 
-    override val pawn: Pawn get() = ctx as Pawn
+    override val pawn: Pawn get() = ctx as RSPawn
 
-    override val player: Player get() = ctx as Player
+    override val player: Player get() = ctx as RSPlayer
 
-    override val npc: Npc get() = ctx as Npc
+    override val npc: Npc get() = ctx as RSNpc
 
     /**
      * When the [nextStep] [SuspendableCondition.resume] returns true, this
@@ -161,7 +162,8 @@ data class RSQueueTask(val ctx: Any, val priority: TaskPriority) : Continuation<
     }
 
     override suspend fun selectAppearance(): Appearance? {
-        (player as RSPlayer).openInterface(APPEARANCE_INTERFACE_ID, InterfaceDestination.MAIN_SCREEN)
+        player
+        player.openInterface(APPEARANCE_INTERFACE_ID, InterfaceDestination.MAIN_SCREEN)
 
         terminateAction = closeAppearance
         waitReturnValue()
@@ -170,6 +172,32 @@ data class RSQueueTask(val ctx: Any, val priority: TaskPriority) : Continuation<
         return requestReturnValue as? Appearance
     }
 
+    /**
+     * The default action that will occur when interrupting or finishing a dialog.
+     */
+    private val closeDialog: QueueTask.() -> Unit = {
+        player.closeComponent(parent = 162, child = CHATBOX_CHILD)
+    }
+
+    /**
+     * Prompts the player with options.
+     *
+     * @return
+     * The id of the option chosen. The id can range from [1] inclusive to [options.size] inclusive.
+     */
+    suspend fun options(vararg options: String, title: String = "Select an Option"): Int {
+        player.sendTempVarbit(5983, 1)
+        player.runClientScript(2379)
+        player.openInterface(parent = 162, child = CHATBOX_CHILD, interfaceId = 219)
+        player.runClientScript(58, title, options.joinToString("|"))
+        player.setInterfaceEvents(interfaceId = 219, component = 1, from = 1, to = options.size, setting = 1)
+
+        terminateAction = closeDialog
+        waitReturnValue()
+        terminateAction!!(this)
+
+        return (requestReturnValue as? ResumePauseButtonMessage)?.slot ?: -1
+    }
 
     ///////////////////////////////////////////////////
 

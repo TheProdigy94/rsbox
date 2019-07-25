@@ -26,4 +26,10 @@ interface Pawn : Entity {
      * Terminates any on-going [RSQueueTask]s that are being executed by this [RSPawn].
      */
     fun interruptQueues()
+
+    fun lock()
+
+    fun unlock()
+
+    fun isLocked(): Boolean
 }

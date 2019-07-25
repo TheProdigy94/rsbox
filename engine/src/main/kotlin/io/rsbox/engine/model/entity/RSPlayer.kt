@@ -32,6 +32,7 @@ import io.rsbox.engine.model.timer.FORCE_DISCONNECTION_TIMER
 import io.rsbox.engine.model.varp.VarpSet
 import io.rsbox.engine.service.log.LoggerService
 import io.rsbox.api.UpdateBlockType
+import io.rsbox.util.BitManipulation
 import it.unimi.dsi.fastutil.objects.ObjectArrayList
 import java.util.Arrays
 
@@ -778,7 +779,7 @@ open class RSPlayer(world: RSWorld) : RSPawn(world), Player {
         write(IfSetTextMessage(interfaceId, component, text))
     }
 
-    fun runClientScript(id: Int, vararg args: Any) {
+    override fun runClientScript(id: Int, vararg args: Any) {
         write(RunClientScriptMessage(id, *args))
     }
 
@@ -819,6 +820,25 @@ open class RSPlayer(world: RSWorld) : RSPawn(world), Player {
 
     override fun getAppearance(): Appearance {
         return appearance
+    }
+
+    /**
+     * Write a varbit message to the player's client without actually modifying
+     * its varp value in [Player.varps].
+     */
+    override fun sendTempVarbit(id: Int, value: Int) {
+        val def = world.definitions.get(VarbitDef::class.java, id)
+        val state = BitManipulation.setBit(varps.getState(def.varp), def.startBit, def.endBit, value)
+        val message = if (state in -Byte.MAX_VALUE..Byte.MAX_VALUE) VarpSmallMessage(def.varp, state) else VarpLargeMessage(def.varp, state)
+        write(message)
+    }
+
+    override fun setInterfaceEvents(interfaceId: Int, component: Int, from: Int, to: Int, setting: Int) {
+        write(IfSetEventsMessage(hash = ((interfaceId shl 16) or component), fromChild = from, toChild = to, setting = setting))
+    }
+
+    override fun setInterfaceEvents(interfaceId: Int, component: Int, range: IntRange, setting: Int) {
+        write(IfSetEventsMessage(hash = ((interfaceId shl 16) or component), fromChild = range.start, toChild = range.endInclusive, setting = setting))
     }
 
     //////////////////////////////////////////////////////////////

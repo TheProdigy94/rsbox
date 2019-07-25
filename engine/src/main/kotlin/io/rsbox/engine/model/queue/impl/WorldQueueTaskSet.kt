@@ -1,15 +1,15 @@
 package io.rsbox.engine.model.queue.impl
 
-import io.rsbox.engine.model.queue.QueueTaskSet
+import io.rsbox.engine.model.queue.RSQueueTaskSet
 import kotlin.coroutines.resume
 
 /**
- * A [QueueTaskSet] implementation for [io.rsbox.engine.model.RSWorld].
+ * A [RSQueueTaskSet] implementation for [io.rsbox.engine.model.RSWorld].
  * All [io.rsbox.engine.model.queue.RSQueueTask]s are handled every tick.
  *
  * @author Tom <rspsmods@gmail.com>
  */
-class WorldQueueTaskSet : QueueTaskSet() {
+class WorldQueueTaskSet : RSQueueTaskSet() {
 
     override fun cycle() {
         val iterator = queue.iterator()

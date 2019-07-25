@@ -1,5 +1,7 @@
 package io.rsbox.engine.model.queue
 
+import io.rsbox.api.QueueTask
+import io.rsbox.api.QueueTaskSet
 import io.rsbox.api.TaskPriority
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -11,7 +13,7 @@ import kotlin.coroutines.createCoroutine
  *
  * @author Tom <rspsmods@gmail.com>
  */
-abstract class QueueTaskSet {
+abstract class RSQueueTaskSet : QueueTaskSet {
 
     protected val queue: LinkedList<RSQueueTask> = LinkedList()
 
@@ -19,7 +21,7 @@ abstract class QueueTaskSet {
 
     abstract fun cycle()
 
-    fun queue(ctx: Any, dispatcher: CoroutineDispatcher, priority: TaskPriority, block: suspend RSQueueTask.(CoroutineScope) -> Unit) {
+    override fun queue(ctx: Any, dispatcher: CoroutineDispatcher, priority: TaskPriority, block: suspend QueueTask.(CoroutineScope) -> Unit) {
         val task = RSQueueTask(ctx, priority)
         val suspendBlock = suspend { block(task, CoroutineScope(dispatcher)) }
 
@@ -39,7 +41,7 @@ abstract class QueueTaskSet {
      * @param value
      * The return value that the oldplugin has asked for.
      */
-    fun submitReturnValue(value: Any) {
+    override fun submitReturnValue(value: Any) {
         val task = queue.peek() ?: return // Shouldn't call this method without a queued task.
         task.requestReturnValue = value
     }
@@ -48,7 +50,7 @@ abstract class QueueTaskSet {
      * Remove all [RSQueueTask] from our [queue], invoking each task's [RSQueueTask.terminate]
      * before-hand.
      */
-    fun terminateTasks() {
+    override fun terminateTasks() {
         queue.forEach { it.terminate() }
         queue.clear()
     }

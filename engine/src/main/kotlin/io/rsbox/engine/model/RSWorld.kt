@@ -12,13 +12,14 @@ import io.rsbox.engine.fs.def.ObjectDef
 import io.rsbox.engine.message.impl.LogoutFullMessage
 import io.rsbox.engine.message.impl.UpdateRebootTimerMessage
 import io.rsbox.api.AttributeMap
+import io.rsbox.api.QueueTask
 import io.rsbox.engine.model.collision.CollisionManager
 import io.rsbox.engine.model.combat.NpcCombatDef
 import io.rsbox.engine.model.entity.*
 import io.rsbox.engine.model.instance.InstancedMapAllocator
 import io.rsbox.engine.model.npcdrops.NpcDropTableDef
 import io.rsbox.engine.model.priv.PrivilegeSet
-import io.rsbox.engine.model.queue.QueueTaskSet
+import io.rsbox.engine.model.queue.RSQueueTaskSet
 import io.rsbox.api.TaskPriority
 import io.rsbox.engine.model.queue.RSQueueTask
 import io.rsbox.engine.model.queue.impl.WorldQueueTaskSet
@@ -83,7 +84,7 @@ class RSWorld(val gameContext: GameContext, val devContext: DevContext) : World 
 
     lateinit var coroutineDispatcher: CoroutineDispatcher
 
-    internal var queues: QueueTaskSet = WorldQueueTaskSet()
+    internal var queues: RSQueueTaskSet = WorldQueueTaskSet()
 
     val players = PawnList(arrayOfNulls<RSPlayer>(gameContext.playerLimit))
 
@@ -534,7 +535,7 @@ class RSWorld(val gameContext: GameContext, val devContext: DevContext) : World 
         return null
     }
 
-    fun queue(logic: suspend RSQueueTask.(CoroutineScope) -> Unit) {
+    fun queue(logic: suspend QueueTask.(CoroutineScope) -> Unit) {
         queues.queue(this, coroutineDispatcher, TaskPriority.STANDARD, logic)
     }
 

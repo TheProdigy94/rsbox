@@ -17,7 +17,7 @@ import io.rsbox.engine.model.path.PathRequest
 import io.rsbox.engine.model.path.Route
 import io.rsbox.engine.model.path.strategy.BFSPathFindingStrategy
 import io.rsbox.engine.model.path.strategy.NpcPathFindingStrategy
-import io.rsbox.engine.model.queue.QueueTaskSet
+import io.rsbox.engine.model.queue.RSQueueTaskSet
 import io.rsbox.api.TaskPriority
 import io.rsbox.engine.model.queue.RSQueueTask
 import io.rsbox.engine.model.queue.impl.PawnQueueTaskSet
@@ -108,7 +108,7 @@ abstract class RSPawn(val world: RSWorld) : RSEntity(), Pawn {
      */
     val timers = TimerMap()
 
-    internal val queues: QueueTaskSet = PawnQueueTaskSet()
+    internal val queues: RSQueueTaskSet = PawnQueueTaskSet()
 
     /**
      * The equipment bonus for the pawn.
@@ -183,21 +183,21 @@ abstract class RSPawn(val world: RSWorld) : RSEntity(), Pawn {
     /**
      * Lock the pawn to the default [LockState.FULL] state.
      */
-    fun lock() {
+    override fun lock() {
         lock = LockState.FULL
     }
 
     /**
      * Unlock the pawn and set it to [LockState.NONE] state.
      */
-    fun unlock() {
+    override fun unlock() {
         lock = LockState.NONE
     }
 
     /**
      * Checks if the pawn has any lock state set.
      */
-    fun isLocked(): Boolean = lock != LockState.NONE
+    override fun isLocked(): Boolean = lock != LockState.NONE
 
     fun getTransmogId(): Int = transmogId
 

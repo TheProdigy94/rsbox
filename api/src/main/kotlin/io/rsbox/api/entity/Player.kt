@@ -52,4 +52,12 @@ interface Player : Pawn {
      * Sends a game message to the player chatbox that can be filtered out.
      */
     fun filterableMessage(message: String)
+
+    fun sendTempVarbit(id: Int, value: Int)
+
+    fun runClientScript(id: Int, vararg args: Any)
+
+    fun setInterfaceEvents(interfaceId: Int, component: Int, from: Int, to: Int, setting: Int)
+
+    fun setInterfaceEvents(interfaceId: Int, component: Int, range: IntRange, setting: Int)
 }

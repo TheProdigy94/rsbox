@@ -9,6 +9,6 @@ import io.rsbox.engine.model.entity.RSPlayer
 
 object PlayerLoginEvent {
     fun execute(player: RSPlayer) {
-        Appearance.openAppearanceSelection(player)
+        Appearance(player).openAppearanceSelection()
     }
 }
