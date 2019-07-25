@@ -3,7 +3,7 @@ package io.rsbox.engine.system
 import io.rsbox.engine.message.Message
 import io.rsbox.engine.message.MessageHandler
 import io.rsbox.engine.model.RSWorld
-import io.rsbox.engine.model.entity.Client
+import io.rsbox.engine.model.entity.RSClient
 import io.rsbox.engine.service.GameService
 import io.rsbox.net.packet.GamePacket
 import io.rsbox.net.packet.GamePacketReader
@@ -15,11 +15,11 @@ import java.util.concurrent.BlockingQueue
 
 /**
  * A [ServerSystem] responsible for decoding and encoding [Message]s from and
- * to the [Client.channel].
+ * to the [RSClient.channel].
  *
  * @author Tom <rspsmods@gmail.com>
  */
-class GameSystem(channel: Channel, val world: RSWorld, val client: Client, val service: GameService) : ServerSystem(channel) {
+class GameSystem(channel: Channel, val world: RSWorld, val client: RSClient, val service: GameService) : ServerSystem(channel) {
 
     private val messages: BlockingQueue<MessageHandle> = ArrayBlockingQueue<MessageHandle>(service.maxMessagesPerCycle)
 

@@ -2,9 +2,9 @@ package io.rsbox.engine.game
 
 import io.rsbox.api.INTERACTING_ITEM_SLOT
 import io.rsbox.api.OTHER_ITEM_SLOT_ATTR
-import io.rsbox.engine.model.entity.Client
+import io.rsbox.engine.model.entity.RSClient
 import io.rsbox.engine.model.entity.RSPlayer
-import io.rsbox.engine.model.interf.InterfaceDestination
+import io.rsbox.api.InterfaceDestination
 
 /**
  * @author Kyle Escobar
@@ -68,7 +68,7 @@ object Game {
 
     }
 
-    fun swapItem(client: Client) {
+    fun swapItem(client: RSClient) {
         val srcSlot = client.attr[INTERACTING_ITEM_SLOT]!!
         val dstSlot = client.attr[OTHER_ITEM_SLOT_ATTR]!!
 

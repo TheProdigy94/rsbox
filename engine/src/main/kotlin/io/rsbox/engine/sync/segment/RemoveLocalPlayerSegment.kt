@@ -15,7 +15,7 @@ class RemoveLocalPlayerSegment(private val updateTileHash: Boolean) : Synchroniz
         buf.putBits(1, 1)
         /*
          * Signal to the client that the player does not require
-         * [io.rsbox.engine.sync.block.UpdateBlockType] decoding.
+         * [io.rsbox.api.UpdateBlockType] decoding.
          */
         buf.putBits(1, 0)
         /*

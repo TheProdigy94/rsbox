@@ -33,7 +33,7 @@ class RebuildRegionEncoder : MessageEncoder<RebuildRegionMessage>() {
                 if (regions.add(region)) {
                     val keys = message.xteaKeyService!!.get(region)
                     for (xteaKey in keys) {
-                        xteaBuffer.writeInt(xteaKey) // Client always reads as int
+                        xteaBuffer.writeInt(xteaKey) // RSClient always reads as int
                     }
                     xteaCount++
                 }

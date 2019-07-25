@@ -31,7 +31,7 @@ import io.rsbox.engine.model.timer.ACTIVE_COMBAT_TIMER
 import io.rsbox.engine.model.timer.FORCE_DISCONNECTION_TIMER
 import io.rsbox.engine.model.varp.VarpSet
 import io.rsbox.engine.service.log.LoggerService
-import io.rsbox.engine.sync.block.UpdateBlockType
+import io.rsbox.api.UpdateBlockType
 import it.unimi.dsi.fastutil.objects.ObjectArrayList
 import java.util.Arrays
 
@@ -416,7 +416,10 @@ open class RSPlayer(world: RSWorld) : RSPawn(world), Player {
 
         initiated = true
         Game.login(this)
-        EventManager.fireEvent(PlayerLoginEvent::class.java, this as Player, this.world as World)
+
+        if(EventManager.fireEvent(PlayerLoginEvent::class.java, this as Player, this.world as World)) {
+            io.rsbox.engine.game.events.PlayerLoginEvent.execute(this)
+        }
     }
 
     /**
@@ -433,7 +436,7 @@ open class RSPlayer(world: RSWorld) : RSPawn(world), Player {
      * logged out. This means all the prerequisites have been met for the player
      * to log out of the [world].
      *
-     * The [Client] implementation overrides this method and will handle saving
+     * The [RSClient] implementation overrides this method and will handle saving
      * data for the player and call this super method at the end.
      */
     internal open fun handleLogout() {
@@ -487,23 +490,26 @@ open class RSPlayer(world: RSWorld) : RSPawn(world), Player {
         }
     }
 
-    fun getInterfaceAt(dest: InterfaceDestination): Int {
+    override fun getInterfaceAt(dest: InterfaceDestination): Int {
         val displayMode = interfaces.displayMode
         val child = getChildId(dest, displayMode)
         val parent = getDisplayComponentId(displayMode)
         return interfaces.getInterfaceAt(parent, child)
     }
 
-    fun openOverlayInterface(displayMode: DisplayMode) {
+    override fun openOverlayInterface(displayMode: DisplayMode) {
         if (displayMode != interfaces.displayMode) {
-            interfaces.setVisible(parent = getDisplayComponentId(interfaces.displayMode), child = getChildId(InterfaceDestination.MAIN_SCREEN, interfaces.displayMode), visible = false)
+            interfaces.setVisible(parent = getDisplayComponentId(interfaces.displayMode), child = getChildId(
+                InterfaceDestination.MAIN_SCREEN,
+                interfaces.displayMode
+            ), visible = false)
         }
         val component = getDisplayComponentId(displayMode)
         interfaces.setVisible(parent = getDisplayComponentId(displayMode), child = 0, visible = true)
         write(IfOpenTopMessage(component))
     }
 
-    fun openInterface(dest: InterfaceDestination, autoClose: Boolean = false) {
+    override fun openInterface(dest: InterfaceDestination, autoClose: Boolean) {
         val displayMode = if (!autoClose || dest.fullscreenChildId == -1) interfaces.displayMode else DisplayMode.FULLSCREEN
         val child = getChildId(dest, displayMode)
         val parent = getDisplayComponentId(displayMode)
@@ -513,7 +519,7 @@ open class RSPlayer(world: RSWorld) : RSPawn(world), Player {
         openInterface(parent, child, dest.interfaceId, if (dest.clickThrough) 1 else 0, isModal = dest == InterfaceDestination.MAIN_SCREEN)
     }
 
-    fun openInterface(parent: Int, child: Int, interfaceId: Int, type: Int = 0, isModal: Boolean = false) {
+    override fun openInterface(parent: Int, child: Int, interfaceId: Int, type: Int, isModal: Boolean) {
         if (isModal) {
             interfaces.openModal(parent, child, interfaceId)
         } else {
@@ -522,7 +528,7 @@ open class RSPlayer(world: RSWorld) : RSPawn(world), Player {
         write(IfOpenSubMessage(parent, child, interfaceId, type))
     }
 
-    fun openInterface(interfaceId: Int, dest: InterfaceDestination, fullscreen: Boolean = false) {
+    override fun openInterface(interfaceId: Int, dest: InterfaceDestination, fullscreen: Boolean) {
         val displayMode = if (!fullscreen || dest.fullscreenChildId == -1) interfaces.displayMode else DisplayMode.FULLSCREEN
         val child = getChildId(dest, displayMode)
         val parent = getDisplayComponentId(displayMode)
@@ -532,7 +538,7 @@ open class RSPlayer(world: RSWorld) : RSPawn(world), Player {
         openInterface(parent, child, interfaceId, if (dest.clickThrough) 1 else 0, isModal = dest == InterfaceDestination.MAIN_SCREEN)
     }
 
-    fun closeInterface(interfaceId: Int) {
+    override fun closeInterface(interfaceId: Int) {
         if (interfaceId == interfaces.getModal()) {
             interfaces.setModal(-1)
         }
@@ -542,7 +548,7 @@ open class RSPlayer(world: RSWorld) : RSPawn(world), Player {
         }
     }
 
-    fun closeInterface(dest: InterfaceDestination) {
+    override fun closeInterface(dest: InterfaceDestination) {
         val displayMode = interfaces.displayMode
         val child = getChildId(dest, displayMode)
         val parent = getDisplayComponentId(displayMode)
@@ -552,7 +558,7 @@ open class RSPlayer(world: RSWorld) : RSPawn(world), Player {
         }
     }
 
-    fun closeComponent(parent: Int, child: Int) {
+    override fun closeComponent(parent: Int, child: Int) {
         interfaces.close(parent, child)
         write(IfCloseSubMessage((parent shl 16) or child))
     }
@@ -598,7 +604,10 @@ open class RSPlayer(world: RSWorld) : RSPawn(world), Player {
                 setInterfaceUnderlay(color = -1, transparency = -1)
             }
             if (oldMode.isResizable()) {
-                openInterface(parent = getDisplayComponentId(newMode), child = getChildId(InterfaceDestination.MAIN_SCREEN, newMode), interfaceId = 60, type = 0)
+                openInterface(parent = getDisplayComponentId(newMode), child = getChildId(
+                    InterfaceDestination.MAIN_SCREEN,
+                    newMode
+                ), interfaceId = 60, type = 0)
             }
         }
     }
@@ -723,14 +732,14 @@ open class RSPlayer(world: RSWorld) : RSPawn(world), Player {
 
     /**
      * Default method to handle any incoming [Message]s that won't be
-     * handled unless the [RSPlayer] is controlled by a [Client] user.
+     * handled unless the [RSPlayer] is controlled by a [RSClient] user.
      */
     open fun handleMessages() {
     }
 
     /**
      * Default method to write [Message]s to the attached channel that won't
-     * be handled unless the [RSPlayer] is controlled by a [Client] user.
+     * be handled unless the [RSPlayer] is controlled by a [RSClient] user.
      */
     open fun write(vararg messages: Message) {
     }
@@ -740,14 +749,14 @@ open class RSPlayer(world: RSWorld) : RSPawn(world), Player {
 
     /**
      * Default method to flush the attached channel. Won't be handled unless
-     * the [RSPlayer] is controlled by a [Client] user.
+     * the [RSPlayer] is controlled by a [RSClient] user.
      */
     open fun channelFlush() {
     }
 
     /**
      * Default method to close the attached channel. Won't be handled unless
-     * the [RSPlayer] is controlled by a [Client] user.
+     * the [RSPlayer] is controlled by a [RSClient] user.
      */
     open fun channelClose() {
     }
@@ -813,6 +822,18 @@ open class RSPlayer(world: RSWorld) : RSPawn(world), Player {
     }
 
     //////////////////////////////////////////////////////////////
+
+    override fun setAppearance(looks: Appearance) {
+        appearance = looks as RSAppearance
+    }
+
+    override fun message(message: String, type: ChatMessageType, username: String?) {
+        write(MessageGameMessage(type = type.id, message = message, username = username))
+    }
+
+    override fun filterableMessage(message: String) {
+        write(MessageGameMessage(type = ChatMessageType.SPAM.id, message = message, username = null))
+    }
 
     companion object {
         /**

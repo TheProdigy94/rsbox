@@ -1,5 +1,6 @@
 package io.rsbox.engine.model.interf
 
+import io.rsbox.api.DisplayMode
 import io.rsbox.engine.model.interf.listener.InterfaceListener
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap
 import mu.KLogging

@@ -6,7 +6,7 @@ import io.rsbox.engine.message.impl.SetMapFlagMessage
 import io.rsbox.engine.model.MovementQueue
 import io.rsbox.engine.model.RSWorld
 import io.rsbox.api.NO_CLIP_ATTR
-import io.rsbox.engine.model.entity.Client
+import io.rsbox.engine.model.entity.RSClient
 import io.rsbox.engine.model.entity.RSEntity
 import io.rsbox.engine.model.priv.Privilege
 import io.rsbox.engine.model.timer.STUN_TIMER
@@ -16,7 +16,7 @@ import io.rsbox.engine.model.timer.STUN_TIMER
  */
 class ClickMinimapHandler : MessageHandler<MoveMinimapClickMessage> {
 
-    override fun handle(client: Client, world: RSWorld, message: MoveMinimapClickMessage) {
+    override fun handle(client: RSClient, world: RSWorld, message: MoveMinimapClickMessage) {
         if (!client.lock.canMove()) {
             return
         }

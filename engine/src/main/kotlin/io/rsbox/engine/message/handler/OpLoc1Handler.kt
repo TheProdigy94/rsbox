@@ -8,8 +8,7 @@ import io.rsbox.engine.model.RSTile
 import io.rsbox.engine.model.RSWorld
 import io.rsbox.api.INTERACTING_OBJ_ATTR
 import io.rsbox.api.INTERACTING_OPT_ATTR
-import io.rsbox.api.Tile
-import io.rsbox.engine.model.entity.Client
+import io.rsbox.engine.model.entity.RSClient
 import io.rsbox.engine.model.entity.RSGameObject
 import io.rsbox.engine.model.entity.RSPlayer
 import io.rsbox.engine.model.priv.Privilege
@@ -20,7 +19,7 @@ import java.lang.ref.WeakReference
  */
 class OpLoc1Handler : MessageHandler<OpLoc1Message> {
 
-    override fun handle(client: Client, world: RSWorld, message: OpLoc1Message) {
+    override fun handle(client: RSClient, world: RSWorld, message: OpLoc1Message) {
         /*
          * If tile is too far away, don't process it.
          */

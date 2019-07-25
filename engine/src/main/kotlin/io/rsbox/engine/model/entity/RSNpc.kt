@@ -12,7 +12,7 @@ import io.rsbox.engine.model.combat.CombatClass
 import io.rsbox.engine.model.combat.CombatStyle
 import io.rsbox.engine.model.combat.NpcCombatDef
 import io.rsbox.engine.model.npcdrops.NpcDropTableDef
-import io.rsbox.engine.sync.block.UpdateBlockType
+import io.rsbox.api.UpdateBlockType
 
 /**
  * @author Tom <rspsmods@gmail.com>

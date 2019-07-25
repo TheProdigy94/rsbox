@@ -6,14 +6,14 @@ import io.rsbox.engine.model.RSWorld
 import io.rsbox.api.INTERACTING_ITEM_ID
 import io.rsbox.api.INTERACTING_OPT_ATTR
 import io.rsbox.api.INTERACTING_SLOT_ATTR
-import io.rsbox.engine.model.entity.Client
+import io.rsbox.engine.model.entity.RSClient
 
 /**
  * @author Tom <rspsmods@gmail.com>
  */
 class IfButton1Handler : MessageHandler<IfButtonMessage> {
 
-    override fun handle(client: Client, world: RSWorld, message: IfButtonMessage) {
+    override fun handle(client: RSClient, world: RSWorld, message: IfButtonMessage) {
         val interfaceId = message.hash shr 16
         val component = message.hash and 0xFFFF
         val option = message.option + 1

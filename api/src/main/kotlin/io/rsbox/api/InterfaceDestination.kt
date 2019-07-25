@@ -1,4 +1,4 @@
-package io.rsbox.engine.model.interf
+package io.rsbox.api
 
 enum class InterfaceDestination(val interfaceId: Int, val fixedChildId: Int, val resizeChildId: Int, val resizeListChildId: Int,
                                 val fullscreenChildId: Int = -1, val clickThrough: Boolean = true) {

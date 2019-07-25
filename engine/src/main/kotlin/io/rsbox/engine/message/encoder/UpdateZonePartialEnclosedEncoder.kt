@@ -22,7 +22,7 @@ class UpdateZonePartialEnclosedEncoder : MessageEncoder<UpdateZonePartialEnclose
             message.messages.forEach { groupMessage ->
                 val encoder = message.encoders.get(groupMessage.message::class.java)!!
                 val structure = message.structures.get(groupMessage.message::class.java)!!
-                builder.put(DataType.BYTE, groupMessage.id) // Client always read as unsigned byte
+                builder.put(DataType.BYTE, groupMessage.id) // RSClient always read as unsigned byte
                 encoder.encode(groupMessage.message, builder, structure)
             }
             val payload = ByteArray(builder.byteBuf.readableBytes())

@@ -9,7 +9,7 @@ import io.rsbox.engine.model.RSWorld
 import io.rsbox.api.INTERACTING_ITEM
 import io.rsbox.api.INTERACTING_OBJ_ATTR
 import io.rsbox.api.item.Item
-import io.rsbox.engine.model.entity.Client
+import io.rsbox.engine.model.entity.RSClient
 import io.rsbox.engine.model.entity.RSGameObject
 import io.rsbox.engine.model.entity.RSPlayer
 import io.rsbox.engine.model.priv.Privilege
@@ -22,7 +22,7 @@ import java.lang.ref.WeakReference
  */
 class OpLocUHandler : MessageHandler<OpLocUMessage> {
 
-    override fun handle(client: Client, world: RSWorld, message: OpLocUMessage) {
+    override fun handle(client: RSClient, world: RSWorld, message: OpLocUMessage) {
         if (message.slot < 0 || message.slot >= client.inventory.capacity) {
             return
         }

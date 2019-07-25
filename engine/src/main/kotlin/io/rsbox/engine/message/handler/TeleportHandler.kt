@@ -3,7 +3,7 @@ package io.rsbox.engine.message.handler
 import io.rsbox.engine.message.MessageHandler
 import io.rsbox.engine.message.impl.TeleportMessage
 import io.rsbox.engine.model.RSWorld
-import io.rsbox.engine.model.entity.Client
+import io.rsbox.engine.model.entity.RSClient
 import io.rsbox.engine.model.priv.Privilege
 
 /**
@@ -11,7 +11,7 @@ import io.rsbox.engine.model.priv.Privilege
  */
 class TeleportHandler : MessageHandler<TeleportMessage> {
 
-    override fun handle(client: Client, world: RSWorld, message: TeleportMessage) {
+    override fun handle(client: RSClient, world: RSWorld, message: TeleportMessage) {
         if (!client.lock.canMove()) {
             return
         }

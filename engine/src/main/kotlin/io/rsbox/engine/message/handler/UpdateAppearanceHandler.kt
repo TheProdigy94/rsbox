@@ -5,7 +5,7 @@ import io.rsbox.engine.message.impl.UpdateAppearanceMessage
 import io.rsbox.engine.model.RSAppearance
 import io.rsbox.engine.model.RSGender
 import io.rsbox.engine.model.RSWorld
-import io.rsbox.engine.model.entity.Client
+import io.rsbox.engine.model.entity.RSClient
 import java.util.Arrays
 
 /**
@@ -13,7 +13,7 @@ import java.util.Arrays
  */
 class UpdateAppearanceHandler : MessageHandler<UpdateAppearanceMessage> {
 
-    override fun handle(client: Client, world: RSWorld, message: UpdateAppearanceMessage) {
+    override fun handle(client: RSClient, world: RSWorld, message: UpdateAppearanceMessage) {
         val gender = if (message.gender == 1) RSGender.FEMALE else RSGender.MALE
         val looks = message.appearance
         val colors = message.colors

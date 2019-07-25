@@ -11,7 +11,7 @@ import io.rsbox.api.INTERACTING_NPC_ATTR
 import io.rsbox.api.entity.Npc
 import io.rsbox.api.item.Item
 import io.rsbox.engine.model.RSTile
-import io.rsbox.engine.model.entity.Client
+import io.rsbox.engine.model.entity.RSClient
 import io.rsbox.engine.model.priv.Privilege
 import java.lang.ref.WeakReference
 
@@ -20,7 +20,7 @@ import java.lang.ref.WeakReference
  */
 class OpNpcUHandler : MessageHandler<OpNpcUMessage> {
 
-    override fun handle(client: Client, world: RSWorld, message: OpNpcUMessage) {
+    override fun handle(client: RSClient, world: RSWorld, message: OpNpcUMessage) {
         val index = message.npcIndex
         val npc = world.npcs[index] ?: return
 

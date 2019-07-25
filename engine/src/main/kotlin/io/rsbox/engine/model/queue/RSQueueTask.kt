@@ -1,8 +1,10 @@
 package io.rsbox.engine.model.queue
 
-import io.rsbox.api.QueueTask
-import io.rsbox.api.TaskPriority
-import io.rsbox.api.Tile
+import io.rsbox.api.*
+import io.rsbox.api.entity.Npc
+import io.rsbox.api.entity.Pawn
+import io.rsbox.api.entity.Player
+import io.rsbox.engine.model.entity.RSNpc
 import io.rsbox.engine.model.entity.RSPawn
 import io.rsbox.engine.model.entity.RSPlayer
 import mu.KLogging
@@ -32,7 +34,7 @@ data class RSQueueTask(val ctx: Any, val priority: TaskPriority) : Continuation<
      * Represents an action that should be executed if, and only if, this task
      * was terminated via [terminate].
      */
-    var terminateAction: ((RSQueueTask).() -> Unit)? = null
+    var terminateAction: ((QueueTask).() -> Unit)? = null
 
     /**
      * The next [SuspendableStep], if any, that must be handled once a [SuspendableCondition]
@@ -44,6 +46,12 @@ data class RSQueueTask(val ctx: Any, val priority: TaskPriority) : Continuation<
      * The [CoroutineContext] implementation for our task.
      */
     override val context: CoroutineContext = EmptyCoroutineContext
+
+    override val pawn: Pawn get() = ctx as Pawn
+
+    override val player: Player get() = ctx as Player
+
+    override val npc: Npc get() = ctx as Npc
 
     /**
      * When the [nextStep] [SuspendableCondition.resume] returns true, this
@@ -134,6 +142,36 @@ data class RSQueueTask(val ctx: Any, val priority: TaskPriority) : Continuation<
             it
         )
     }
+
+    ////////////////// API ////////////////////////////
+
+    /**
+     * The child id of the chat box in the gameframe interface. This can change
+     * with revision.
+     */
+    private val CHATBOX_CHILD = 561
+
+    /**
+     * The id for the appearance interface.
+     */
+    private val APPEARANCE_INTERFACE_ID = 269
+
+    override val closeAppearance: QueueTask.() -> Unit = { this as RSQueueTask
+        player.closeInterface(APPEARANCE_INTERFACE_ID)
+    }
+
+    override suspend fun selectAppearance(): Appearance? {
+        (player as RSPlayer).openInterface(APPEARANCE_INTERFACE_ID, InterfaceDestination.MAIN_SCREEN)
+
+        terminateAction = closeAppearance
+        waitReturnValue()
+        terminateAction!!(this)
+
+        return requestReturnValue as? Appearance
+    }
+
+
+    ///////////////////////////////////////////////////
 
     override fun equals(other: Any?): Boolean {
         val o = other as? RSQueueTask ?: return false

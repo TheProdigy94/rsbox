@@ -7,8 +7,8 @@ import io.rsbox.engine.RSServer
 import io.rsbox.engine.model.*
 import io.rsbox.api.AttributeKey
 import io.rsbox.engine.model.container.ItemContainer
-import io.rsbox.engine.model.entity.Client
-import io.rsbox.engine.model.interf.DisplayMode
+import io.rsbox.engine.model.entity.RSClient
+import io.rsbox.api.DisplayMode
 import io.rsbox.engine.model.item.RSItem
 import io.rsbox.engine.model.priv.Privilege
 import io.rsbox.engine.model.timer.TimerKey
@@ -35,7 +35,7 @@ class JsonPlayerSerializer : PlayerSerializerService() {
         }
     }
 
-    override fun loadClientData(client: Client, request: LoginRequest): PlayerLoadResult {
+    override fun loadClientData(client: RSClient, request: LoginRequest): PlayerLoadResult {
         val save = path.resolve(client.loginUsername)
         if (!Files.exists(save)) {
             configureNewPlayer(client, request)
@@ -120,7 +120,7 @@ class JsonPlayerSerializer : PlayerSerializerService() {
         }
     }
 
-    override fun saveClientData(client: Client): Boolean {
+    override fun saveClientData(client: RSClient): Boolean {
         val data = JsonPlayerSaveData(passwordHash = client.passwordHash, username = client.loginUsername, previousXteas = client.currentXteaKeys,
             displayName = client.username, x = client.tile.x, z = client.tile.z, height = client.tile.height,
             privilege = client.privilege.id, runEnergy = client.runEnergy, displayMode = client.interfaces.displayMode.id,
@@ -134,7 +134,7 @@ class JsonPlayerSerializer : PlayerSerializerService() {
         return true
     }
 
-    private fun Client.getPersistentContainers(): List<PersistentContainer> {
+    private fun RSClient.getPersistentContainers(): List<PersistentContainer> {
         val persistent = mutableListOf<PersistentContainer>()
 
         containers.forEach { (key, container) ->
@@ -146,7 +146,7 @@ class JsonPlayerSerializer : PlayerSerializerService() {
         return persistent
     }
 
-    private fun Client.getPersistentSkills(): List<PersistentSkill> {
+    private fun RSClient.getPersistentSkills(): List<PersistentSkill> {
         val skills = mutableListOf<PersistentSkill>()
 
         for (i in 0 until getSkills().maxSkills) {
@@ -159,7 +159,7 @@ class JsonPlayerSerializer : PlayerSerializerService() {
         return skills
     }
 
-    private fun Client.getPersistentAppearance(): PersistentAppearance = PersistentAppearance(appearance.gender.id, appearance.looks, appearance.colors)
+    private fun RSClient.getPersistentAppearance(): PersistentAppearance = PersistentAppearance(appearance.gender.id, appearance.looks, appearance.colors)
 
     data class PersistentAppearance(@JsonProperty("gender") val gender: Int,
                                     @JsonProperty("looks") val looks: IntArray,

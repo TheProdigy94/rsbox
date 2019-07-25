@@ -9,7 +9,7 @@ import io.rsbox.engine.message.impl.OpObjUMessage
 import io.rsbox.engine.model.EntityType
 import io.rsbox.engine.model.RSTile
 import io.rsbox.engine.model.RSWorld
-import io.rsbox.engine.model.entity.Client
+import io.rsbox.engine.model.entity.RSClient
 import io.rsbox.engine.model.entity.RSGroundItem
 import io.rsbox.engine.model.entity.RSPlayer
 import io.rsbox.engine.model.priv.Privilege
@@ -20,7 +20,7 @@ import java.lang.ref.WeakReference
  */
 class OpObjUHandler : MessageHandler<OpObjUMessage> {
 
-    override fun handle(client: Client, world: RSWorld, message: OpObjUMessage) {
+    override fun handle(client: RSClient, world: RSWorld, message: OpObjUMessage) {
         /*
          * If tile is too far away, don't process it.
          */

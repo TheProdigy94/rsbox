@@ -1,4 +1,4 @@
-package io.rsbox.engine.sync.block
+package io.rsbox.api
 
 /**
  * @author Tom <rspsmods@gmail.com>

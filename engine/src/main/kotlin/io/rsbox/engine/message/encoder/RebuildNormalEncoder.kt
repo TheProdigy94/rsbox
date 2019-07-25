@@ -37,14 +37,14 @@ class RebuildNormalEncoder : MessageEncoder<RebuildNormalMessage>() {
             }
 
             var count = 0
-            buf.writeShort(count) // Client always read as unsigned short
+            buf.writeShort(count) // RSClient always read as unsigned short
             for (x in lx..rx) {
                 for (z in lz..rz) {
                     if (!forceSend || z != 49 && z != 149 && z != 147 && x != 50 && (x != 49 || z != 47)) {
                         val region = z + (x shl 8)
                         val keys = message.xteaKeyService?.get(region) ?: XteaKeyService.EMPTY_KEYS
                         for (xteaKey in keys) {
-                            buf.writeInt(xteaKey) // Client always reads as int
+                            buf.writeInt(xteaKey) // RSClient always reads as int
                         }
                         count++
                     }

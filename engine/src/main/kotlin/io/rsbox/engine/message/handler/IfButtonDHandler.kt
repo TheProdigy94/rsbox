@@ -5,14 +5,14 @@ import io.rsbox.engine.message.impl.IfButtonDMessage
 import io.rsbox.engine.model.RSWorld
 import io.rsbox.api.INTERACTING_ITEM_SLOT
 import io.rsbox.api.OTHER_ITEM_SLOT_ATTR
-import io.rsbox.engine.model.entity.Client
+import io.rsbox.engine.model.entity.RSClient
 
 /**
  * @author Tom <rspsmods@gmail.com>
  */
 class IfButtonDHandler : MessageHandler<IfButtonDMessage> {
 
-    override fun handle(client: Client, world: RSWorld, message: IfButtonDMessage) {
+    override fun handle(client: RSClient, world: RSWorld, message: IfButtonDMessage) {
         val fromComponentHash = message.srcComponentHash
         val fromSlot = message.srcSlot
         val fromItemId = message.srcItem

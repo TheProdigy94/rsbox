@@ -1,7 +1,7 @@
 package io.rsbox.engine.service.log
 
 import io.rsbox.engine.event.Event
-import io.rsbox.engine.model.entity.Client
+import io.rsbox.engine.model.entity.RSClient
 import io.rsbox.engine.model.entity.RSNpc
 import io.rsbox.engine.model.entity.RSPawn
 import io.rsbox.engine.model.entity.RSPlayer
@@ -19,7 +19,7 @@ import io.rsbox.engine.service.Service
  */
 interface LoggerService : Service {
 
-    fun logPacket(client: Client, message: String)
+    fun logPacket(client: RSClient, message: String)
 
     fun logLogin(player: RSPlayer)
 

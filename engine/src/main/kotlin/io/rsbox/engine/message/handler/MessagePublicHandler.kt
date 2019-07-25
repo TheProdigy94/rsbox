@@ -4,17 +4,17 @@ import io.rsbox.engine.message.MessageHandler
 import io.rsbox.engine.message.impl.MessagePublicMessage
 import io.rsbox.engine.model.ChatMessage
 import io.rsbox.engine.model.RSWorld
-import io.rsbox.engine.model.entity.Client
+import io.rsbox.engine.model.entity.RSClient
 import io.rsbox.engine.model.priv.Privilege
 import io.rsbox.engine.service.log.LoggerService
-import io.rsbox.engine.sync.block.UpdateBlockType
+import io.rsbox.api.UpdateBlockType
 
 /**
  * @author Tom <rspsmods@gmail.com>
  */
 class MessagePublicHandler : MessageHandler<MessagePublicMessage> {
 
-    override fun handle(client: Client, world: RSWorld, message: MessagePublicMessage) {
+    override fun handle(client: RSClient, world: RSWorld, message: MessagePublicMessage) {
         val decompressed = ByteArray(256)
         val huffman = world.huffman
         huffman.decompress(message.data, decompressed, message.length)

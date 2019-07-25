@@ -1,5 +1,6 @@
 package io.rsbox.engine.sync.block
 
+import io.rsbox.api.UpdateBlockType
 import io.rsbox.engine.message.MessageValue
 import io.rsbox.net.packet.DataOrder
 import io.rsbox.net.packet.DataSignature

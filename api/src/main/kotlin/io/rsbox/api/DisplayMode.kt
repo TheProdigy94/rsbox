@@ -1,4 +1,4 @@
-package io.rsbox.engine.model.interf
+package io.rsbox.api
 
 /**
  * Represents a display-mode that the client can use.

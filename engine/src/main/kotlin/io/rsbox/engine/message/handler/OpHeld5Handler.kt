@@ -8,7 +8,7 @@ import io.rsbox.api.INTERACTING_ITEM_ID
 import io.rsbox.api.INTERACTING_ITEM_SLOT
 import io.rsbox.api.item.Item
 import io.rsbox.engine.model.RSTile
-import io.rsbox.engine.model.entity.Client
+import io.rsbox.engine.model.entity.RSClient
 import io.rsbox.engine.model.entity.RSGroundItem
 import io.rsbox.engine.model.item.RSItem
 import io.rsbox.engine.service.log.LoggerService
@@ -19,7 +19,7 @@ import java.lang.ref.WeakReference
  */
 class OpHeld5Handler : MessageHandler<OpHeld5Message> {
 
-    override fun handle(client: Client, world: RSWorld, message: OpHeld5Message) {
+    override fun handle(client: RSClient, world: RSWorld, message: OpHeld5Message) {
         if (!client.lock.canDropItems() || !client.canDropItems) {
             return
         }

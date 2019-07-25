@@ -2,7 +2,7 @@ package io.rsbox.engine.sync.segment
 
 import io.rsbox.engine.model.entity.RSNpc
 import io.rsbox.engine.sync.SynchronizationSegment
-import io.rsbox.engine.sync.block.UpdateBlockType
+import io.rsbox.api.UpdateBlockType
 import io.rsbox.net.packet.DataType
 import io.rsbox.net.packet.GamePacketBuilder
 

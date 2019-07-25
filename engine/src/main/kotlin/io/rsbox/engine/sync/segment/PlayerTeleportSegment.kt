@@ -15,7 +15,7 @@ class PlayerTeleportSegment(private val other: RSPlayer, private val encodeUpdat
          */
         buf.putBits(1, 1)
         /*
-         * Does [other] have pending [io.rsbox.engine.sync.block.UpdateBlockType]s?
+         * Does [other] have pending [io.rsbox.api.UpdateBlockType]s?
          */
         buf.putBit(encodeUpdateBlocks)
         /*

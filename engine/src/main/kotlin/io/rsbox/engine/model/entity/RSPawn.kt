@@ -29,7 +29,7 @@ import io.rsbox.engine.model.timer.TimerMap
 import io.rsbox.engine.oldplugin.Plugin
 import io.rsbox.engine.service.log.LoggerService
 import io.rsbox.engine.sync.block.UpdateBlockBuffer
-import io.rsbox.engine.sync.block.UpdateBlockType
+import io.rsbox.api.UpdateBlockType
 import kotlinx.coroutines.CoroutineScope
 import java.lang.ref.WeakReference
 import java.util.ArrayDeque
@@ -591,7 +591,7 @@ abstract class RSPawn(val world: RSWorld) : RSEntity(), Pawn {
     /**
      * Terminates any on-going [RSQueueTask]s that are being executed by this [RSPawn].
      */
-    fun interruptQueues() {
+    override fun interruptQueues() {
         queues.terminateTasks()
     }
 

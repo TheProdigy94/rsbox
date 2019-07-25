@@ -21,4 +21,9 @@ interface Pawn : Entity {
      * @param logic [Unit] lamda logic
      */
     fun queue(priority: TaskPriority = TaskPriority.STANDARD, logic: suspend QueueTask.(CoroutineScope) -> Unit)
+
+    /**
+     * Terminates any on-going [RSQueueTask]s that are being executed by this [RSPawn].
+     */
+    fun interruptQueues()
 }

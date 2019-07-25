@@ -1,6 +1,6 @@
 package io.rsbox.engine.service.login
 
-import io.rsbox.engine.model.entity.Client
+import io.rsbox.engine.model.entity.RSClient
 import io.rsbox.engine.service.GameService
 import io.rsbox.engine.service.serializer.PlayerLoadResult
 import io.rsbox.engine.service.world.WorldVerificationService
@@ -24,7 +24,7 @@ class LoginWorker(private val boss: LoginService, private val verificationServic
             try {
                 val world = request.world
 
-                val client = Client.fromRequest(world, request.login)
+                val client = RSClient.fromRequest(world, request.login)
                 val loadResult: PlayerLoadResult = boss.serializer.loadClientData(client, request.login)
 
                 if (loadResult == PlayerLoadResult.LOAD_ACCOUNT || loadResult == PlayerLoadResult.NEW_ACCOUNT) {

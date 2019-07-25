@@ -8,9 +8,10 @@ import io.rsbox.engine.service.serializer.PlayerSerializerService
 import io.rsbox.engine.system.GameSystem
 import io.rsbox.net.codec.login.LoginRequest
 import io.netty.channel.Channel
+import io.rsbox.api.entity.Client
 
 /**
- * A [RSPlayer] that is controlled by a human. A [Client] is responsible for
+ * A [RSPlayer] that is controlled by a human. A [RSClient] is responsible for
  * handling any network related job.
  *
  * Anything other than network logic should be added to [RSPlayer] instead.
@@ -23,7 +24,7 @@ import io.netty.channel.Channel
  *
  * @author Tom <rspsmods@gmail.com>
  */
-class Client(val channel: Channel, world: RSWorld) : RSPlayer(world) {
+class RSClient(val channel: Channel, world: RSWorld) : RSPlayer(world), Client {
 
     /**
      * The [System] that will handle [Message]s, write [Message]s and flush the
@@ -118,10 +119,10 @@ class Client(val channel: Channel, world: RSWorld) : RSPlayer(world) {
     companion object {
 
         /**
-         * Constructs a [Client] based on the [LoginRequest].
+         * Constructs a [RSClient] based on the [LoginRequest].
          */
-        fun fromRequest(world: RSWorld, request: LoginRequest): Client {
-            val client = Client(request.channel, world)
+        fun fromRequest(world: RSWorld, request: LoginRequest): RSClient {
+            val client = RSClient(request.channel, world)
             client.clientWidth = request.clientWidth
             client.clientHeight = request.clientHeight
             client.loginUsername = request.username

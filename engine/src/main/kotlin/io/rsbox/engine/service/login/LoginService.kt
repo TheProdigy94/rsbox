@@ -3,7 +3,7 @@ package io.rsbox.engine.service.login
 import com.google.common.util.concurrent.ThreadFactoryBuilder
 import io.rsbox.engine.RSServer
 import io.rsbox.engine.model.RSWorld
-import io.rsbox.engine.model.entity.Client
+import io.rsbox.engine.model.entity.RSClient
 import io.rsbox.engine.protocol.GameHandler
 import io.rsbox.engine.protocol.GameMessageEncoder
 import io.rsbox.engine.protocol.PacketMetadata
@@ -69,7 +69,7 @@ class LoginService : Service {
         requests.offer(serviceRequest)
     }
 
-    fun successfulLogin(client: Client, world: RSWorld, encodeRandom: IsaacRandom, decodeRandom: IsaacRandom) {
+    fun successfulLogin(client: RSClient, world: RSWorld, encodeRandom: IsaacRandom, decodeRandom: IsaacRandom) {
         val gameSystem = GameSystem(
                 channel = client.channel, world = world, client = client,
                 service = client.world.getService(GameService::class.java)!!)

@@ -5,7 +5,7 @@ import io.rsbox.engine.model.ChatMessage
 import io.rsbox.engine.model.RSTile
 import io.rsbox.engine.model.entity.RSPlayer
 import io.rsbox.engine.sync.SynchronizationSegment
-import io.rsbox.engine.sync.block.UpdateBlockType
+import io.rsbox.api.UpdateBlockType
 import io.rsbox.net.packet.DataType
 import io.rsbox.net.packet.GamePacketBuilder
 

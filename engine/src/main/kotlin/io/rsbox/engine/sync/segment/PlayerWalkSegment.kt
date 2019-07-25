@@ -14,7 +14,7 @@ class PlayerWalkSegment(private val encodeUpdateBlocks: Boolean, private val run
          */
         buf.putBits(1, 1)
         /*
-         * Does the player need to have their [io.rsbox.engine.sync.block.UpdateBlockType]s
+         * Does the player need to have their [io.rsbox.api.UpdateBlockType]s
          * decoded?
          */
         buf.putBit(encodeUpdateBlocks)

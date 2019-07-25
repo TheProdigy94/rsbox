@@ -1,7 +1,7 @@
 package io.rsbox.engine.message
 
 import io.rsbox.engine.model.RSWorld
-import io.rsbox.engine.model.entity.Client
+import io.rsbox.engine.model.entity.RSClient
 import io.rsbox.engine.service.log.LoggerService
 import mu.KLogging
 
@@ -15,14 +15,14 @@ interface MessageHandler<T : Message> {
 
     /**
      * Handles the [message] on the game-thread with the ability to read and write
-     * to the [Client].
+     * to the [RSClient].
      */
-    fun handle(client: Client, world: RSWorld, message: T)
+    fun handle(client: RSClient, world: RSWorld, message: T)
 
     /**
      * A default method to log the handlers.
      */
-    fun log(client: Client, format: String, vararg args: Any) {
+    fun log(client: RSClient, format: String, vararg args: Any) {
         if (client.logPackets) {
             val message = String.format(format, *args)
             val logService = client.world.getService(LoggerService::class.java, searchSubclasses = true)

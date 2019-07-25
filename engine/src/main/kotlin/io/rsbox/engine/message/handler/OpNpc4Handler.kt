@@ -8,7 +8,7 @@ import io.rsbox.api.INTERACTING_NPC_ATTR
 import io.rsbox.api.INTERACTING_OPT_ATTR
 import io.rsbox.api.entity.Npc
 import io.rsbox.engine.model.RSTile
-import io.rsbox.engine.model.entity.Client
+import io.rsbox.engine.model.entity.RSClient
 import io.rsbox.engine.model.priv.Privilege
 import java.lang.ref.WeakReference
 
@@ -17,7 +17,7 @@ import java.lang.ref.WeakReference
  */
 class OpNpc4Handler : MessageHandler<OpNpc4Message> {
 
-    override fun handle(client: Client, world: RSWorld, message: OpNpc4Message) {
+    override fun handle(client: RSClient, world: RSWorld, message: OpNpc4Message) {
         val npc = world.npcs[message.index] ?: return
 
         if (!client.lock.canNpcInteract()) {

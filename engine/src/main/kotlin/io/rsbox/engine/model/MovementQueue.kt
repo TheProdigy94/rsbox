@@ -3,7 +3,7 @@ package io.rsbox.engine.model
 import io.rsbox.api.Direction
 import io.rsbox.engine.model.MovementQueue.Step
 import io.rsbox.engine.model.entity.RSPawn
-import io.rsbox.engine.sync.block.UpdateBlockType
+import io.rsbox.api.UpdateBlockType
 import java.util.ArrayDeque
 import java.util.Deque
 

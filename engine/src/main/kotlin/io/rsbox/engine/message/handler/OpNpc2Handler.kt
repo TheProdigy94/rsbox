@@ -4,7 +4,7 @@ import io.rsbox.engine.message.MessageHandler
 import io.rsbox.engine.message.impl.OpNpc2Message
 import io.rsbox.engine.model.RSTile
 import io.rsbox.engine.model.RSWorld
-import io.rsbox.engine.model.entity.Client
+import io.rsbox.engine.model.entity.RSClient
 import io.rsbox.engine.model.priv.Privilege
 
 /**
@@ -12,7 +12,7 @@ import io.rsbox.engine.model.priv.Privilege
  */
 class OpNpc2Handler : MessageHandler<OpNpc2Message> {
 
-    override fun handle(client: Client, world: RSWorld, message: OpNpc2Message) {
+    override fun handle(client: RSClient, world: RSWorld, message: OpNpc2Message) {
         val npc = world.npcs[message.index] ?: return
 
         if (!client.lock.canAttack()) {

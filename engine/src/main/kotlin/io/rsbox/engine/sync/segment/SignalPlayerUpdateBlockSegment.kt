@@ -15,7 +15,7 @@ class SignalPlayerUpdateBlockSegment : SynchronizationSegment {
         buf.putBits(1, 1)
         /*
          * Signal to the client that the player requires
-         * [io.rsbox.engine.sync.block.UpdateBlockType] decoding.
+         * [io.rsbox.api.UpdateBlockType] decoding.
          */
         buf.putBits(1, 1)
         /*

@@ -7,7 +7,7 @@ import io.rsbox.engine.model.RSWorld
 import io.rsbox.api.INTERACTING_OPT_ATTR
 import io.rsbox.api.INTERACTING_PLAYER_ATTR
 import io.rsbox.api.entity.Player
-import io.rsbox.engine.model.entity.Client
+import io.rsbox.engine.model.entity.RSClient
 import java.lang.ref.WeakReference
 
 /**
@@ -15,7 +15,7 @@ import java.lang.ref.WeakReference
  */
 class OpPlayer2Handler : MessageHandler<OpPlayer2Message> {
 
-    override fun handle(client: Client, world: RSWorld, message: OpPlayer2Message) {
+    override fun handle(client: RSClient, world: RSWorld, message: OpPlayer2Message) {
         val index = message.index
         // The interaction option id.
         val option = 2

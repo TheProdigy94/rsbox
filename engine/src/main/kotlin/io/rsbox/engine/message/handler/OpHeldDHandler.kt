@@ -6,14 +6,14 @@ import io.rsbox.engine.message.impl.OpHeldDMessage
 import io.rsbox.engine.model.RSWorld
 import io.rsbox.api.INTERACTING_ITEM_SLOT
 import io.rsbox.api.OTHER_ITEM_SLOT_ATTR
-import io.rsbox.engine.model.entity.Client
+import io.rsbox.engine.model.entity.RSClient
 
 /**
  * @author Tom <rspsmods@gmail.com>
  */
 class OpHeldDHandler : MessageHandler<OpHeldDMessage> {
 
-    override fun handle(client: Client, world: RSWorld, message: OpHeldDMessage) {
+    override fun handle(client: RSClient, world: RSWorld, message: OpHeldDMessage) {
         val interfaceId = message.componentHash shr 16
         val component = message.componentHash and 0xFFFF
         val fromSlot = message.srcSlot

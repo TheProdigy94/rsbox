@@ -179,7 +179,7 @@ class Chunk(val coords: ChunkCoords, val heights: Int) {
     }
 
     /**
-     * Send the [update] to any [Client] entities that are within view distance
+     * Send the [update] to any [RSClient] entities that are within view distance
      * of this chunk.
      */
     private fun sendUpdate(world: RSWorld, update: EntityUpdate<*>) {
@@ -187,7 +187,7 @@ class Chunk(val coords: ChunkCoords, val heights: Int) {
 
         for (coords in surrounding) {
             val chunk = world.chunks.get(coords, createIfNeeded = false) ?: continue
-            val clients = chunk.getEntities<Client>(EntityType.CLIENT)
+            val clients = chunk.getEntities<RSClient>(EntityType.CLIENT)
             for (client in clients) {
                 if (!canBeViewed(client, update.entity)) {
                     continue
