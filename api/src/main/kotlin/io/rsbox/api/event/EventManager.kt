@@ -1,7 +1,5 @@
 package io.rsbox.api.event
 
-import io.rsbox.api.event.inter.ButtonClickEvent
-import io.rsbox.api.event.login.PlayerLoginEvent
 import io.rsbox.api.plugin.PluginManager
 
 /**
@@ -9,28 +7,14 @@ import io.rsbox.api.plugin.PluginManager
  */
 
 object EventManager {
-    private val events = arrayListOf<Event>()
-
-    init {
-        register(PlayerLoginEvent::class.java)
-        register(ButtonClickEvent::class.java)
-    }
-
-    fun fireEvent(eventClass: Class<out Event>, vararg args: Any?): Boolean {
-        events.forEach { event ->
-            if(event.getEventClass() == eventClass) {
-
-                // Add the needed args to the event fired
-                event.init(args)
-                this.invokePluginListeners(event)
-
-                if(event is Cancellable) {
-                    return !event.isCancelled()
-                }
-                return true
+    fun fireEvent(event: Event): Boolean {
+        invokePluginListeners(event)
+        if(event is Cancellable) {
+            if(event.isCancelled()) {
+                return false
             }
         }
-        throw EventException("Event fired does not have initialized event instance.")
+        return true
     }
 
     private fun invokePluginListeners(event: Event) {
@@ -42,10 +26,5 @@ object EventManager {
                 }
             }
         }
-    }
-
-    fun register(clazz: Class<out Event>) {
-        val event = clazz.newInstance()
-        events.add(event)
     }
 }

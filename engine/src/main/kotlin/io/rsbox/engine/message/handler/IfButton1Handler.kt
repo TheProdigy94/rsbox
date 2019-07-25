@@ -31,8 +31,7 @@ class IfButton1Handler : MessageHandler<IfButtonMessage> {
         client.attr[INTERACTING_ITEM_ID] = message.item
         client.attr[INTERACTING_SLOT_ATTR] = message.slot
 
-        if(!EventManager.fireEvent(ButtonClickEvent::class.java, client as Player, interfaceId, component)) {
-            // Event cancelled
+        if(!EventManager.fireEvent(ButtonClickEvent(client as Player, interfaceId, component))) {
             return
         }
 

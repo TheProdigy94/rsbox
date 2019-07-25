@@ -8,38 +8,12 @@ import io.rsbox.api.event.Event
  * @author Kyle Escobar
  */
 
-class ButtonClickEvent : Event(), Cancellable {
+class ButtonClickEvent(val player: Player, val parent: Int, val child: Int) : Event(), Cancellable {
     private var cancelEvent = false
 
-    // Args
-    private var player: Player? = null
-    private var parent: Int = -1
-    private var child: Int = -1
-    override fun init(vararg objArgs: Any?) {
-        player = args[0] as Player
-        parent = args[1] as Int
-        child = args[2] as Int
-    }
+    val option: Int = player.getInteractingOption()
 
-    fun getPlayer(): Player {
-        return this.player!!
-    }
-
-    fun getParent(): Int {
-        return this.parent
-    }
-
-    fun getChild(): Int {
-        return this.child
-    }
-
-    fun getOption(): Int {
-        return getPlayer().getInteractingOption()
-    }
-
-    fun getSubComponentId(): Int {
-        return getPlayer().getInteractingSlot()
-    }
+    val subComponent: Int = player.getInteractingSlot()
 
     override fun setCancelled(cancel: Boolean) {
         this.cancelEvent = cancel

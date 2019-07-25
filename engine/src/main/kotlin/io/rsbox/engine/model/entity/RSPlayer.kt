@@ -418,7 +418,7 @@ open class RSPlayer(world: RSWorld) : RSPawn(world), Player {
         initiated = true
         Game.login(this)
 
-        if(EventManager.fireEvent(PlayerLoginEvent::class.java, this as Player, this.world as World)) {
+        if(EventManager.fireEvent(PlayerLoginEvent(player = this as Player, world = this.world as World))) {
             io.rsbox.engine.game.events.PlayerLoginEvent.execute(this)
         }
     }
